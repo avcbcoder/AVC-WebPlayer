@@ -9,6 +9,19 @@ import { SUPPORTED_SITES, ID } from './constants'
 import { identifySite } from './utils/functions'
 
 class Main extends React.Component {
+
+  // send message from foreground content script to background js
+  send = () => {
+    chrome.runtime.sendMessage({
+      type: "notification", options: {
+        type: "basic",
+        iconUrl: chrome.extension.getURL("icon128.png"),
+        title: "Test",
+        message: "Test"
+      }
+    });
+  }
+
   render() {
     return (
       <Frame head={[<link type="text/css" rel="stylesheet" href={chrome.runtime.getURL("/static/css/content.css")} ></link>]}>
@@ -20,6 +33,7 @@ class Main extends React.Component {
               return (
                 <div className={'my-extension'}>
                   <h1>Hello world</h1>
+                  <button onClick={this.send}>Click to console to all tabs</button>
                 </div>
               )
             }
@@ -67,10 +81,14 @@ ReactDOM.render(<Main />, app);
 
 app.style.display = "none";
 
+// recieve message sent from backgound 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === "clicked_browser_action") {
       toggle();
+    }
+    if (request.message === "console") {
+      console.log('console me ye dikhane ka abb')
     }
   }
 );
