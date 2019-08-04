@@ -8,8 +8,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
          chrome.tabs.sendMessage(activeTab.id, { "message": "clicked_browser_action" });
       }
    });
-   // chrome.tabs.executeScript(null, { code: `document.body.style.background = 'red';console.log('done');` });
-   // chrome.tabs.executeScript(null, { file: 'app/ss.js' });
 });
 
 // recieve msg from foreground and send to one or all tabs
@@ -26,11 +24,35 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-   if (request.type === "change-bkg") {
+   if (request.type === "extract-spotify-data") {
       chrome.tabs.query({}, function (tabs) {
-         for (let i = 0; i < tabs.length; i++)
-            chrome.tabs.executeScript(tabs[i].id, { code: "document.body.style.background='red';console.log('done')" })
+         for (let i = 0; i < tabs.length; i++) {
+            const tab = tabs[i];
+            if (tab.url.includes('//open.spotify.com')) {
+               chrome.tabs.executeScript(tab.id, { file: "app/open-spotify.js" })
+            }
+         }
       });
+   }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+   if (request.type === "media") {
+      switch (request.options.type) {
+         case 'next':
+            chrome.tabs.query({}, function (tabs) {
+               for (let i = 0; i < tabs.length; i++) {
+                  const tab = tabs[i];
+                  if (tab.url.includes('//open.spotify.com')) {
+                     chrome.tabs.executeScript(tab.id, { file: "app/page-elements.js" }, function () {
+                        chrome.tabs.executeScript(tab.id, { code: "next.click();console.log('next click');" });
+                     });
+                  }
+               }
+            });
+            break;
+         default: break;
+      }
    }
 });
 

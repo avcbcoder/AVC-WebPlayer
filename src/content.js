@@ -24,8 +24,16 @@ class Main extends React.Component {
 
   injectInSpotify = () => {
     chrome.runtime.sendMessage({
-      type: "change-bkg", options: {
+      type: "extract-spotify-data", options: {
         type: "basic"
+      }
+    });
+  }
+
+  playNext = () => {
+    chrome.runtime.sendMessage({
+      type: "media", options: {
+        type: "next"
       }
     });
   }
@@ -43,6 +51,7 @@ class Main extends React.Component {
                   <h1>Hello world</h1>
                   <button onClick={this.send}>Click to console to all tabs</button>
                   <button onClick={this.injectInSpotify}>Click to remove spotify</button>
+                  <button onClick={this.playNext}>Next</button>
                 </div>
               )
             }
