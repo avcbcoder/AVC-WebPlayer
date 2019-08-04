@@ -22,6 +22,14 @@ class Main extends React.Component {
     });
   }
 
+  injectInSpotify = () => {
+    chrome.runtime.sendMessage({
+      type: "change-bkg", options: {
+        type: "basic"
+      }
+    });
+  }
+
   render() {
     return (
       <Frame head={[<link type="text/css" rel="stylesheet" href={chrome.runtime.getURL("/static/css/content.css")} ></link>]}>
@@ -34,6 +42,7 @@ class Main extends React.Component {
                 <div className={'my-extension'}>
                   <h1>Hello world</h1>
                   <button onClick={this.send}>Click to console to all tabs</button>
+                  <button onClick={this.injectInSpotify}>Click to remove spotify</button>
                 </div>
               )
             }
