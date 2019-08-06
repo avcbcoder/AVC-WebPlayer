@@ -1,3 +1,11 @@
+/*global chrome*/
+
+var songDetailsObj = {
+    title: '',
+    artist: [],
+    albumArt: '',
+}
+
 function main() {
     const rootDetails = document.getElementsByClassName('now-playing')[0]
     const rootText = rootDetails.getElementsByClassName('track-info')[0]
@@ -11,14 +19,8 @@ function main() {
     return {
         title: songTitle ? songTitle.innerText : '',
         artist: songArtist ? songArtist : [],
-        albumArt: rootAlbum ? rootAlbum.style.backgroundImage : ''
+        albumArt: rootAlbum ? rootAlbum.style.backgroundImage.split(`"`)[1] : ''
     }
-}
-
-var songDetailsObj = {
-    title: '',
-    artist: [],
-    albumArt: '',
 }
 
 setInterval(() => {
