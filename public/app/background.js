@@ -1,3 +1,4 @@
+/*global chrome*/
 
 // Called when the user clicks on the browser action
 chrome.browserAction.onClicked.addListener(function (tab) {
@@ -36,23 +37,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
    }
 });
 
+const executeMediaButton = (id, media) => {
+   chrome.tabs.executeScript(id, { code: `${media}.click()` });
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
    if (request.type === "media") {
-      switch (request.options.type) {
-         case 'next':
-            chrome.tabs.query({}, function (tabs) {
-               for (let i = 0; i < tabs.length; i++) {
-                  const tab = tabs[i];
-                  if (tab.url.includes('//open.spotify.com')) {
-                     chrome.tabs.executeScript(tab.id, { file: "app/page-elements.js" }, function () {
-                        chrome.tabs.executeScript(tab.id, { code: "next.click();console.log('next click');" });
-                     });
-                  }
-               }
-            });
-            break;
-         default: break;
-      }
+      chrome.tabs.query({}, function (tabs) {
+         for (let i = 0; i < tabs.length; i++) {
+            const tab = tabs[i];
+            if (tab.url.includes('//open.spotify.com')) {
+               chrome.tabs.executeScript(tab.id, { file: "app/page-elements.js" },
+                  executeMediaButton(tab.id, request.options.type))
+            }
+         }
+      });
    }
 });
 

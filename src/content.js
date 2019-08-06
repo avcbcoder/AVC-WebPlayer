@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import "./content.css";
 import WindowButton from "./components/youtube/window-button"
-import { SUPPORTED_SITES, ID } from './constants'
+import { SUPPORTED_SITES, ID, MEDIA_CONTROLS } from './constants'
 import { identifySite } from './utils/functions'
 
 class Main extends React.Component {
@@ -30,10 +30,10 @@ class Main extends React.Component {
     });
   }
 
-  playNext = () => {
+  controls = (media) => {
     chrome.runtime.sendMessage({
       type: "media", options: {
-        type: "next"
+        type: media
       }
     });
   }
@@ -48,10 +48,14 @@ class Main extends React.Component {
               // Render Children
               return (
                 <div className={'my-extension'}>
-                  <h1>Hello world</h1>
+                  <h1>----</h1>
                   <button onClick={this.send}>Click to console to all tabs</button>
                   <button onClick={this.injectInSpotify}>Click to remove spotify</button>
-                  <button onClick={this.playNext}>Next</button>
+                  <button onClick={() => { this.controls(MEDIA_CONTROLS.NEXT) }}>Next</button>
+                  <button onClick={() => { this.controls(MEDIA_CONTROLS.PREVIOUS) }}>Previous</button>
+                  <button onClick={() => { this.controls(MEDIA_CONTROLS.PLAY_PAUSE) }}>Play/Pause</button>
+                  <button onClick={() => { this.controls(MEDIA_CONTROLS.SHUFFLE) }}>Shuffle</button>
+                  <button onClick={() => { this.controls(MEDIA_CONTROLS.REPEAT) }}>Repeat</button>
                 </div>
               )
             }
@@ -69,16 +73,13 @@ function performMagic() {
 }
 
 if (identifySite(document.location.href) === SUPPORTED_SITES.YOUTUBE) {
-  console.log('youtube working')
 
   window.onload = function () {
-    console.log('loaded')
     const myDoc = this.document
     const collectionButtons = myDoc.getElementById('top-level-buttons');
     const app = myDoc.createElement('div');
     app.id = "432";
     collectionButtons.insertBefore(app, collectionButtons.childNodes[0])
-    console.log(collectionButtons.childNodes[0])
     ReactDOM.render(
       <WindowButton
         document={myDoc}
