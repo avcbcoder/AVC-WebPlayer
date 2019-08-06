@@ -8,9 +8,10 @@ import "./content.css";
 import WindowButton from "./components/youtube/window-button"
 import youtube from "./api/youtube"
 import { SUPPORTED_SITES, ID, MEDIA_CONTROLS } from './constants'
-import { YOUTUBE_API_KEYS } from './config'
+import { YOUTUBE_API_KEYS, LYRICS_API } from './config'
 import { identifySite } from './utils/functions'
 import YTSearch from 'youtube-api-search';
+import axios from 'axios'
 
 // const onGapiLoad = () => {
 //   console.log('onGapi load')
@@ -95,6 +96,17 @@ class Main extends React.Component {
     });
   }
 
+  getLyrics = (track, artist) => {
+    const url = `https://orion.apiseeds.com/api/music/lyric/${artist}/${track}?apikey=${LYRICS_API.API_SEEDS}`
+    axios.get(url)
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   render() {
     return (
       <Frame head={[<link type="text/css" rel="stylesheet" href={chrome.runtime.getURL("/static/css/content.css")} ></link>]}>
@@ -113,7 +125,8 @@ class Main extends React.Component {
                   <button onClick={() => { this.controls(MEDIA_CONTROLS.PLAY_PAUSE) }}>Play/Pause</button>
                   <button onClick={() => { this.controls(MEDIA_CONTROLS.SHUFFLE) }}>Shuffle</button>
                   <button onClick={() => { this.controls(MEDIA_CONTROLS.REPEAT) }}>Repeat</button>
-                  <button onClick={() => { this.videoSearch('bad at love') }}>Search</button>
+                  <button onClick={() => { this.videoSearch('bad at love'); }}>Search</button>
+                  <button onClick={() => { this.getLyrics('bad at love', 'halsey'); }}>Lyrics</button>
                 </div>
               )
             }
