@@ -15,4 +15,8 @@ const ID = {
     YOUTUBE_BUTTON_SET: 'top-level-buttons',
 }
 
-export { SUPPORTED_SITES, ID, MEDIA_CONTROLS };
+const MESSAGE_PASSING = {
+
+}
+
+export { SUPPORTED_SITES, ID, MEDIA_CONTROLS, MESSAGE_PASSING };
