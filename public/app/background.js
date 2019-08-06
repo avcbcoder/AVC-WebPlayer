@@ -55,3 +55,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
    }
 });
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+   if (request.type === "current-song-details") {
+      chrome.tabs.query({}, function (tabs) {
+         for (let i = 0; i < tabs.length; i++) {
+            var activeTab = tabs[i];
+            chrome.tabs.sendMessage(activeTab.id, { "message": "current-song-details", "songDetailsObj": request.options.songDetailsObj });
+         }
+      });
+   }
+});
+

@@ -1,5 +1,3 @@
-document.body.style.opacity = "0.5";
-
 var mediaButtons = document.getElementsByClassName('player-controls')[0].childNodes[0]
 var shuffle = mediaButtons.childNodes[0];
 var prev = mediaButtons.childNodes[1];

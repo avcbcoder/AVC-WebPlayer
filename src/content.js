@@ -112,6 +112,12 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.message === "current-song-details" || request.type === "current-song-details") {
+    console.log("songDetails", request, request.songDetailsObj)
+  }
+});
+
 function toggle() {
   if (app.style.display === "none") {
     app.style.display = "block";
@@ -119,4 +125,6 @@ function toggle() {
     app.style.display = "none";
   }
 }
+
+
 

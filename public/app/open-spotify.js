@@ -3,12 +3,29 @@ function main() {
     const rootText = rootDetails.getElementsByClassName('track-info')[0]
     const songTitle = rootText.childNodes[0].getElementsByTagName('a')[0].innerText
     console.log("found this song", songTitle)
-    chrome.runtime.sendMessage({
-        type: "details", options: {
-            type: "basic",
-            title: songTitle,
-        }
-    });
+
+    return {
+        title: songTitle,
+        artist: ''
+    }
 }
 
-main();
+var songDetailsObj = {
+    title: '',
+    artist: [],
+    albumArt: '',
+}
+
+setInterval(() => {
+    const newDetailsObj = main();
+    console.log(newDetailsObj)
+    if (newDetailsObj.title !== songDetailsObj.title) {
+        songDetailsObj = newDetailsObj;
+        chrome.runtime.sendMessage({
+            type: "current-song-details", options: {
+                type: "basic",
+                songDetailsObj,
+            }
+        });
+    }
+}, 2000);
