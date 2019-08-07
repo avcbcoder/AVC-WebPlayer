@@ -18,5 +18,11 @@ const ID = {
 const MESSAGE_PASSING = {
 
 }
+const MODE = {
+    NONE: 'none',
+    SPOTIFY: 'spotify',
+    YOUTUBE: 'youtube',
+    MINI_WINDOW: 'min_youtube',
+}
 
-export { SUPPORTED_SITES, ID, MEDIA_CONTROLS, MESSAGE_PASSING };
+export { MODE, SUPPORTED_SITES, ID, MEDIA_CONTROLS, MESSAGE_PASSING };

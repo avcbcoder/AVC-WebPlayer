@@ -1,21 +1,63 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { MODE } from './constants';
 
-class App extends Component {
+import styled from 'styled-components';
+import SpotifyPlayer from './modules/spotify-player'
+import YoutubePlayer from './modules/youtube-player'
+
+
+const Root = styled.div`
+    width:30%;
+    height:100vh;
+    border:1px solid red;
+    position:fixed;
+    right:0;
+    z-index:5000;
+`;
+
+const Wrapper = styled.div`
+`;
+
+class RootApp extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+
+    }
+  }
+
+  static getDerivedStateFromProps() {
+    return {}
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Root >
+        <Wrapper>
+          <SpotifyPlayer mode songDetails mediaControl></SpotifyPlayer>
+          <YoutubePlayer mode songDetails></YoutubePlayer>
+        </Wrapper>
+      </Root>
     );
   }
 }
 
-export default App;
+RootApp.defaultProps = {
+  mode: MODE.NONE,
+  songDetails: {
+    title: 'Go to https://open.spotify.com to enable the player',
+    artist: [],
+    albumArt: '',
+  }
+}
+
+RootApp.prototypes = {
+  mode: PropTypes.string,
+  songDetails: PropTypes.shape({}),
+  mediaControl: PropTypes.func,
+  switchToYoutubeMode: PropTypes.func,
+}
+
+export default RootApp;
