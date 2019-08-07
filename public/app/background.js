@@ -3,12 +3,17 @@
 // Called when the user clicks on the browser action
 chrome.browserAction.onClicked.addListener(function (tab) {
    // Send a message to the active tab
+   chrome.runtime.sendMessage("emklekamjcedidleoebpbpcejnjpbmdk", { min: 'fjdnjdn' });
    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       for (let i = 0; i < tabs.length; i++) {
          var activeTab = tabs[i];
          chrome.tabs.sendMessage(activeTab.id, { "message": "clicked_browser_action", "tabs": tabs });
       }
    });
+   // to launch own chrome app
+   // chrome.management.launchApp("emklekamjcedidleoebpbpcejnjpbmdk", function () {
+   //    console.log('lets see')
+   // })
 });
 
 // recieve msg from foreground and send to one or all tabs
