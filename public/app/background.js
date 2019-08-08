@@ -10,6 +10,15 @@ chrome.browserAction.onClicked.addListener(function (tab) {
          chrome.tabs.sendMessage(activeTab.id, { "message": "clicked_browser_action", "tabs": tabs });
       }
    });
+   // chrome.windows.create({ type: "panel", focused: true, width: 470, height: 440, url: "https://www.youtube.com/watch?v=dfnCAmr569k" });
+   // var myWindow = window.open("./window.html", "newWindow", "width=500,height=700");
+   // chrome.app.window.create('window.html', {
+   //    alwaysOnTop: true,
+   //    'outerBounds': {
+   //       'width': 560,
+   //       'height': 315
+   //    }
+   // });
    // to launch own chrome app
    // chrome.management.launchApp("emklekamjcedidleoebpbpcejnjpbmdk", function () {
    //    console.log('lets see')
