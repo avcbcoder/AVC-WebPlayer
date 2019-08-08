@@ -6,6 +6,10 @@ tryPictureInPicture = () => {
     console.log('trying picture in picture')
     document.body.click();
     document.getElementsByClassName('view-count')[0].click();
+    chrome.storage.local.get(['url'], function (result) {
+        console.log('Value currently is ' + result.key, result);
+    });
+
     const videos = document.getElementsByTagName('video')
     if (videos.length > 0) {
         videos[0].focus();

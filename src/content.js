@@ -151,5 +151,9 @@ function toggle() {
   }
 }
 
+chrome.storage.local.set({ 'url': 'yt.com' }, function () {
+  console.log('Value is set to ');
+});
+
 
 
