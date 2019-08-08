@@ -18,7 +18,10 @@ const IFrame = styled.iframe`
 const Div = styled.div`
     border:4px solid blue;
 `;
-
+const style = {
+    overflow: 'auto',
+    border: '5px ridge blue',
+}
 class YoutubePlayer extends React.Component {
 
     constructor(props) {
@@ -35,8 +38,8 @@ class YoutubePlayer extends React.Component {
     render() {
         return (
             <Wrapper>
-                <CenterHV>
-                    {/* <IFrame id={ID.YOUTUBE_IFRAME}
+                {/* <CenterHV>
+                    <IFrame id={ID.YOUTUBE_IFRAME}
                     src="https://www.youtube.com/embed/dfnCAmr569k?autoplay=0&showinfo=0&controls=0" 
                     frameborder="0" allow="accelerometer; 
                     autoplay; 
@@ -44,10 +47,10 @@ class YoutubePlayer extends React.Component {
                     gyroscope; 
                     picture-in-picture" 
                     allowfullscreen>  
-                    </IFrame> */}
-                    <Div>
-                        <webview src="http://www.youtube.com/embed/dfnCAmr569k" width="420" height="315"></webview></Div>
-                </CenterHV>
+                    </IFrame>
+                </CenterHV> */}
+                <object type="text/html" data="https://www.youtube.com/watch?v=-QMg39gK624" width="800px" height="600px" style={style}>
+                </object>
             </Wrapper>
         );
     }

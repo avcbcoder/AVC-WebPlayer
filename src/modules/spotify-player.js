@@ -24,12 +24,12 @@ class SpotifyPlayer extends React.Component {
     }
 
     render() {
-        const { songDetails, mediaControl } = this.props
+        const { songDetails, mediaControl, switchToMiniMode } = this.props
         const { title, artist, albumArt } = songDetails;
 
         return (
             <Wrapper>
-
+<button onClick={switchToMiniMode}>playInMiniMode</button>
             </Wrapper>
         );
     }

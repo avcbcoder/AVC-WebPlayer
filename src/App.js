@@ -1,3 +1,4 @@
+/*global chrome*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MODE } from './constants';
@@ -32,11 +33,28 @@ class RootApp extends React.Component {
     return {}
   }
 
+  switchToMiniMode = () => {
+    console.log('wait switching...')
+    chrome.runtime.sendMessage({
+      type: "mini-mode", options: {
+        url: 'https://www.youtube.com/watch?v=Dkk9gvTmCXY&autoplay=1'
+      }
+    });
+    setTimeout(() => {
+      console.log('start mini mode')
+      chrome.runtime.sendMessage({
+        type: "start-mini-mode", options: {
+          url: 'https://www.youtube.com/watch?v=Dkk9gvTmCXY'
+        }
+      });
+    }, 1000);
+  }
+
   render() {
     return (
       <Root >
         <Wrapper>
-          <SpotifyPlayer mode songDetails mediaControl></SpotifyPlayer>
+          <SpotifyPlayer mode songDetails mediaControl switchToMiniMode={this.switchToMiniMode}></SpotifyPlayer>
           <YoutubePlayer mode songDetails></YoutubePlayer>
         </Wrapper>
       </Root>

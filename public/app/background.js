@@ -10,7 +10,8 @@ chrome.browserAction.onClicked.addListener(function (tab) {
          chrome.tabs.sendMessage(activeTab.id, { "message": "clicked_browser_action", "tabs": tabs });
       }
    });
-   // chrome.windows.create({ type: "panel", focused: true, width: 470, height: 440, url: "https://www.youtube.com/watch?v=dfnCAmr569k" });
+
+   chrome.windows.create({ type: "panel", focused: false, width: 470, height: 440, url: "https://www.youtube.com/watch?v=dfnCAmr569k" });
    // var myWindow = window.open("./window.html", "newWindow", "width=500,height=700");
    // chrome.app.window.create('window.html', {
    //    alwaysOnTop: true,
@@ -75,6 +76,24 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
          for (let i = 0; i < tabs.length; i++) {
             var activeTab = tabs[i];
             chrome.tabs.sendMessage(activeTab.id, { "message": "current-song-details", "songDetailsObj": request.options.songDetailsObj });
+         }
+      });
+   }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+   if (request.type === "mini-mode") {
+      chrome.tabs.create({ url: request.options.url, active: false, index: 0 }, function (tab) {
+         // chrome.tabs.executeScript(tab.id, { file: "app/youtube-script.js" })
+      });
+   }
+   if (request.type === "start-mini-mode") {
+      chrome.tabs.query({}, function (tabs) {
+         for (let i = 0; i < tabs.length; i++) {
+            const tab = tabs[i];
+            if (tab.url.includes('//www.youtube.com')) {
+               chrome.tabs.executeScript(tab.id, { file: "app/youtube-script.js" })
+            }
          }
       });
    }
