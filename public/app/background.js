@@ -11,7 +11,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
       }
    });
 
-   chrome.windows.create({ type: "panel", focused: false, width: 470, height: 440, url: "https://www.youtube.com/watch?v=dfnCAmr569k" });
+   // chrome.windows.create({ type: "panel", focused: false, width: 470, height: 440, url: "https://www.youtube.com/watch?v=dfnCAmr569k" });
 
 });
 

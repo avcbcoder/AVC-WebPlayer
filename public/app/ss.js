@@ -34,12 +34,4 @@ if (window.location.href.includes('www.youtube.com/watch?')) {
             tryPictureInPicture();
         }, 1000);
     }
-    // document.addEventListener("DOMContentLoaded", function (event) {
-    // console.log('clicking your video')
-    // document.getElementsByClassName('ytp-large-play-button')[0].click();
-    // console.log(432, document.getElementsByClassName('ytp-large-play-button'))
-    // interval = setInterval(() => {
-    //     tryPictureInPicture();
-    // }, 1000);
-    // });
 }

@@ -38,7 +38,7 @@ class YoutubePlayer extends React.Component {
     render() {
         return (
             <Wrapper>
-                {/* <CenterHV>
+                <CenterHV>
                     <IFrame id={ID.YOUTUBE_IFRAME}
                     src="https://www.youtube.com/embed/dfnCAmr569k?autoplay=0&showinfo=0&controls=0" 
                     frameborder="0" allow="accelerometer; 
@@ -48,9 +48,7 @@ class YoutubePlayer extends React.Component {
                     picture-in-picture" 
                     allowfullscreen>  
                     </IFrame>
-                </CenterHV> */}
-                <object type="text/html" data="https://www.youtube.com/watch?v=-QMg39gK624" width="800px" height="600px" style={style}>
-                </object>
+                </CenterHV>
             </Wrapper>
         );
     }

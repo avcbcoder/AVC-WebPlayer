@@ -1,4 +1,3 @@
-/*global chrome*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MODE } from './constants';
@@ -9,11 +8,14 @@ import YoutubePlayer from './modules/youtube-player'
 
 
 const Root = styled.div`
-    width:30%;
-    height:100vh;
-    border:1px solid red;
+    width:26%;
+    height:98vh;
+    /* border:1px solid red; */
     position:fixed;
-    right:0;
+    right:30px;
+    top:10px;
+    overflow:hidden;
+    box-shadow: 0 14px 28px 0 rgba(115, 143, 147, 0.5);
     z-index:5000;
 `;
 
@@ -33,29 +35,12 @@ class RootApp extends React.Component {
     return {}
   }
 
-  switchToMiniMode = () => {
-    console.log('wait switching...')
-    chrome.runtime.sendMessage({
-      type: "mini-mode", options: {
-        url: 'https://www.youtube.com/watch?v=Dkk9gvTmCXY&autoplay=1'
-      }
-    });
-    setTimeout(() => {
-      console.log('start mini mode')
-      chrome.runtime.sendMessage({
-        type: "start-mini-mode", options: {
-          url: 'https://www.youtube.com/watch?v=Dkk9gvTmCXY'
-        }
-      });
-    }, 1000);
-  }
-
   render() {
     return (
       <Root >
         <Wrapper>
-          <SpotifyPlayer mode songDetails mediaControl switchToMiniMode={this.switchToMiniMode}></SpotifyPlayer>
-          <YoutubePlayer mode songDetails></YoutubePlayer>
+          <SpotifyPlayer mode songDetails mediaControl></SpotifyPlayer>
+          {/* <YoutubePlayer mode songDetails></YoutubePlayer> */}
         </Wrapper>
       </Root>
     );

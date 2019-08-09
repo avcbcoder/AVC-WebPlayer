@@ -12,7 +12,7 @@
         "css": ["/static/css/app.css"],
         "js": ["/static/js/content.js", "app/ss.js"]
     }],
-    "web_accessible_resources": ["/static/css/content.css"],
+    "web_accessible_resources": ["/static/css/content.css", "img/music_gif.gif"],
     "permissions": [
         "activeTab",
         "tabs",
