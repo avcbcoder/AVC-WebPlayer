@@ -1,5 +1,5 @@
 var interval = null;
-console.log('inside of spotify')
+console.log('inside of spotify' + window.location.href)
 
 tryPictureInPicture = () => {
     // window.focus();

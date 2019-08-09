@@ -88,3 +88,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
    }
 });
 
+chrome.tabs.onCreated.addListener(function (tab) {
+   // console.log("here is tab", tab);
+   // execute scripts from here only
+   // chrome.tabs.executeScript(tab.id, { code: "alert('Hello World')" });
+});
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+   // execute content scripts from here only
+   // chrome.tabs.executeScript(tabId, { code: "alert('Hello World')" });
+});
