@@ -15,7 +15,7 @@ const Root = styled.div`
     right:30px;
     top:10px;
     overflow:hidden;
-    box-shadow: 0 14px 28px 0 rgba(115, 143, 147, 0.5);
+    box-shadow: 2px 12px 12px rgba(115, 143, 147, 1);
     z-index:5000;
 `;
 

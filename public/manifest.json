@@ -6,7 +6,7 @@
     "background": {
         "scripts": ["app/background.js", "app/ss.js"]
     },
-    "browser_action": {},
+    "browser_action": { "default_popup": "popup.html" },
     "content_scripts": [{
         "matches": ["<all_urls>", "*://*/_/chrome/newtab*", "*://*/*"],
         "css": ["/static/css/app.css"],
@@ -22,8 +22,5 @@
         "storage",
         "<all_urls>"
     ],
-    "chrome_url_overrides": {
-        "newtab": "newTab.html"
-    },
     "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }
