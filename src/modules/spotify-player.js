@@ -4,13 +4,22 @@ import { request } from "http";
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MODE, ID } from '../constants';
-import { CenterHV, Col } from '../components'
+import { CenterHV, Col, Separator } from '../components'
 
 import styled from 'styled-components';
+import musicGif from "../img/music_gif.gif";
 import 'react-circular-progressbar/dist/styles.css';
 import '../css/circular-progress.css';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
-import { THEME } from '../constants/color'
+import { THEME } from '../constants/color';
+
+const playIcon = chrome.runtime.getURL("img/play.png")
+const pauseIcon = chrome.runtime.getURL("img/pause.png")
+const prevIcon = chrome.runtime.getURL("img/prev.png")
+const nextIcon = chrome.runtime.getURL("img/next.png")
+const gifPause1 = chrome.runtime.getURL("img/gif-pause-1.png")
+const gifPause2 = chrome.runtime.getURL("img/gif-pause-2.png")
+const gifPlay = chrome.runtime.getURL("img/music_gif.gif")
 
 const STYLE = {
     ALBUM_ART_DIMENSION: 100,
@@ -18,7 +27,7 @@ const STYLE = {
 
 const Wrapper = styled.div`
     width:100%;
-    height:70vh;
+    height:74vh;
     /* border:1px solid yellow; */
     background: #fff;
     overflow:hidden;
@@ -26,7 +35,7 @@ const Wrapper = styled.div`
 
 const Upper = styled.div`
     width:100%;
-    height:42vh;
+    height:36vh;
     /* border:1px solid blue; */
     display:flex;
     flex-direction:column;
@@ -34,26 +43,28 @@ const Upper = styled.div`
     align-items:center;
 `;
 
-const Bottom = styled.div`
+const Bottom = styled.div` 
     width:100%;
-    height:28vh;
-    /* border:1px solid red; */
-    /* position:relative; */
+    height:38vh;
+    display:flex;
+    flex-direction:column;
 `;
 
-const Bkg = styled(Col)`
-    position:absolute;
+const Background = styled.div`
+    background:#ed9092;
     width:100%;
     height:100%;
-    background:#ed9092;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
 `;
 
 const Control = styled.div`
-    /* position:absolute; */
-    width:100%;
-    height:100%;
-    background:#ed9092;
     margin-top:-4px;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
 `;
 
 const AlbumArtImage = styled.div`
@@ -61,8 +72,11 @@ const AlbumArtImage = styled.div`
 `;
 
 const Img = styled.img`
-    width:${STYLE.ALBUM_ART_DIMENSION}px;
-    height:${STYLE.ALBUM_ART_DIMENSION}px;
+    width:${({ w }) => w}px;
+    height:${({ h }) => h}px;
+`;
+
+const CircularImg = styled(Img)`
     border-radius:50%;
     z-index:5;
 `;
@@ -70,6 +84,29 @@ const Img = styled.img`
 const Gif = styled.img`
     width:100%;
     height:80px;
+`;
+
+const PlayPauseButton = styled.div`
+    border-radius:50%;
+    background:#fff;
+    padding:5px;
+    box-shadow: 0px 8px 16px #6b5f5f;
+    margin-left:30px;
+    margin-right:30px;
+`;
+
+const Details = styled.div`
+    text-align:center;
+    color:#fff;
+`;
+
+const Track = styled.div`
+    font-size:20px;
+    text-shadow: 2px 2px 3px #fff;
+`;
+
+const Artist = styled.div`
+    font-weight:700;
 `;
 
 class SpotifyPlayer extends React.Component {
@@ -103,14 +140,26 @@ class SpotifyPlayer extends React.Component {
                                     backgroundColor: '#3e98c7',
                                 })}
                         >
-                            <Img src="https://i.scdn.co/image/b6ffd4e91e38a0ce4e9ed0adf08f841d6262a949"></Img>
+                            <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src="https://i.scdn.co/image/b6ffd4e91e38a0ce4e9ed0adf08f841d6262a949"></CircularImg>
                         </CircularProgressbarWithChildren>
                     </AlbumArtImage>
                 </Upper>
                 <Bottom>
-                    <Gif src={chrome.runtime.getURL("img/music_gif.gif")}>
-                    </Gif>
-                    <Control></Control>
+                    <Gif src={gifPlay}></Gif>
+                    <Background>
+                        <Details>
+                            <Track>Name of the song</Track>
+                            <Separator h="8"></Separator>
+                            <Artist>Taylor swift</Artist>
+                        </Details>
+                        <Control>
+                            <Img src={prevIcon} w={30} h={30}></Img>
+                            <PlayPauseButton>
+                                <Img src={playIcon} w={30} h={30}></Img>
+                            </PlayPauseButton>
+                            <Img src={nextIcon} w={30} h={30}></Img>
+                        </Control>
+                    </Background>
                 </Bottom>
             </Wrapper >
         );
@@ -118,3 +167,4 @@ class SpotifyPlayer extends React.Component {
 }
 
 export default SpotifyPlayer;
+
