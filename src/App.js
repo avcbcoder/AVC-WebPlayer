@@ -42,10 +42,12 @@ class RootApp extends React.Component {
   }
 
   render() {
+    const { mode, songDetails, mediaControl } = this.props;
+
     return (
       <Root >
         <Wrapper>
-          <SpotifyPlayer mode songDetails mediaControl></SpotifyPlayer>
+          <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl}></SpotifyPlayer>
         </Wrapper>
       </Root>
     );

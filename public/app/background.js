@@ -49,8 +49,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 const executeMediaButton = (id, media) => {
-   chrome.extension.getBackgroundPage().console.log(`${media}.click()`)
-   chrome.tabs.executeScript(id, { code: `${media}.click()` });
+   chrome.tabs.executeScript(id, { code: `spotifyPageElements.${media}.click()` });
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -59,8 +58,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
          for (let i = 0; i < tabs.length; i++) {
             const tab = tabs[i];
             if (tab.url.includes('//open.spotify.com')) {
-               chrome.tabs.executeScript(tab.id, { file: "app/page-elements.js" },
-                  executeMediaButton(tab.id, request.options.type))
+               // chrome.tabs.executeScript(tab.id, { file: "app/page-elements.js" },
+               //    executeMediaButton(tab.id, request.options.type))
+               chrome.tabs.executeScript(tab.id, { code: `spotifyPageElements.${request.options.type}.click()` });
             }
          }
       });
@@ -97,17 +97,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 chrome.tabs.onCreated.addListener(function (tab) {
-   // console.log("here is tab", tab);
-   // execute scripts from here only
-   // chrome.tabs.executeScript(tab.id, { code: "alert('Hello World')" });
    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.storage.local.set({ 'url': tabs[0].url }, function () { });
    })
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-   // execute content scripts from here only
-   // chrome.tabs.executeScript(tabId, { code: "alert('Hello World')" });
    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.storage.local.set({ 'url': tabs[0].url }, function () { });
    })

@@ -173,7 +173,7 @@ class SpotifyPlayer extends React.Component {
     render() {
         const { songDetails, mediaControl, mode } = this.props
         const { title, artist, albumArt, progress } = songDetails;
-
+        console.log(543, songDetails, mediaControl)
         return (
             <Wrapper>
                 <Upper>
@@ -206,7 +206,7 @@ class SpotifyPlayer extends React.Component {
                                 <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} style={{ cursor: 'pointer' }}></Img>
                             </PrevButton>
                             <PlayPauseButton>
-                                <Img src={mode === MODE.SPOTIFY.PLAYING ? pauseIcon : playIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY_PAUSE) }} style={{ cursor: 'pointer' }}></Img>
+                                <Img src={mode === MODE.SPOTIFY.PLAYING ? pauseIcon : playIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={{ cursor: 'pointer' }}></Img>
                             </PlayPauseButton>
                             <NextButton>
                                 <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} style={{ cursor: 'pointer' }}></Img>

@@ -1,9 +1,10 @@
 const MODE = {
     NONE: 'none',
-    SPOTIFY: {
+    SPOTIFY_MODE: {
         PLAYING: 'playing',
         IDLE: 'idle',
     },
+    SPOTIFY: 'spotify',
     YOUTUBE: 'youtube',
     MINI_WINDOW: 'min_youtube',
 }
@@ -14,10 +15,10 @@ const ID = {
 
 const CONTROLS = {
     NEXT: 'next',
-    PREV: 'prev',
+    PREV: 'previous',
     SHUFFLE: 'shuffle',
     REPEAT: 'repeat',
-    PLAY_PAUSE: 'play_pause'
+    PLAY: 'play'
 }
 
 export { MODE, ID, CONTROLS }

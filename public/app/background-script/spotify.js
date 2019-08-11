@@ -1,5 +1,12 @@
 /*global chrome*/
 
+var mediaButtons = document.getElementsByClassName('player-controls')[0].childNodes[0]
+var shuffle = mediaButtons.childNodes[0];
+var previous = mediaButtons.childNodes[1];
+var play = mediaButtons.childNodes[2];
+var next = mediaButtons.childNodes[3];
+var repeat = mediaButtons.childNodes[4];
+
 var BUFFER_TIME = 500;
 
 var songDetailsObj = {
@@ -23,7 +30,7 @@ function main() {
         title: spotifyPageElements.songTitle ? spotifyPageElements.songTitle.innerText : '',
         artist: songArtist ? songArtist : [],
         albumArt: spotifyPageElements.rootAlbum ? spotifyPageElements.rootAlbum.style.backgroundImage.split(`"`)[1] : '',
-        playing: spotifyPageElements.play_pause.getAttribute('title').toLowerCase() === 'pause',
+        playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'pause',
         progressTime: spotifyPageElements.progress[0].innerText,
         totalTime: spotifyPageElements.progress[1].innerText
     }
@@ -41,7 +48,7 @@ function extractElements() {
     const mediaButtons = document.getElementsByClassName('player-controls')[0].childNodes[0]
     spotifyPageElements.shuffle = mediaButtons.childNodes[0];
     spotifyPageElements.previous = mediaButtons.childNodes[1];
-    spotifyPageElements.play_pause = mediaButtons.childNodes[2];
+    spotifyPageElements.play = mediaButtons.childNodes[2];
     spotifyPageElements.next = mediaButtons.childNodes[3];
     spotifyPageElements.repeat = mediaButtons.childNodes[4];
 
