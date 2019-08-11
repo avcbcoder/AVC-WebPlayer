@@ -7,7 +7,6 @@ import { MODE, ID } from '../constants';
 import { CenterHV, Col, Separator } from '../components'
 
 import styled from 'styled-components';
-import musicGif from "../img/music_gif.gif";
 import 'react-circular-progressbar/dist/styles.css';
 import '../css/circular-progress.css';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
@@ -20,6 +19,9 @@ const nextIcon = chrome.runtime.getURL("img/next.png")
 const gifPause1 = chrome.runtime.getURL("img/gif-pause-1.png")
 const gifPause2 = chrome.runtime.getURL("img/gif-pause-2.png")
 const gifPlay = chrome.runtime.getURL("img/music_gif.gif")
+const shuffleIcon = chrome.runtime.getURL("img/shuffle.png")
+const repeatIcon = chrome.runtime.getURL("img/repeat.png")
+
 
 const STYLE = {
     ALBUM_ART_DIMENSION: 100,
@@ -31,6 +33,7 @@ const Wrapper = styled.div`
     /* border:1px solid yellow; */
     background: #fff;
     overflow:hidden;
+    position:relative;
 `;
 
 const Upper = styled.div`
@@ -65,6 +68,21 @@ const Control = styled.div`
     flex-direction:row;
     justify-content:center;
     align-items:center;
+    /* border:1px solid red; */
+`;
+
+const PlaylistControlRepeat = styled.div`
+    position:absolute;
+    /* border:1px solid red; */
+    bottom:-28px;
+    right:-28px;
+`;
+
+const PlaylistControlShuffle = styled.div`
+    position:absolute;
+    /* border:1px solid red; */
+    bottom:-28px;
+    left:-28px;
 `;
 
 const AlbumArtImage = styled.div`
@@ -98,6 +116,7 @@ const PlayPauseButton = styled.div`
 const Details = styled.div`
     text-align:center;
     color:#fff;
+    /* border:1px solid blue; */
 `;
 
 const Track = styled.div`
@@ -108,6 +127,27 @@ const Track = styled.div`
 const Artist = styled.div`
     font-weight:700;
 `;
+
+const ImgR = styled(Img)`
+    position:absolute;
+    top:8px;
+    left:8px;
+`;
+
+const ImgS = styled(Img)`
+    position:absolute;
+    top:8px;
+    right:8px;
+`;
+
+const Pie = styled.div`
+    border-radius:50%;
+    background:#fff;
+    width:60px;
+    height:60px;
+    position:relative;
+`;
+
 
 class SpotifyPlayer extends React.Component {
 
@@ -145,7 +185,8 @@ class SpotifyPlayer extends React.Component {
                     </AlbumArtImage>
                 </Upper>
                 <Bottom>
-                    <Gif src={gifPlay}></Gif>
+                    <Gif src={gifPlay}>
+                    </Gif>
                     <Background>
                         <Details>
                             <Track>Name of the song</Track>
@@ -161,6 +202,8 @@ class SpotifyPlayer extends React.Component {
                         </Control>
                     </Background>
                 </Bottom>
+                <PlaylistControlShuffle><Pie><ImgS src={shuffleIcon} w={20} h={20}></ImgS></Pie></PlaylistControlShuffle>
+                <PlaylistControlRepeat><Pie><ImgR src={repeatIcon} w={20} h={20}></ImgR></Pie></PlaylistControlRepeat>
             </Wrapper >
         );
     }
