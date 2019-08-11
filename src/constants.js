@@ -1,7 +1,7 @@
 const MEDIA_CONTROLS = {
     NEXT: 'next',
-    PREVIOUS: 'prev',
-    PLAY_PAUSE: 'playPause',
+    PREVIOUS: 'previous',
+    PLAY_PAUSE: 'play_pause',
     SHUFFLE: 'shuffle',
     REPEAT: 'repeat',
 }

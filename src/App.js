@@ -46,7 +46,6 @@ class RootApp extends React.Component {
       <Root >
         <Wrapper>
           <SpotifyPlayer mode songDetails mediaControl></SpotifyPlayer>
-          {/* <YoutubePlayer mode songDetails></YoutubePlayer> */}
         </Wrapper>
       </Root>
     );
@@ -56,9 +55,10 @@ class RootApp extends React.Component {
 RootApp.defaultProps = {
   mode: MODE.NONE,
   songDetails: {
-    title: 'Go to https://open.spotify.com to enable the player',
+    title: 'Go to https://open.spotify.com to start the player',
     artist: [],
     albumArt: '',
+    progress: '',
   }
 }
 

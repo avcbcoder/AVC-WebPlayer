@@ -3,7 +3,7 @@ import { request } from "http";
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MODE, ID } from '../constants';
+import { MODE, ID, CONTROLS } from '../constants/index';
 import { CenterHV, Col, Separator } from '../components'
 
 import styled from 'styled-components';
@@ -111,6 +111,15 @@ const PlayPauseButton = styled.div`
     box-shadow: 0px 8px 16px #6b5f5f;
     margin-left:30px;
     margin-right:30px;
+    cursor:pointer;
+`;
+
+const NextButton = styled.div`
+    cursor: pointer;
+`;
+
+const PrevButton = styled.div`
+    cursor:pointer;
 `;
 
 const Details = styled.div`
@@ -148,7 +157,6 @@ const Pie = styled.div`
     position:relative;
 `;
 
-
 class SpotifyPlayer extends React.Component {
 
     constructor(props) {
@@ -163,8 +171,8 @@ class SpotifyPlayer extends React.Component {
     }
 
     render() {
-        const { songDetails, mediaControl } = this.props
-        const { title, artist, albumArt } = songDetails;
+        const { songDetails, mediaControl, mode } = this.props
+        const { title, artist, albumArt, progress } = songDetails;
 
         return (
             <Wrapper>
@@ -172,7 +180,7 @@ class SpotifyPlayer extends React.Component {
                     <AlbumArtImage>
                         <CircularProgressbarWithChildren
                             strokeWidth="3"
-                            value={66}
+                            value={Math.floor(Math.abs(progress))}
                             styles={
                                 buildStyles({
                                     pathColor: `rgba(71, 143, 252, ${66 / 100})`,
@@ -180,7 +188,7 @@ class SpotifyPlayer extends React.Component {
                                     backgroundColor: '#3e98c7',
                                 })}
                         >
-                            <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src="https://i.scdn.co/image/b6ffd4e91e38a0ce4e9ed0adf08f841d6262a949"></CircularImg>
+                            <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={albumArt}></CircularImg>
                         </CircularProgressbarWithChildren>
                     </AlbumArtImage>
                 </Upper>
@@ -189,25 +197,28 @@ class SpotifyPlayer extends React.Component {
                     </Gif>
                     <Background>
                         <Details>
-                            <Track>Name of the song</Track>
+                            <Track>{title}</Track>
                             <Separator h="8"></Separator>
-                            <Artist>Taylor swift</Artist>
+                            <Artist>{artist}</Artist>
                         </Details>
                         <Control>
-                            <Img src={prevIcon} w={30} h={30}></Img>
+                            <PrevButton>
+                                <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} style={{ cursor: 'pointer' }}></Img>
+                            </PrevButton>
                             <PlayPauseButton>
-                                <Img src={playIcon} w={30} h={30}></Img>
+                                <Img src={mode === MODE.SPOTIFY.PLAYING ? pauseIcon : playIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY_PAUSE) }} style={{ cursor: 'pointer' }}></Img>
                             </PlayPauseButton>
-                            <Img src={nextIcon} w={30} h={30}></Img>
+                            <NextButton>
+                                <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} style={{ cursor: 'pointer' }}></Img>
+                            </NextButton>
                         </Control>
                     </Background>
                 </Bottom>
-                <PlaylistControlShuffle><Pie><ImgS src={shuffleIcon} w={20} h={20}></ImgS></Pie></PlaylistControlShuffle>
-                <PlaylistControlRepeat><Pie><ImgR src={repeatIcon} w={20} h={20}></ImgR></Pie></PlaylistControlRepeat>
+                <PlaylistControlShuffle><Pie><ImgS src={shuffleIcon} w={20} h={20} onClick={() => { mediaControl(CONTROLS.SHUFFLE) }} style={{ cursor: 'pointer' }}></ImgS></Pie></PlaylistControlShuffle>
+                <PlaylistControlRepeat><Pie><ImgR src={repeatIcon} w={20} h={20} onClick={() => { mediaControl(CONTROLS.REPEAT) }} style={{ cursor: 'pointer' }}></ImgR></Pie></PlaylistControlRepeat>
             </Wrapper >
         );
     }
 }
 
 export default SpotifyPlayer;
-

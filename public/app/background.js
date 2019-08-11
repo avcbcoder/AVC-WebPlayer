@@ -1,19 +1,7 @@
 /*global chrome*/
 
-// Called when the user clicks on the browser action
+// will not fire if popup deined
 chrome.browserAction.onClicked.addListener(function (tab) {
-   // Send a message to the active tab
-   // chrome.runtime.sendMessage("emklekamjcedidleoebpbpcejnjpbmdk", { min: 'fjdnjdn' });
-   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      for (let i = 0; i < tabs.length; i++) {
-         var activeTab = tabs[i];
-         if (!(activeTab.url.includes('chrome://') || activeTab.url.includes('chrome-search://'))) {
-            chrome.tabs.sendMessage(activeTab.id, { "message": "clicked_browser_action", "tabs": tabs });
-         }
-      }
-   });
-
-   // chrome.windows.create({ type: "panel", focused: false, width: 470, height: 440, url: "https://www.youtube.com/watch?v=dfnCAmr569k" });
 
 });
 
@@ -24,6 +12,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             var activeTab = tabs[i];
             chrome.tabs.sendMessage(activeTab.id, { "message": "clicked_browser_action", "tabs": tabs });
          }
+      });
+      chrome.tabs.query({}, function (tabs) {
+         for (let i = 0; i < tabs.length; i++)
+            if (tabs[i].url.includes('//open.spotify.com')) {
+               chrome.tabs.executeScript(tabs[i].id, { file: "app/background-script/spotify.js" })
+            }
       });
    }
 });
@@ -55,6 +49,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 const executeMediaButton = (id, media) => {
+   chrome.extension.getBackgroundPage().console.log(`${media}.click()`)
    chrome.tabs.executeScript(id, { code: `${media}.click()` });
 }
 
