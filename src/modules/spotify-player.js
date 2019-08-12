@@ -21,10 +21,11 @@ const gifPause2 = chrome.runtime.getURL("img/gif-pause-2.png")
 const gifPlay = chrome.runtime.getURL("img/music_gif.gif")
 const shuffleIcon = chrome.runtime.getURL("img/shuffle.png")
 const repeatIcon = chrome.runtime.getURL("img/repeat.png")
-
+const menuIcon = chrome.runtime.getURL("img/menu_thin.png")
+const closeIcon = chrome.runtime.getURL("img/cross.png")
 
 const STYLE = {
-    ALBUM_ART_DIMENSION: 100,
+    ALBUM_ART_DIMENSION: 120,
 }
 
 const Wrapper = styled.div`
@@ -72,21 +73,21 @@ const Control = styled.div`
 `;
 
 const PlaylistControlRepeat = styled.div`
+    cursor: pointer;
     position:absolute;
-    /* border:1px solid red; */
     bottom:-28px;
     right:-28px;
 `;
 
 const PlaylistControlShuffle = styled.div`
+    cursor: pointer;
     position:absolute;
-    /* border:1px solid red; */
     bottom:-28px;
     left:-28px;
 `;
 
 const AlbumArtImage = styled.div`
-    margin-top:40px;
+    margin-top:50px;
 `;
 
 const Img = styled.img`
@@ -112,27 +113,22 @@ const PlayPauseButton = styled.div`
     margin-left:30px;
     margin-right:30px;
     cursor:pointer;
+    padding-left:3px;
 `;
 
 const NextButton = styled.div`
     cursor: pointer;
-    &:hover{-webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
-    -moz-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
-    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    transition: transform .2s;
+    &:hover{
+        transform: scale(1.2);
     }
 `;
 
 const PrevButton = styled.div`
-    cursor:pointer;
-    &:hover{-webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
-    -moz-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
-    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    cursor: pointer;
+    transition: transform .2s;
+    &:hover{
+        transform: scale(1.2);
     }
 `;
 
@@ -141,7 +137,6 @@ const Details = styled.div`
     color:#fff;
     padding-left:10px;
     padding-right:10px;
-    /* border:1px solid blue; */
 `;
 
 const Track = styled.div`
@@ -165,6 +160,28 @@ const ImgS = styled(Img)`
     position:absolute;
     top:8px;
     right:8px;
+`;
+
+const Menu = styled.div`
+    position:absolute;
+    top:16px;
+    left:16px;
+    cursor: pointer;
+    transition: transform .2s;
+    &:hover{
+        transform: scale(1.2);
+    }
+`;
+
+const Close = styled.div`
+    position:absolute;
+    top:16px;
+    right:16px;
+    cursor: pointer;
+    transition: transform .2s;
+    &:hover{
+        transform: scale(1.2);
+    }
 `;
 
 const Pie = styled.div`
@@ -200,6 +217,9 @@ class SpotifyPlayer extends React.Component {
         console.log('mode', playing)
         return (
             <Wrapper>
+                <Menu><Img src={menuIcon} w={20} h={20}></Img></Menu>
+                <Close><Img src={closeIcon} w={20} h={20}></Img></Close>
+
                 <Upper>
                     <AlbumArtImage>
                         <CircularProgressbarWithChildren
@@ -222,24 +242,24 @@ class SpotifyPlayer extends React.Component {
                     <Background>
                         <Details>
                             <Track>{title}</Track>
-                            <Separator h="8"></Separator>
+                            <Separator h="10"></Separator>
                             <Artist>{artist}</Artist>
                         </Details>
                         <Control>
                             <PrevButton>
-                                <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} style={{ cursor: 'pointer' }}></Img>
+                                <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} ></Img>
                             </PrevButton>
                             <PlayPauseButton>
-                                <Img src={playing ? playIcon : pauseIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={{ cursor: 'pointer' }}></Img>
+                                <Img src={playing ? playIcon : pauseIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} ></Img>
                             </PlayPauseButton>
                             <NextButton>
-                                <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} style={{ cursor: 'pointer' }}></Img>
+                                <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} ></Img>
                             </NextButton>
                         </Control>
                     </Background>
                 </Bottom>
-                <PlaylistControlShuffle><Pie><ImgS src={shuffleIcon} w={20} h={20} onClick={() => { mediaControl(CONTROLS.SHUFFLE) }} style={{ cursor: 'pointer' }}></ImgS></Pie></PlaylistControlShuffle>
-                <PlaylistControlRepeat><Pie><ImgR src={repeatIcon} w={20} h={20} onClick={() => { mediaControl(CONTROLS.REPEAT) }} style={{ cursor: 'pointer' }}></ImgR></Pie></PlaylistControlRepeat>
+                <PlaylistControlShuffle><Pie><ImgS src={shuffleIcon} w={20} h={20} onClick={() => { mediaControl(CONTROLS.SHUFFLE) }} ></ImgS></Pie></PlaylistControlShuffle>
+                <PlaylistControlRepeat><Pie><ImgR src={repeatIcon} w={20} h={20} onClick={() => { mediaControl(CONTROLS.REPEAT) }} ></ImgR></Pie></PlaylistControlRepeat>
             </Wrapper >
         );
     }
