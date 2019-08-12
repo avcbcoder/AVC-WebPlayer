@@ -60,7 +60,9 @@ RootApp.defaultProps = {
     title: 'Go to https://open.spotify.com to start the player',
     artist: [],
     albumArt: '',
-    progress: '',
+    progressTime: '0:00',
+    totalTime: '0:00',
+    playing: false,
   }
 }
 

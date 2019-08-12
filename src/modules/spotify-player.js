@@ -86,7 +86,7 @@ const PlaylistControlShuffle = styled.div`
 `;
 
 const AlbumArtImage = styled.div`
-    margin-top:30px;
+    margin-top:40px;
 `;
 
 const Img = styled.img`
@@ -116,21 +116,39 @@ const PlayPauseButton = styled.div`
 
 const NextButton = styled.div`
     cursor: pointer;
+    &:hover{-webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    }
 `;
 
 const PrevButton = styled.div`
     cursor:pointer;
+    &:hover{-webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.67);
+    }
 `;
 
 const Details = styled.div`
     text-align:center;
     color:#fff;
+    padding-left:10px;
+    padding-right:10px;
     /* border:1px solid blue; */
 `;
 
 const Track = styled.div`
     font-size:20px;
     text-shadow: 2px 2px 3px #fff;
+    overflow:hidden;
+    white-space:nowrap;
 `;
 
 const Artist = styled.div`
@@ -170,17 +188,23 @@ class SpotifyPlayer extends React.Component {
         return {}
     }
 
+    getProgress = (progressTime, totalTime) => {
+        var p = 60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)
+        var t = 60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)
+        return Math.floor((p / t) * 100);
+    }
+
     render() {
         const { songDetails, mediaControl, mode } = this.props
-        const { title, artist, albumArt, progress } = songDetails;
-        console.log(543, songDetails, mediaControl)
+        const { title, artist, albumArt, totalTime, progressTime, playing } = songDetails;
+        console.log('mode', playing)
         return (
             <Wrapper>
                 <Upper>
                     <AlbumArtImage>
                         <CircularProgressbarWithChildren
                             strokeWidth="3"
-                            value={Math.floor(Math.abs(progress))}
+                            value={Math.floor(Math.abs(this.getProgress(progressTime, totalTime)))}
                             styles={
                                 buildStyles({
                                     pathColor: `rgba(71, 143, 252, ${66 / 100})`,
@@ -193,7 +217,7 @@ class SpotifyPlayer extends React.Component {
                     </AlbumArtImage>
                 </Upper>
                 <Bottom>
-                    <Gif src={gifPlay}>
+                    <Gif src={playing ? gifPlay : Math.floor(Math.random() * 100) % 2 === 0 ? gifPause1 : gifPause2}>
                     </Gif>
                     <Background>
                         <Details>
@@ -206,7 +230,7 @@ class SpotifyPlayer extends React.Component {
                                 <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} style={{ cursor: 'pointer' }}></Img>
                             </PrevButton>
                             <PlayPauseButton>
-                                <Img src={mode === MODE.SPOTIFY.PLAYING ? pauseIcon : playIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={{ cursor: 'pointer' }}></Img>
+                                <Img src={playing ? playIcon : pauseIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={{ cursor: 'pointer' }}></Img>
                             </PlayPauseButton>
                             <NextButton>
                                 <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} style={{ cursor: 'pointer' }}></Img>

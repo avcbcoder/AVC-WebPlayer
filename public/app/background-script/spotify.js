@@ -28,7 +28,7 @@ function main() {
 
     return {
         title: spotifyPageElements.songTitle ? spotifyPageElements.songTitle.innerText : '',
-        artist: songArtist ? songArtist : [],
+        artist: songArtist ? songArtist.join(', ') : [],
         albumArt: spotifyPageElements.rootAlbum ? spotifyPageElements.rootAlbum.style.backgroundImage.split(`"`)[1] : '',
         playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'pause',
         progressTime: spotifyPageElements.progress[0].innerText,
@@ -63,7 +63,10 @@ if (window.location.href.includes('open.spotify.com') && !window.set) {
     window.set = true;
     setInterval(() => {
         const newDetailsObj = main();
-        if (newDetailsObj.title !== songDetailsObj.title || newDetailsObj.albumArt !== songDetailsObj.albumArt || songDetailsObj.progressTime !== newDetailsObj.progressTime) {
+        if (newDetailsObj.title !== songDetailsObj.title
+            || newDetailsObj.albumArt !== songDetailsObj.albumArt
+            || songDetailsObj.progressTime !== newDetailsObj.progressTime
+            || songDetailsObj.playing !== newDetailsObj.playing) {
             songDetailsObj = newDetailsObj;
             chrome.runtime.sendMessage({
                 type: "current-song-details", options: {
