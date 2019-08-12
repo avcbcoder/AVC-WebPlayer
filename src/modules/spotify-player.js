@@ -21,8 +21,8 @@ const gifPause2 = chrome.runtime.getURL("img/gif-pause-2.png")
 const gifPlay = chrome.runtime.getURL("img/music_gif.gif")
 const shuffleIcon = chrome.runtime.getURL("img/shuffle.png")
 const repeatIcon = chrome.runtime.getURL("img/repeat.png")
-const menuIcon = chrome.runtime.getURL("img/menu_thin.png")
-const closeIcon = chrome.runtime.getURL("img/cross.png")
+const menuIcon = chrome.runtime.getURL("img/menu_ham.png")
+const closeIcon = chrome.runtime.getURL("img/close.png")
 
 const STYLE = {
     ALBUM_ART_DIMENSION: 120,
@@ -106,6 +106,8 @@ const Gif = styled.img`
 `;
 
 const PlayPauseButton = styled.div`
+    width:38px;
+    height:38px;
     border-radius:50%;
     background:#fff;
     padding:5px;
@@ -113,14 +115,17 @@ const PlayPauseButton = styled.div`
     margin-left:30px;
     margin-right:30px;
     cursor:pointer;
-    padding-left:3px;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
 `;
 
 const NextButton = styled.div`
     cursor: pointer;
     transition: transform .2s;
     &:hover{
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 `;
 
@@ -128,7 +133,7 @@ const PrevButton = styled.div`
     cursor: pointer;
     transition: transform .2s;
     &:hover{
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 `;
 
@@ -169,7 +174,7 @@ const Menu = styled.div`
     cursor: pointer;
     transition: transform .2s;
     &:hover{
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 `;
 
@@ -180,7 +185,7 @@ const Close = styled.div`
     cursor: pointer;
     transition: transform .2s;
     &:hover{
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 `;
 
@@ -211,14 +216,18 @@ class SpotifyPlayer extends React.Component {
         return Math.floor((p / t) * 100);
     }
 
+    trim = (str) => {
+        return str.length > 22 ? str.substr(0, 25) + '...' : str
+    }
+
     render() {
-        const { songDetails, mediaControl, mode } = this.props
+        const { songDetails, mediaControl, mode, close } = this.props
         const { title, artist, albumArt, totalTime, progressTime, playing } = songDetails;
-        console.log('mode', playing)
+
         return (
             <Wrapper>
                 <Menu><Img src={menuIcon} w={20} h={20}></Img></Menu>
-                <Close><Img src={closeIcon} w={20} h={20}></Img></Close>
+                <Close onClick={() => { close() }}><Img src={closeIcon} w={20} h={20}></Img></Close>
 
                 <Upper>
                     <AlbumArtImage>
@@ -241,16 +250,16 @@ class SpotifyPlayer extends React.Component {
                     </Gif>
                     <Background>
                         <Details>
-                            <Track>{title}</Track>
-                            <Separator h="10"></Separator>
-                            <Artist>{artist}</Artist>
+                            <Track>{this.trim(title)}</Track>
+                            <Separator h="12"></Separator>
+                            <Artist>{this.trim(artist)}</Artist>
                         </Details>
                         <Control>
                             <PrevButton>
                                 <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} ></Img>
                             </PrevButton>
                             <PlayPauseButton>
-                                <Img src={playing ? playIcon : pauseIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} ></Img>
+                                <Img src={playing ? playIcon : pauseIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={playing ? {} : { 'margin-left': '4px' }}></Img>
                             </PlayPauseButton>
                             <NextButton>
                                 <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} ></Img>

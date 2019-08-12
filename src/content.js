@@ -13,12 +13,16 @@ function mediaControl(media) {
   });
 }
 
+function close() {
+  app.style.display = "none";
+}
+
 const app = document.createElement('div');
 app.id = "my-extension";
 app.style.zIndex = 900000;
 app.style.display = "none";
 document.body.appendChild(app);
-ReactDOM.render(<RootApp mediaControl />, app);
+ReactDOM.render(<RootApp mediaControl close />, app);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -31,8 +35,7 @@ chrome.runtime.onMessage.addListener(
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.message === "current-song-details" || request.type === "current-song-details") {
-    console.log("songDetails", request, request.songDetailsObj)
-    ReactDOM.render(<RootApp mode={MODE.SPOTIFY} songDetails={request.songDetailsObj} mediaControl={mediaControl} />, app);
+    ReactDOM.render(<RootApp mode={MODE.SPOTIFY} songDetails={request.songDetailsObj} mediaControl={mediaControl} close={close}/>, app);
   }
 });
 

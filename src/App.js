@@ -42,12 +42,12 @@ class RootApp extends React.Component {
   }
 
   render() {
-    const { mode, songDetails, mediaControl } = this.props;
+    const { mode, songDetails, mediaControl, close } = this.props;
 
     return (
       <Root >
         <Wrapper>
-          <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl}></SpotifyPlayer>
+          <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} close={close}></SpotifyPlayer>
         </Wrapper>
       </Root>
     );
@@ -70,6 +70,7 @@ RootApp.prototypes = {
   mode: PropTypes.string,
   songDetails: PropTypes.shape({}),
   mediaControl: PropTypes.func,
+  close: PropTypes.func,
   switchToYoutubeMode: PropTypes.func,
 }
 
