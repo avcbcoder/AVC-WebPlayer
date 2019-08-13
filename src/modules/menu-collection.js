@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
-import { getAllIcons } from '../constants/icon'
+// import { getAllIcons } from '../constants/icon'
+import { THEME } from '../constants/color';
 import { DISPLAY_MODE } from '../constants/index';
 
 // const { playIcon, prevIcon, nextIcon, gifPause1, gifPause2, shuffleIcon, gifPlay, repeatIcon, menuIcon, closeIcon, pauseIcon, menuWhiteIcon, closeWhiteIcon } = getAllIcons(chrome);
@@ -20,23 +21,22 @@ const Tabs = styled.ul`
     table-layout: fixed; 
     width: 100%; 
     text-align: center;
-    border-radius: 4px;
     overflow: hidden;
-    -webkit-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
-    -moz-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
-    box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
 `;
 
 const Link = styled.a`
     padding: 1em;
-    background-color: #BADA55;
+    background-color:${({ selected }) => selected ? THEME.PLAYER_BLUE : THEME.PLAYER_PINK}; 
     color: #fff;
     font-weight: bold;
     text-decoration: none;
     display: block;
     &:hover{
-        background-color: #A3C43B;
+        background-color:${({ selected }) => selected ? THEME.PLAYER_BLUE : THEME.PLAYER_PINK_HOVER};
         text-decoration:none;
+    }
+    &:active{
+        color:#fff;
     }
 `;
 
@@ -59,17 +59,34 @@ class MenuCollection extends React.Component {
     }
 
     render() {
+        const { selected, onSelected } = this.props
+
         return (
             <TabsWrapper>
                 <Tabs>
                     <TabItem>
-                        <Link href="#" >Spotify</Link>
+                        <Link
+                            selected={selected === DISPLAY_MODE.SPOTIFY}
+                            onClick={() => { onSelected(DISPLAY_MODE.SPOTIFY) }}
+                        >
+                            Spotify
+                        </Link>
                     </TabItem>
                     <TabItem>
-                        <Link href="#" >Lyrics</Link>
+                        <Link
+                            selected={selected === DISPLAY_MODE.LYRICS}
+                            onClick={() => { onSelected(DISPLAY_MODE.LYRICS) }}
+                        >
+                            Lyrics
+                        </Link>
                     </TabItem>
                     <TabItem>
-                        <Link href="#" >Youtube</Link>
+                        <Link
+                            selected={selected === DISPLAY_MODE.YOUTUBE}
+                            onClick={() => { onSelected(DISPLAY_MODE.YOUTUBE) }}
+                        >
+                            Youtube
+                        </Link>
                     </TabItem>
                 </Tabs>
             </TabsWrapper>
@@ -79,53 +96,3 @@ class MenuCollection extends React.Component {
 }
 
 export default MenuCollection;
-
-// {/* <ul class="tabs  primary-nav">
-//     <li class="tabs__item">
-//         <a href="#" class="tabs__link">Home</a>
-//     </li>
-//     <li class="tabs__item">
-//         <a href="#" class="tabs__link">About</a>
-//     </li>
-//     <li class="tabs__item">
-//         <a href="#" class="tabs__link">Work</a>
-//     </li>
-//     <li class="tabs__item">
-//         <a href="#" class="tabs__link">Contact</a>
-//     </li>
-// </ul> */}
-
-// .tabs {
-//     margin: 0;
-//     padding: 0;
-//     list - style: none;
-//     display: table; /* [1] */
-//     table - layout: fixed; /* [2] */
-//     width: 100 %; /* [3] */
-// }
-
-//     .tabs__item {
-//     display: table - cell; /* [4] */
-// }
-
-//         .tabs__link {
-//     display: block; /* [5] */
-// }
-
-// .primary-nav {
-//     text-align: center;
-//     border-radius: 4px;
-//     overflow: hidden; /* [1] */
-// }
-
-//         .primary-nav a {
-//             padding: 1em;
-//             background-color: #BADA55;
-//             color: #fff;
-//             font-weight: bold;
-//             text-decoration: none;
-//         }
-
-//         .primary-nav a:hover {
-//             background-color: #A3C43B;
-//         }
