@@ -7,7 +7,6 @@ import { CenterHV, Col, Separator, Img } from '../components'
 import styled from 'styled-components';
 import 'react-circular-progressbar/dist/styles.css';
 import '../css/circular-progress.css';
-import '../css/custom-animation.css';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { THEME } from '../constants/color';
 import { getAllIcons } from '../constants/icon'

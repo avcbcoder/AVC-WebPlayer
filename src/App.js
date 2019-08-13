@@ -7,25 +7,36 @@ import { MODE } from './constants';
 
 import styled from 'styled-components';
 import SpotifyPlayer from './modules/spotify-player'
-import YoutubePlayer from './modules/youtube-player'
+import MenuCollection from './modules/menu-collection'
+
 import { PLAYER } from './constants/dimension'
 
 const Root = styled.div`
     width:${(PLAYER.WIDTH_PERCENT * window.screen.availWidth) / 100}px;
-    height:${PLAYER.HEIGHT_VH}vh;
-    /* border:1px solid red; */
+    height:100vh;
+`;
+
+const MenuWrapper = styled.div`    
+    width:${(PLAYER.WIDTH_PERCENT * window.screen.availWidth) / 100}px;
     position:fixed;
     right:30px;
     top:10px;
+    overflow:hidden;
+    z-index:5000;
+`;
+
+const Wrapper = styled.div`
+    width:${(PLAYER.WIDTH_PERCENT * window.screen.availWidth) / 100}px;
+    height:${PLAYER.HEIGHT_VH}vh;
+    position:fixed;
+    right:30px;
+    top:80px;
     overflow:hidden;
     -webkit-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
     -moz-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
     box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
     z-index:5000;
     border-radius:1%;
-`;
-
-const Wrapper = styled.div`
 `;
 
 class RootApp extends React.Component {
@@ -46,6 +57,9 @@ class RootApp extends React.Component {
 
     return (
       <Root >
+        <MenuWrapper>
+          <MenuCollection />
+        </MenuWrapper>
         <Wrapper>
           <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} close={close}></SpotifyPlayer>
         </Wrapper>
