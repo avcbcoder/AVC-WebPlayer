@@ -1,28 +1,18 @@
 /*global chrome */
-import { request } from "http";
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MODE, ID, CONTROLS } from '../constants/index';
-import { CenterHV, Col, Separator } from '../components'
+import { CenterHV, Col, Separator, Img } from '../components'
 
 import styled from 'styled-components';
 import 'react-circular-progressbar/dist/styles.css';
 import '../css/circular-progress.css';
+import '../css/custom-animation.css';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { THEME } from '../constants/color';
+import { getAllIcons } from '../constants/icon'
 
-const playIcon = chrome.runtime.getURL("img/play.png")
-const pauseIcon = chrome.runtime.getURL("img/pause.png")
-const prevIcon = chrome.runtime.getURL("img/prev.png")
-const nextIcon = chrome.runtime.getURL("img/next.png")
-const gifPause1 = chrome.runtime.getURL("img/gif-pause-1.png")
-const gifPause2 = chrome.runtime.getURL("img/gif-pause-2.png")
-const gifPlay = chrome.runtime.getURL("img/music_gif.gif")
-const shuffleIcon = chrome.runtime.getURL("img/shuffle.png")
-const repeatIcon = chrome.runtime.getURL("img/repeat.png")
-const menuIcon = chrome.runtime.getURL("img/menu_ham.png")
-const closeIcon = chrome.runtime.getURL("img/close.png")
+const { playIcon, prevIcon, nextIcon, gifPause1, gifPause2, shuffleIcon, gifPlay, repeatIcon, menuIcon, closeIcon, pauseIcon, menuWhiteIcon, closeWhiteIcon } = getAllIcons(chrome);
 
 const STYLE = {
     ALBUM_ART_DIMENSION: 120,
@@ -31,7 +21,6 @@ const STYLE = {
 const Wrapper = styled.div`
     width:100%;
     height:74vh;
-    /* border:1px solid yellow; */
     background: #fff;
     overflow:hidden;
     position:relative;
@@ -40,7 +29,6 @@ const Wrapper = styled.div`
 const Upper = styled.div`
     width:100%;
     height:36vh;
-    /* border:1px solid blue; */
     display:flex;
     flex-direction:column;
     justify-content:space-between;
@@ -69,7 +57,6 @@ const Control = styled.div`
     flex-direction:row;
     justify-content:center;
     align-items:center;
-    /* border:1px solid red; */
 `;
 
 const PlaylistControlRepeat = styled.div`
@@ -90,10 +77,6 @@ const AlbumArtImage = styled.div`
     margin-top:50px;
 `;
 
-const Img = styled.img`
-    width:${({ w }) => w}px;
-    height:${({ h }) => h}px;
-`;
 
 const CircularImg = styled(Img)`
     border-radius:50%;
@@ -176,6 +159,7 @@ const Menu = styled.div`
     &:hover{
         transform: scale(1.1);
     }
+    z-index:100;
 `;
 
 const Close = styled.div`
@@ -187,6 +171,7 @@ const Close = styled.div`
     &:hover{
         transform: scale(1.1);
     }
+    z-index:100;
 `;
 
 const Pie = styled.div`
@@ -197,6 +182,17 @@ const Pie = styled.div`
     position:relative;
 `;
 
+const HoverMenu = styled.div`
+    position:absolute;
+    background:${THEME.PLAYER_BLUE};
+    height:100%;
+    width:100%;
+    z-index:50;
+    clip-path: circle(10px at -90% -10%);
+    -webkit-clip-path:circle(10px at -90% -10%);
+    transition:all 1s ease-out;
+`;
+
 class SpotifyPlayer extends React.Component {
 
     constructor(props) {
@@ -204,6 +200,10 @@ class SpotifyPlayer extends React.Component {
         this.state = {
 
         }
+        this.refMenuHover = React.createRef();
+        this.refMenuIcon = React.createRef();
+        this.refCloseIcon = React.createRef();
+        this.isMenuOpen = false;
     }
 
     static getDerivedStateFromProps() {
@@ -220,14 +220,36 @@ class SpotifyPlayer extends React.Component {
         return str.length > 22 ? str.substr(0, 25) + '...' : str
     }
 
+    toggleMenu = () => {
+        if (!this.isMenuOpen) {
+            this.refMenuHover.current.style.clipPath = 'circle(1000px at -90% -10%)'
+            this.refMenuHover.current.style.webkitClipPath = 'circle(1000px at -90% -10%)'
+            document.getElementById('menu-icon').src = menuWhiteIcon
+            document.getElementById('close-icon').src = closeWhiteIcon
+            this.refMenuIcon.current.src = menuWhiteIcon;
+            this.refCloseIcon.current.src = closeWhiteIcon;
+            this.isMenuOpen = true;
+        }
+        else {
+            this.refMenuHover.current.style.clipPath = 'circle(10px at -90% -10%)'
+            this.refMenuHover.current.style.webkitClipPath = 'circle(10px at -90% -10%)'
+            document.getElementById('menu-icon').src = menuIcon
+            document.getElementById('close-icon').src = closeIcon
+            this.refMenuIcon.current.src = menuIcon;
+            this.refCloseIcon.current.src = closeIcon;
+            this.isMenuOpen = false;
+        }
+    }
+
     render() {
         const { songDetails, mediaControl, mode, close } = this.props
         const { title, artist, albumArt, totalTime, progressTime, playing } = songDetails;
 
         return (
             <Wrapper>
-                <Menu><Img src={menuIcon} w={20} h={20}></Img></Menu>
-                <Close onClick={() => { close() }}><Img src={closeIcon} w={20} h={20}></Img></Close>
+                <HoverMenu ref={this.refMenuHover}></HoverMenu>
+                <Menu onClick={() => { this.toggleMenu() }}><Img id="menu-icon" ref={this.refMenuIcon} src={menuIcon} w={20} h={20}></Img></Menu>
+                <Close onClick={() => { close() }}><Img id="close-icon" ref={this.refCloseIcon} src={closeIcon} w={20} h={20}></Img></Close>
 
                 <Upper>
                     <AlbumArtImage>
@@ -241,7 +263,7 @@ class SpotifyPlayer extends React.Component {
                                     backgroundColor: '#3e98c7',
                                 })}
                         >
-                            <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={albumArt}></CircularImg>
+                            <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={albumArt} alt='' onError="this.style.display='none'"></CircularImg>
                         </CircularProgressbarWithChildren>
                     </AlbumArtImage>
                 </Upper>
@@ -259,7 +281,7 @@ class SpotifyPlayer extends React.Component {
                                 <Img src={prevIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PREV) }} ></Img>
                             </PrevButton>
                             <PlayPauseButton>
-                                <Img src={playing ? playIcon : pauseIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={playing ? {} : { 'margin-left': '4px' }}></Img>
+                                <Img src={playing ? playIcon : pauseIcon} w={24} h={24} onClick={() => { mediaControl(CONTROLS.PLAY) }} style={playing ? {} : { 'margin-left': '4px' }}></Img>
                             </PlayPauseButton>
                             <NextButton>
                                 <Img src={nextIcon} w={30} h={30} onClick={() => { mediaControl(CONTROLS.NEXT) }} ></Img>

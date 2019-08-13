@@ -11,8 +11,8 @@ const Col = styled.div`
 `;
 
 const Separator = styled.div`
-    width=${(width) => width ? width : 0}px;
-    height=${(height) => height ? height : 0}px;
+    width:${(width) => width ? width : 0}px;
+    height:${(height) => height ? height : 0}px;
 `;
 
 const CenterHV = styled(Row)`
@@ -20,4 +20,9 @@ const CenterHV = styled(Row)`
     align-items:center;
 `;
 
-export { Row, Col, Separator, CenterHV }
+const Img = styled.img`
+    width:${({ w }) => w}px;
+    height:${({ h }) => h}px;
+`;
+
+export { Row, Col, Separator, CenterHV, Img }
