@@ -224,19 +224,17 @@ class SpotifyPlayer extends React.Component {
         if (!this.isMenuOpen) {
             this.refMenuHover.current.style.clipPath = 'circle(1000px at -90% -10%)'
             this.refMenuHover.current.style.webkitClipPath = 'circle(1000px at -90% -10%)'
-            document.getElementById('menu-icon').src = menuWhiteIcon
-            document.getElementById('close-icon').src = closeWhiteIcon
             this.refMenuIcon.current.src = menuWhiteIcon;
             this.refCloseIcon.current.src = closeWhiteIcon;
+            this.refMenuHover.current.style.pointerEvents = "none";
             this.isMenuOpen = true;
         }
         else {
             this.refMenuHover.current.style.clipPath = 'circle(10px at -90% -10%)'
             this.refMenuHover.current.style.webkitClipPath = 'circle(10px at -90% -10%)'
-            document.getElementById('menu-icon').src = menuIcon
-            document.getElementById('close-icon').src = closeIcon
             this.refMenuIcon.current.src = menuIcon;
             this.refCloseIcon.current.src = closeIcon;
+            this.refMenuHover.current.style.pointerEvents = "all";
             this.isMenuOpen = false;
         }
     }
@@ -248,8 +246,8 @@ class SpotifyPlayer extends React.Component {
         return (
             <Wrapper>
                 <HoverMenu ref={this.refMenuHover}></HoverMenu>
-                <Menu onClick={() => { this.toggleMenu() }}><Img id="menu-icon" ref={this.refMenuIcon} src={menuIcon} w={20} h={20}></Img></Menu>
-                <Close onClick={() => { close() }}><Img id="close-icon" ref={this.refCloseIcon} src={closeIcon} w={20} h={20}></Img></Close>
+                <Menu onClick={() => { this.toggleMenu() }}><Img ref={this.refMenuIcon} src={menuIcon} w={20} h={20}></Img></Menu>
+                <Close onClick={() => { close() }}><Img ref={this.refCloseIcon} src={closeIcon} w={20} h={20}></Img></Close>
 
                 <Upper>
                     <AlbumArtImage>
