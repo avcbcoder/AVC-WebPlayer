@@ -11,8 +11,8 @@ const Col = styled.div`
 `;
 
 const Separator = styled.div`
-    width:${(width) => width ? width : 0}px;
-    height:${(height) => height ? height : 0}px;
+    width:${({ width }) => width ? width : 0}px;
+    height:${({ height }) => height ? height : 0}px;
 `;
 
 const CenterHV = styled(Row)`

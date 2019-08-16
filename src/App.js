@@ -50,7 +50,7 @@ const WrapperSpotify = styled.div`
 
 const WrapperYoutube = styled.div`
     width:${(YOUTUBE_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
-    height:${Math.floor(((Math.floor((window.screen.availWidth * YOUTUBE_PLAYER.WIDTH) / 100)) * 10) / 16)}px;
+    height:${Math.floor(((Math.floor((window.screen.availWidth * YOUTUBE_PLAYER.WIDTH) / 100)) * 10.9) / 16)}px;
     position:fixed;
     right:30px;
     top:70px;
