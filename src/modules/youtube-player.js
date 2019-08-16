@@ -4,24 +4,30 @@ import { MODE, ID } from '../constants';
 import styled from 'styled-components';
 import { CenterHV } from '../components'
 
+
+
+const w = Math.floor((window.screen.availWidth * 18) / 100)
+const h = Math.floor((w * 9) / 16)
+
 const Wrapper = styled.div`
     width:100%;
-    height:30vh;
-    border:2px solid yellow;
+    height:100%;
+    background:transparent;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 `;
 
 const IFrame = styled.iframe`
-    width:100%;
-    height:30vh;
+    width:${w}px;
+    height:${h}px;
+    margin-top:10px;
 `;
 
-const Div = styled.div`
-    border:4px solid blue;
+const ButtonCollection = styled.div`
+
 `;
-const style = {
-    overflow: 'auto',
-    border: '5px ridge blue',
-}
+
 class YoutubePlayer extends React.Component {
 
     constructor(props) {

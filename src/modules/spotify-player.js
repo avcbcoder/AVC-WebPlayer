@@ -239,14 +239,14 @@ class SpotifyPlayer extends React.Component {
     }
 
     render() {
-        const { songDetails, mediaControl, mode, close } = this.props
+        const { songDetails, mediaControl, mode, onClose } = this.props
         const { title, artist, albumArt, totalTime, progressTime, playing } = songDetails;
-
+        console.log('spot', onClose)
         return (
             <Wrapper>
                 <HoverMenu ref={this.refMenuHover}></HoverMenu>
                 <Menu onClick={() => { this.toggleMenu() }}><Img ref={this.refMenuIcon} src={menuIcon} w={20} h={20}></Img></Menu>
-                <Close onClick={() => { close() }}><Img ref={this.refCloseIcon} src={closeIcon} w={20} h={20}></Img></Close>
+                <Close onClick={() => { onClose() }}><Img ref={this.refCloseIcon} src={closeIcon} w={20} h={20}></Img></Close>
 
                 <Upper>
                     <AlbumArtImage>

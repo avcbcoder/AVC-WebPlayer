@@ -31,6 +31,7 @@ const Link = styled.a`
     font-weight: bold;
     text-decoration: none;
     display: block;
+    cursor:pointer;
     &:hover{
         background-color:${({ selected }) => selected ? THEME.PLAYER_BLUE : THEME.PLAYER_PINK_HOVER};
         text-decoration:none;
@@ -60,7 +61,7 @@ class MenuCollection extends React.Component {
 
     render() {
         const { selected, onSelected } = this.props
-
+        console.log(selected)
         return (
             <TabsWrapper>
                 <Tabs>

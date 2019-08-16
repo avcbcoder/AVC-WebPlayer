@@ -10,10 +10,17 @@ const getAllIcons = (chrome) => {
     const repeatIcon = chrome.runtime.getURL("img/repeat.png")
     const menuIcon = chrome.runtime.getURL("img/menu_ham.png")
     const closeIcon = chrome.runtime.getURL("img/close.png")
+    const minimizeIcon = chrome.runtime.getURL("img/minimize.png")
     const menuWhiteIcon = chrome.runtime.getURL("img/menu_white.png")
     const closeWhiteIcon = chrome.runtime.getURL("img/close_white.png")
+    const ytBkg1 = chrome.runtime.getURL("img/yt-bkg-1.svg")
+    const ytBkg2 = chrome.runtime.getURL("img/yt-bkg-1.png")
 
-    return { playIcon, prevIcon, nextIcon, gifPause1, gifPause2, shuffleIcon, gifPlay, repeatIcon, menuIcon, closeIcon, pauseIcon, menuWhiteIcon, closeWhiteIcon }
+    return {
+        playIcon, prevIcon, nextIcon, gifPause1, gifPause2, shuffleIcon, gifPlay, repeatIcon,
+        menuIcon, closeIcon, pauseIcon, menuWhiteIcon, closeWhiteIcon, minimizeIcon,
+        ytBkg1, ytBkg2
+    }
 }
 
 export { getAllIcons }

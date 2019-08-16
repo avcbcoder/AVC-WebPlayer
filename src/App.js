@@ -1,5 +1,4 @@
-/*global screen*/
-/* eslint no-restricted-globals:0 */
+/*global chrome*/
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -9,16 +8,21 @@ import styled from 'styled-components';
 import SpotifyPlayer from './modules/spotify-player'
 import MenuCollection from './modules/menu-collection'
 
-import { PLAYER } from './constants/dimension'
+import { YOUTUBE_PLAYER, SPOTIFY_PLAYER } from './constants/dimension'
 import { DISPLAY_MODE } from './constants/index';
+import YoutubePlayer from './modules/youtube-player';
+import { getAllIcons } from './constants/icon'
+
+const { ytBkg1, ytBkg2 } = getAllIcons(chrome);
+
 
 const Root = styled.div`
-    width:${(PLAYER.WIDTH_PERCENT * window.screen.availWidth) / 100}px;
+    width:${(SPOTIFY_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
     height:100vh;
 `;
 
 const MenuWrapper = styled.div`    
-    width:${(PLAYER.WIDTH_PERCENT * window.screen.availWidth) / 100}px;
+    width:${(SPOTIFY_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
     position:fixed;
     right:30px;
     top:10px;
@@ -30,9 +34,9 @@ const MenuWrapper = styled.div`
     border-radius:2px;
 `;
 
-const Wrapper = styled.div`
-    width:${(PLAYER.WIDTH_PERCENT * window.screen.availWidth) / 100}px;
-    height:${PLAYER.HEIGHT_VH}vh;
+const WrapperSpotify = styled.div`
+    width:${(SPOTIFY_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
+    height:${SPOTIFY_PLAYER.HEIGHT}vh;
     position:fixed;
     right:30px;
     top:70px;
@@ -42,6 +46,22 @@ const Wrapper = styled.div`
     box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
     z-index:5000;
     border-radius:2px;
+`;
+
+const WrapperYoutube = styled.div`
+    width:${(YOUTUBE_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
+    height:${Math.floor(((Math.floor((window.screen.availWidth * YOUTUBE_PLAYER.WIDTH) / 100)) * 10) / 16)}px;
+    position:fixed;
+    right:30px;
+    top:70px;
+    overflow:hidden;
+    -webkit-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
+    -moz-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
+    box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
+    z-index:5000;
+    border-radius:2px;
+    background:url(${ytBkg1});
+    background-size: cover;
 `;
 
 class RootApp extends React.Component {
@@ -57,23 +77,28 @@ class RootApp extends React.Component {
     return {}
   }
 
-  onSelected = (select) => {
-    this.setState({ select })
+  onSelected = (selected) => {
+    this.setState({ selected })
   }
 
   render() {
-    const { mode, songDetails, mediaControl, close } = this.props;
-    const { select } = this.state
-
+    const { mode, songDetails, mediaControl, onClose } = this.props;
+    const { selected } = this.state
+    console.log('app', selected)
     return (
       <Root >
         <MenuWrapper>
-          <MenuCollection select={select} onSelected={this.onSelected} />
+          <MenuCollection selected={selected} onSelected={this.onSelected} />
         </MenuWrapper>
-        {select === DISPLAY_MODE.SPOTIFY &&
-          <Wrapper>
-            <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} close={close}></SpotifyPlayer>
-          </Wrapper>
+        {selected === DISPLAY_MODE.SPOTIFY &&
+          <WrapperSpotify>
+            <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose}></SpotifyPlayer>
+          </WrapperSpotify>
+        }
+        {selected === DISPLAY_MODE.YOUTUBE &&
+          <WrapperYoutube>
+            <YoutubePlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose}></YoutubePlayer>
+          </WrapperYoutube>
         }
       </Root>
     );
@@ -83,11 +108,11 @@ class RootApp extends React.Component {
 RootApp.defaultProps = {
   mode: MODE.NONE,
   songDetails: {
-    title: 'Go to https://open.spotify.com to start the player',
+    title: 'open spotify',
     artist: [],
     albumArt: '',
-    progressTime: '0:00',
-    totalTime: '0:00',
+    progressTime: '0:01',
+    totalTime: '1:40',
     playing: false,
   }
 }
@@ -96,7 +121,7 @@ RootApp.prototypes = {
   mode: PropTypes.string,
   songDetails: PropTypes.shape({}),
   mediaControl: PropTypes.func,
-  close: PropTypes.func,
+  onClose: PropTypes.func,
   switchToYoutubeMode: PropTypes.func,
 }
 

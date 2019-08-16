@@ -1,6 +1,10 @@
-const PLAYER = {
-    WIDTH_PERCENT: 22,
-    HEIGHT_VH: 74,
+const SPOTIFY_PLAYER = {
+    WIDTH: 24,
+    HEIGHT: 74,
 }
 
-export { PLAYER }
+const YOUTUBE_PLAYER = {
+    WIDTH: 24,
+}
+
+export { SPOTIFY_PLAYER, YOUTUBE_PLAYER }
