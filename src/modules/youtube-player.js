@@ -53,7 +53,7 @@ class YoutubePlayer extends React.Component {
             <Wrapper>
                 <Separator height="12"/>
                 <ButtonCollection>
-                    <Img w="15" h="15" src={minimizeIcon} onClick={onClose()} style={{cursor:'pointer'}}></Img>
+                    <Img w="15" h="15" src={minimizeIcon} onClick={()=>onClose()} style={{cursor:'pointer'}}></Img>
                     <Separator width="16"/>
                     <Img w="15" h="15" src={closeWhiteThinIcon} style={{cursor:'pointer'}}></Img>
                     <Separator width="16"/>

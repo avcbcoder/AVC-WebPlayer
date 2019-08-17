@@ -6,6 +6,7 @@ import { MODE } from './constants';
 
 import styled from 'styled-components';
 import SpotifyPlayer from './modules/spotify-player'
+import LyricsPlayer from './modules/lyrics-player'
 import MenuCollection from './modules/menu-collection'
 
 import { YOUTUBE_PLAYER, SPOTIFY_PLAYER } from './constants/dimension'
@@ -64,12 +65,29 @@ const WrapperYoutube = styled.div`
     background-size: cover;
 `;
 
+const WrapperLyrics = styled.div`
+    width:${(YOUTUBE_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
+    height:${Math.floor(((Math.floor((window.screen.availWidth * YOUTUBE_PLAYER.WIDTH) / 100)) * 10.9) / 16)}px;
+    position:fixed;
+    right:30px;
+    top:70px;
+    overflow:hidden;
+    -webkit-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
+    -moz-box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
+    box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
+    z-index:5000;
+    border-radius:2px;
+    background:url(${ytBkg1});
+    background-size: cover;
+`;
+
 class RootApp extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       selected: DISPLAY_MODE.SPOTIFY,
+      lyrics: ''
     }
   }
 
@@ -83,7 +101,7 @@ class RootApp extends React.Component {
 
   render() {
     const { mode, songDetails, mediaControl, onClose } = this.props;
-    const { selected } = this.state
+    const { selected, lyrics } = this.state
     console.log('app', selected)
     return (
       <Root >
@@ -99,6 +117,11 @@ class RootApp extends React.Component {
           <WrapperYoutube>
             <YoutubePlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose}></YoutubePlayer>
           </WrapperYoutube>
+        }
+        {selected === DISPLAY_MODE.LYRICS &&
+          <WrapperLyrics>
+            <LyricsPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose} lyrics={lyrics}></LyricsPlayer>
+          </WrapperLyrics>
         }
       </Root>
     );
