@@ -77,7 +77,6 @@ const WrapperLyrics = styled.div`
     box-shadow: 0px 0px 8px 2px rgba(163,145,163,1);
     z-index:5000;
     border-radius:2px;
-    background:url(${ytBkg1});
     background-size: cover;
 `;
 

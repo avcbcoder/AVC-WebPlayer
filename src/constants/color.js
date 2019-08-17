@@ -4,4 +4,10 @@ const THEME = {
     PLAYER_BLUE: '#478ffc',//#5698fc
 }
 
-export { THEME }
+const COLOR = {
+    WHITE: '#fff',
+    BLACK: '#000',
+    LIGHT_BLACK: '#262626'
+}
+
+export { THEME, COLOR }
