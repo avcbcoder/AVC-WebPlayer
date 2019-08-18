@@ -3,9 +3,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import RootApp from './modules/root-module';
 import { MODE } from './constants';
+import fetchApi from './api';
 
-import { getFandomLyrics, getAzLyrics } from './api/lyrics'
-import { youtubeSearch } from './api/youtube-search'
+
+const storage = chrome.storage.local
+/**
+ * store :{
+ *    lyrics :{
+ *     
+ *      },
+ * song :songObj,
+ * ytVideos:videos
+ * }
+ */
 
 function mediaControl(media) {
   console.log('media buttons clicked', media)
@@ -37,41 +47,33 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.message === "current-song-details" || request.type === "current-song-details") {
-    ReactDOM.render(<RootApp mode={MODE.SPOTIFY} songDetails={request.songDetailsObj} mediaControl={mediaControl} onClose={onClose} />, app);
-  }
-});
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.type !== "spotify")
-    return
-
-  switch (request.method) {
-    case 'song-change':
-
-      break;
-    case 'progress-change':
-
-      break;
-
-    case 'play-state-change':
-
-      break;
-
-    default:
-      break;
-  }
-
+const renderComponent = (mode, songDetails, lyrics, videos) => {
   ReactDOM.render(
     <RootApp
-      mode={MODE.SPOTIFY}
-      songDetails={request.songDetailsObj}
+      mode={mode}
+      songDetails={songDetails}
+      lyrics={lyrics}
       mediaControl={mediaControl}
       onClose={onClose}
     />,
     app
   );
+}
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.type !== "spotify")
+    return
+
+  if (request.method === 'song-change')
+    fetchApi(storage, request.data, renderComponent)
+
+  storage.get('store', (store) => {// modify song details
+    store.songs = request.data
+    storage.set('store', store)
+  })
+
+  renderComponent(MODE.SPOTIFY, request.data, '', '')
 });
 
 function toggle() {
