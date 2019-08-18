@@ -58,22 +58,35 @@ function extractElements() {
 
 extractElements();
 
-// || songDetailsObj.progressTime !== newDetailsObj.progressTime
 if (window.location.href.includes('open.spotify.com') && !window.set) {
-    console.log('injecting into spotify')
     window.set = true;
     setInterval(() => {
         const newDetailsObj = main();
-        if (newDetailsObj.title !== songDetailsObj.title
-            || newDetailsObj.albumArt !== songDetailsObj.albumArt
-            || songDetailsObj.playing !== newDetailsObj.playing) {
-            songDetailsObj = newDetailsObj;
+        const lastProgress = 60 * parseInt(songDetailsObj.progressTime.split(':')[0], 10) + parseInt(songDetailsObj.progressTime.split(':')[1], 10)
+        const newProgress = 60 * parseInt(newDetailsObj.progressTime.split(':')[0], 10) + parseInt(newDetailsObj.progressTime.split(':')[1], 10)
+
+        if (newDetailsObj.title !== songDetailsObj.title) {// fire event that song is changed
             chrome.runtime.sendMessage({
-                type: "current-song-details", options: {
-                    type: "basic",
+                type: "spotify", options: {
+                    type: "song-change",
+                    songDetailsObj,
+                }
+            });
+        } else if (Math.abs(newProgress - lastProgress > 2)) {// fire event that progress is changed
+            chrome.runtime.sendMessage({
+                type: "spotify", options: {
+                    type: "progress-change",
+                    songDetailsObj,
+                }
+            });
+        } else if (songDetailsObj.playing !== newDetailsObj.playing) {// fire event that play-state-changed
+            chrome.runtime.sendMessage({
+                type: "spotify", options: {
+                    type: "play-sgtate-change",
                     songDetailsObj,
                 }
             });
         }
+        songDetailsObj = newDetailsObj;
     }, BUFFER_TIME);
 }
