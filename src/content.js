@@ -20,7 +20,7 @@ function onClose(c) {
 
 const app = document.createElement('div');
 app.id = "my-extension";
-app.style.zIndex = 900000;
+app.style.zIndex = 9999999;
 app.style.display = "none";
 document.body.appendChild(app);
 ReactDOM.render(<RootApp mediaControl={mediaControl} onClose={onClose} />, app);

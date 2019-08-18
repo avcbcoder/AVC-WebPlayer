@@ -241,7 +241,7 @@ class SpotifyPlayer extends React.Component {
     render() {
         const { songDetails, mediaControl, mode, onClose } = this.props
         const { title, artist, albumArt, totalTime, progressTime, playing } = songDetails;
-        console.log('spot', onClose)
+
         return (
             <Wrapper>
                 <HoverMenu ref={this.refMenuHover}></HoverMenu>

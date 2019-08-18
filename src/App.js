@@ -2,24 +2,26 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { MODE } from './constants';
 
 import styled from 'styled-components';
-import SpotifyPlayer from './modules/spotify-player'
-import LyricsPlayer from './modules/lyrics-player'
-import MenuCollection from './modules/menu-collection'
+import SpotifyPlayer from './modules/spotify-player';
+import LyricsPlayer from './modules/lyrics-player';
+import MenuCollection from './modules/menu-collection';
 
-import { YOUTUBE_PLAYER, SPOTIFY_PLAYER } from './constants/dimension'
+import { YOUTUBE_PLAYER, SPOTIFY_PLAYER } from './constants/dimension';
 import { DISPLAY_MODE } from './constants/index';
 import YoutubePlayer from './modules/youtube-player';
-import { getAllIcons } from './constants/icon'
+import { getAllIcons } from './constants/icon';
+
 
 const { ytBkg1, ytBkg2 } = getAllIcons(chrome);
-
 
 const Root = styled.div`
     width:${(SPOTIFY_PLAYER.WIDTH * window.screen.availWidth) / 100}px;
     height:100vh;
+    z-index:9000101;
 `;
 
 const MenuWrapper = styled.div`    
@@ -94,6 +96,20 @@ class RootApp extends React.Component {
     return {}
   }
 
+  componentDidMount() {
+    const { songDetails } = this.props
+    const { title, artist } = songDetails
+    const url = `http://lyrics.wikia.com/wiki/${artist[0]}:${title}`
+    const heroku = `https://lyric-api.herokuapp.com/api/find/${artist[0]}/${title}`
+
+    axios.get(heroku)
+      .then(response => {
+        this.setState({lyrics:response.lyric});
+        console.log('axios', response.lyric)
+      })
+      .catch(err => console.log('axios', err))
+  }
+
   onSelected = (selected) => {
     this.setState({ selected })
   }
@@ -101,7 +117,7 @@ class RootApp extends React.Component {
   render() {
     const { mode, songDetails, mediaControl, onClose } = this.props;
     const { selected, lyrics } = this.state
-    console.log('app', selected)
+
     return (
       <Root >
         <MenuWrapper>
@@ -130,8 +146,8 @@ class RootApp extends React.Component {
 RootApp.defaultProps = {
   mode: MODE.NONE,
   songDetails: {
-    title: 'open spotify',
-    artist: [],
+    title: 'style',
+    artist: ['taylor swift'],
     albumArt: '',
     progressTime: '0:01',
     totalTime: '3:51',
