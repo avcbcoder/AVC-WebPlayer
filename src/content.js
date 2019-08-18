@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom';
 import RootApp from './modules/root-module';
 import { MODE } from './constants';
 
+import { getFandomLyrics, getAzLyrics } from './api/lyrics'
+import { youtubeSearch } from './api/youtube-search'
+
 function mediaControl(media) {
   console.log('media buttons clicked', media)
   chrome.runtime.sendMessage({
@@ -41,8 +44,34 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.type === "spotify")
-    console.log(request)
+  if (request.type !== "spotify")
+    return
+
+  switch (request.method) {
+    case 'song-change':
+
+      break;
+    case 'progress-change':
+
+      break;
+
+    case 'play-state-change':
+
+      break;
+
+    default:
+      break;
+  }
+
+  ReactDOM.render(
+    <RootApp
+      mode={MODE.SPOTIFY}
+      songDetails={request.songDetailsObj}
+      mediaControl={mediaControl}
+      onClose={onClose}
+    />,
+    app
+  );
 });
 
 function toggle() {
