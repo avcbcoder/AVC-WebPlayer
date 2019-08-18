@@ -128,6 +128,8 @@ class LyricsPlayer extends React.Component {
         const lyricsArr = this.replace(lyrics ? lyrics : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
         const y = lyrics ? lyrics.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
 
+        console.log('lyric player', lyrics)
+
         return (
             <Wrapper>
                 <Separator height="12" />

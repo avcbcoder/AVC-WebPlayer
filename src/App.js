@@ -3,6 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import $ from 'jquery'
 import { MODE } from './constants';
 
 import styled from 'styled-components';
@@ -90,24 +91,26 @@ class RootApp extends React.Component {
       selected: DISPLAY_MODE.SPOTIFY,
       lyrics: ''
     }
+    this.prevTitle = ''
   }
 
   static getDerivedStateFromProps() {
     return {}
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps, prevState) {
     const { songDetails } = this.props
     const { title, artist } = songDetails
-    const url = `http://lyrics.wikia.com/wiki/${artist[0]}:${title}`
-    const heroku = `https://lyric-api.herokuapp.com/api/find/${artist[0]}/${title}`
 
-    axios.get(heroku)
-      .then(response => {
-        this.setState({lyrics:response.lyric});
-        console.log('axios', response.lyric)
-      })
-      .catch(err => console.log('axios', err))
+    const heroku = `https://lyric-api.herokuapp.com/api/find/${artist[0]}/${title}`
+    if (title !== prevProps.songDetails.title)// change this condition further
+      axios.get(heroku)
+        .then(response => {
+          console.log('found', response, response.data.lyric)
+          this.setState({ lyrics: response.data.lyric });
+        })
+        .catch(err => { this.setState({ lyrics: '' }); })
+
   }
 
   onSelected = (selected) => {

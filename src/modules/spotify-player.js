@@ -271,7 +271,7 @@ class SpotifyPlayer extends React.Component {
                         <Details>
                             <Track>{this.trim(title)}</Track>
                             <Separator h="12"></Separator>
-                            <Artist>{this.trim(artist)}</Artist>
+                            <Artist>{this.trim(artist.join(`, `))}</Artist>
                         </Details>
                         <Control>
                             <PrevButton>

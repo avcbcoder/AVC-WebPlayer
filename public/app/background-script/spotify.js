@@ -28,7 +28,7 @@ function main() {
 
     return {
         title: spotifyPageElements.songTitle ? spotifyPageElements.songTitle.innerText : '',
-        artist: songArtist ? songArtist.join(', ') : [],
+        artist: songArtist ? songArtist : [],
         albumArt: spotifyPageElements.rootAlbum ? spotifyPageElements.rootAlbum.style.backgroundImage.split(`"`)[1] : '',
         playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'pause',
         progressTime: spotifyPageElements.progress[0].innerText,
@@ -58,6 +58,7 @@ function extractElements() {
 
 extractElements();
 
+// || songDetailsObj.progressTime !== newDetailsObj.progressTime
 if (window.location.href.includes('open.spotify.com') && !window.set) {
     console.log('injecting into spotify')
     window.set = true;
@@ -65,7 +66,6 @@ if (window.location.href.includes('open.spotify.com') && !window.set) {
         const newDetailsObj = main();
         if (newDetailsObj.title !== songDetailsObj.title
             || newDetailsObj.albumArt !== songDetailsObj.albumArt
-            || songDetailsObj.progressTime !== newDetailsObj.progressTime
             || songDetailsObj.playing !== newDetailsObj.playing) {
             songDetailsObj = newDetailsObj;
             chrome.runtime.sendMessage({
