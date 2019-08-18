@@ -1,15 +1,16 @@
 import $ from 'jquery';
 
 const replace = (str, a, b) => {
-    //Method 1 
     return str.split(a).join(b)
-    //Method 2 - using regular expression
 }
 
-const getAzLyrics = (track, artist) => {
-    const azURL = `https://www.azlyrics.com/lyrics/beberexha/2soulsonfire.html`
+const getAzLyrics = (track, artist, successCallback, failureCallback) => {
+    track = replace(track.substr(0, track.indexOf('(')).trim(), ' ', '').toLowerCase()
+    artist = replace(artist, ' ', '').toLowerCase()
+    const azURL = `https://www.azlyrics.com/lyrics/${artist}/${track}.html`
     $.ajax({
-        url: azURL, success: function (htmlData) {
+        url: azURL,
+        success: function (htmlData) {
             const doc = new DOMParser().parseFromString(htmlData, "text/html");
             const ringtone = doc.body.getElementsByClassName('ringtone')[0]
             const sibling = ringtone.parentElement.childNodes
@@ -20,16 +21,19 @@ const getAzLyrics = (track, artist) => {
                     lyricBox = sibling[i]
             }
             let lyrics = []
-            console.log(lyricBox)
             lyricBox.childNodes.forEach((val, idx) => {
-                console.log((val.nodeName.toString().toLowerCase()))
                 if (val.nodeName.toString().toLowerCase() === '#text')
                     lyrics.push(val ? val.data ? replace(val.data, '\n', '') : '' : '')
                 if (val.nodeName.toString().toLowerCase() === 'br')
                     lyrics.push('\n')
             });
-            console.log(replace(lyrics.join(''), '\n\n\n', '\n\n'))
-        }
+            successCallback(replace(lyrics.join(''), '\n\n\n', '\n\n'))
+        },
+        statusCode: {
+            404: function () { failureCallback() }
+        },
+        error: function () { failureCallback() },
+        fail: function () { failureCallback() },
     });
 }
 
