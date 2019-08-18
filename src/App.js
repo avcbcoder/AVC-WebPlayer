@@ -134,7 +134,7 @@ RootApp.defaultProps = {
     artist: [],
     albumArt: '',
     progressTime: '0:01',
-    totalTime: '1:40',
+    totalTime: '3:51',
     playing: false,
   }
 }

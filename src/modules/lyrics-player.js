@@ -9,6 +9,15 @@ import { COLOR } from '../constants/color'
 
 const { minimizeIcon, closeWhiteThinIcon } = getAllIcons(chrome);
 
+const scroll = (y) => keyframes`
+  0% {
+    top: 8em;
+  }
+  100% {
+    top: -${y}em;
+  }
+`;
+
 const Wrapper = styled.div`
     width:100%;
     height:100%;
@@ -39,21 +48,10 @@ const LyricsBox = styled.div`
     text-align:center;
     width:90%;
     height:70%;
-    overflow-x:hidden;
-    overflow-y:scroll;
     font-size:14px;
     line-height:1.3em;
     position: relative;
     box-sizing: border-box;
-`;
-
-const scroll = keyframes`
-  0% {
-    top: 8em;
-  }
-  100% {
-    top: -11em;
-  }
 `;
 
 const TopGradient = styled.div`
@@ -80,14 +78,18 @@ const MarqueeWrapper = styled.div`
     position:absolute;
     top:0;
     left:0;
+    width:100%;
+    height:100%;
+    overflow-x:hidden;
+    overflow-y:scroll;
 `;
 
 const Marquee = styled.p`
     top: 6em;
     position: relative;
     box-sizing: border-box;
-    /* animation: ${ scroll} ${({ time }) => time}s linear infinite; */
-    animation: ${ scroll} 3s linear infinite;
+    /* animation: $${ y => scroll(y)} ${({ time }) => time}s linear infinite; */
+    animation: ${ ({ y }) => scroll(y)} 20s linear infinite;
     &:hover{
         animation-play-state: paused;
     }
@@ -113,10 +115,18 @@ class LyricsPlayer extends React.Component {
         //Method 2 - using regular expression
     }
 
+    getY = (y, arr) => {
+        arr.forEach((str, idx) => {
+            y += str.length >= 50 ? 2 : 1
+        })
+        return y
+    }
+
     render() {
         const { songDetails, mediaControl, mode, onClose, lyrics } = this.props
         const { progressTime, totalTime } = songDetails;
         const lyricsArr = this.replace(lyrics ? lyrics : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
+        const y = lyrics ? lyrics.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
 
         return (
             <Wrapper>
@@ -131,7 +141,10 @@ class LyricsPlayer extends React.Component {
                 <LyricsBox>
                     <TopGradient />
                     <MarqueeWrapper>
-                        <Marquee time={totalTime}>
+                        <Marquee
+                            y={this.getY(y, lyricsArr)}
+                            time={60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)}
+                        >
                             {lyricsArr.map(lyric => (
                                 <Text >{lyric === ' ' ? <br /> : lyric}</Text>
                             ))}
