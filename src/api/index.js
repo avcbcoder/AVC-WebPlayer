@@ -1,31 +1,39 @@
 import { getFandomLyrics, getAzLyrics } from './lyrics'
 import { youtubeSearch } from './youtube-search'
 
-function fetchLyrics(song) {
-    const { title, artist } = song
+const fetchApi = (storage, songDetails, render) => {
+    const { title, artist } = songDetails
 
-    chrome.storage.local.set({ 'lyricsData': { state: 'fetching', lyrics: '' } })
-
-    const onSuccess = (lyrics) => {
-        chrome.storage.local.get('lyricsData', (lyricsData) => {
-            if (lyricsData.state !== 'success') {
-                chrome.storage.local.set({ 'lyricsData': { state: 'success', lyrics } })
-                renderComponent()
-            }
+    const onSuccessLyrics = (lyrics) => {
+        storage.get('store', (store) => {
+            if (store.lyrics.state !== 'success')
+                store.lyrics = { state: 'success', lyrics }
+            storage.set('store', store)
+            render(store.mode, store.song, store.lyrics, store.youtubeVideos)
         })
     }
 
-    const onFailure = () => {
-        chrome.storage.local.get('lyricsData', (lyricsData) => {
-            if (lyricsData.state !== 'success')
-                chrome.storage.local.set({ 'lyricsData': { state: 'fail', lyrics: '' } })
+    const onFailureLyrics = () => {
+        storage.get('store', (store) => {
+            if (store.lyrics.state === 'fetching')
+                store.lyrics = { state: 'fail', lyrics: '' }
+            storage.set('store', store)
+            render(store.mode, store.song, store.lyrics, store.youtubeVideos)
         })
     }
 
     for (let i = 0; i < artist.length; i++) {
-        getFandomLyrics(title, artist[i], onSuccess, onFailure);
-        getAzLyrics(title, artist[i], onSuccess, onFailure);
+        getFandomLyrics(title, artist[i], onSuccessLyrics, onFailureLyrics);
+        getAzLyrics(title, artist[i], onSuccessLyrics, onFailureLyrics);
     }
+
+    youtubeSearch(title + ' ' + artist.join(' '), (videos) => {
+        storage.get('store', (store) => {
+            store.youtubeVideos = { state: 'success', videos }
+            storage.set('store', store)
+            render(store.mode, store.song, store.lyrics, store.youtubeVideos)
+        })
+    })
 }
 
 export default fetchApi;

@@ -65,13 +65,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.type !== "spotify")
     return
 
-  if (request.method === 'song-change')
+  if (request.method === 'song-change') {
+    storage.get('store', (store) => {// modify song details and set default state for fetch
+      store.song = request.data
+      store.lyrics = { state: 'fetching', lyrics: '' }
+      store.youtubeVideos = { state: 'fetching', videos: '' }
+      store.mode = ''
+      storage.set('store', store)
+    })
     fetchApi(storage, request.data, renderComponent)
-
-  storage.get('store', (store) => {// modify song details
-    store.songs = request.data
-    storage.set('store', store)
-  })
+  } else {
+    storage.get('store', (store) => {// modify song details
+      store.song = request.data
+      storage.set('store', store)
+    })
+  }
 
   renderComponent(MODE.SPOTIFY, request.data, '', '')
 });
