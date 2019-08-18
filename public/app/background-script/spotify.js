@@ -65,7 +65,16 @@ if (window.location.href.includes('open.spotify.com') && !window.set) {
         const lastProgress = 60 * parseInt(songDetailsObj.progressTime.split(':')[0], 10) + parseInt(songDetailsObj.progressTime.split(':')[1], 10)
         const newProgress = 60 * parseInt(newDetailsObj.progressTime.split(':')[0], 10) + parseInt(newDetailsObj.progressTime.split(':')[1], 10)
 
-        if (newDetailsObj.title !== songDetailsObj.title) {// fire event that song is changed
+        const isDiffArtist = (a, b) => {
+            if (a.length !== b.length)
+                return true;
+            for (let i = 0; i < a.length; i++)
+                if (a[i] !== b[i])
+                    return true;
+            return false;
+        }
+
+        if (newDetailsObj.title !== songDetailsObj.title || isDiffArtist(newDetailsObj.artist, songDetailsObj.artist)) {// fire event that song is changed
             chrome.runtime.sendMessage({
                 type: "spotify", options: {
                     type: "song-change",
