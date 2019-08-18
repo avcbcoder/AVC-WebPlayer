@@ -15,7 +15,7 @@ const h = Math.floor((w * 9) / 16)
 const Wrapper = styled.div`
     width:100%;
     height:100%;
-    background:transparent;
+    background:white;
     text-align:center;
 `;
 

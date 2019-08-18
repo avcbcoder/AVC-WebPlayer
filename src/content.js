@@ -1,7 +1,7 @@
 /*global chrome*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
+import RootApp from './modules/root-module';
 import { MODE } from './constants';
 
 function mediaControl(media) {
@@ -23,7 +23,7 @@ app.id = "my-extension";
 app.style.zIndex = 9999999;
 app.style.display = "none";
 document.body.appendChild(app);
-ReactDOM.render(<App mediaControl={mediaControl} onClose={onClose} />, app);
+ReactDOM.render(<RootApp mediaControl={mediaControl} onClose={onClose} />, app);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -36,7 +36,7 @@ chrome.runtime.onMessage.addListener(
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.message === "current-song-details" || request.type === "current-song-details") {
-    ReactDOM.render(<App mode={MODE.SPOTIFY} songDetails={request.songDetailsObj} mediaControl={mediaControl} onClose={onClose} />, app);
+    ReactDOM.render(<RootApp mode={MODE.SPOTIFY} songDetails={request.songDetailsObj} mediaControl={mediaControl} onClose={onClose} />, app);
   }
 });
 
