@@ -83,7 +83,7 @@ const WrapperLyrics = styled.div`
     background-size: cover;
 `;
 
-class RootApp extends React.Component {
+class App extends React.Component {
 
   constructor(props) {
     super(props)
@@ -98,30 +98,13 @@ class RootApp extends React.Component {
     return {}
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { songDetails } = this.props
-    const { title, artist } = songDetails
-    const url = `https://www.azlyrics.com/lyrics/beberexha/2soulsonfire.html`
-    $.ajax({ url: url, success: function (data) { console.log("+++++++", data); } });
-
-    const heroku = `https://lyric-api.herokuapp.com/api/find/${artist[0]}/${title}`
-    if (title !== prevProps.songDetails.title)// change this condition further
-      axios.get(heroku)
-        .then(response => {
-          console.log('found', response, response.data.lyric)
-          this.setState({ lyrics: response.data.lyric });
-        })
-        .catch(err => { this.setState({ lyrics: '' }); })
-
-  }
-
   onSelected = (selected) => {
     this.setState({ selected })
   }
 
   render() {
-    const { mode, songDetails, mediaControl, onClose } = this.props;
-    const { selected, lyrics } = this.state
+    const { mode, songDetails, mediaControl, onClose, lyrics, videos } = this.props;
+    const { selected } = this.state
 
     return (
       <Root >
@@ -135,7 +118,7 @@ class RootApp extends React.Component {
         }
         {selected === DISPLAY_MODE.YOUTUBE &&
           <WrapperYoutube>
-            <YoutubePlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose}></YoutubePlayer>
+            <YoutubePlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose} videos={videos}></YoutubePlayer>
           </WrapperYoutube>
         }
         {selected === DISPLAY_MODE.LYRICS &&
@@ -148,7 +131,7 @@ class RootApp extends React.Component {
   }
 }
 
-RootApp.defaultProps = {
+App.defaultProps = {
   mode: MODE.NONE,
   songDetails: {
     title: 'style',
@@ -157,10 +140,11 @@ RootApp.defaultProps = {
     progressTime: '0:01',
     totalTime: '3:51',
     playing: false,
-  }
+  },
+  lyrics: '404'
 }
 
-RootApp.prototypes = {
+App.prototypes = {
   mode: PropTypes.string,
   songDetails: PropTypes.shape({}),
   mediaControl: PropTypes.func,
@@ -168,4 +152,4 @@ RootApp.prototypes = {
   switchToYoutubeMode: PropTypes.func,
 }
 
-export default RootApp;
+export default App;
