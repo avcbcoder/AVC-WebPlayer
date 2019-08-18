@@ -1,8 +1,8 @@
 /*global chrome */
 import React from 'react';
-import { MODE, ID } from '../constants';
+import { MODE, ID, DEFAULT_LYRICS } from '../constants/index';
 
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Col, Separator, Img, CenterHV } from '../components'
 import { getAllIcons } from '../constants/icon'
 import { COLOR } from '../constants/color'
@@ -31,7 +31,7 @@ const ButtonCollection = styled.div`
 `;
 
 const Text = styled.div`
-    color:${COLOR.WHITE};
+    color:${COLOR.WHITE_LYRICS};
 `;
 
 const LyricsBox = styled.div`
@@ -39,84 +39,71 @@ const LyricsBox = styled.div`
     text-align:center;
     width:90%;
     height:70%;
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    position: relative;
+    box-sizing: border-box;
 `;
 
-const Sample = `Boy, you're lookin' like my type
-But tell me, can you hit it right?
-'Cause if I let you in tonight
-You better put it da-da-down da-da-down
+const scroll = keyframes`
+  0% {
+    top: 8em;
+  }
+  100% {
+    top: -11em;
+  }
+`;
 
-Now we do without the talk
-I ain't playin' any more
-You heard me when I said before
-You better put it da-da-down da-da-down
-
-Make me say you the one I like, like, like, like
-Come put your body on mine, mine, mine, mine
-Keep it up all night, night, night, night
-Don't let me down da-da-down
-
-All night give me mad love
-All night give me mad love
-All night give me mad love
-Yeah, don't let me down da-da-down
-All night give me mad love
-All night give me mad love
-All night give me mad love
-Yeah, don't let me down da-da-down
-
-Yo, come over, we can chill
-Tell each other how we feel
-But, baby, know I love the thrill
-When you put it da-da-down da-da-down
-
-I'm alright on my own
-But with you I'm in the zone
-One shot, don't let it go
-You better put it da-da-down da-da-down
-
-Make me say you the one I like, like, like, like
-Come put your body on mine, mine, mine, mine
-Keep it up all night, night, night, night
-Don't let me down da-da-down
-
-All night give me mad love
-All night give me mad love
-All night give me mad love
-Yeah, don't let me down da-da-down
-All night give me mad love
-All night give me mad love
-All night give me mad love
-Yeah, don't let me down da-da-down
-
-If I back up, can you handle?
-Get it all night, give me mad love
-Don't be too nice, feel the mad love
-Now don't let me down da-da-down
-If I back up, can you handle?
-Get it all night, give me mad love
-Don't be too nice, feel the mad love
-Now don't let me down da-da-down
-
-All night give me mad love
-All night give me mad love
-All night give me mad love
-Yeah, don't let me down da-da-down
-All night give me mad love
-All night give me mad love
-All night give me mad love
-Yeah, don't let me down da-da-down
-
-Make me say you the one I like, like, like, like
-Come put your body on mine, mine, mine, mine
-Keep it up all night, night, night, night
-Don't let me down da-da-down
-
-If I back up, can you handle?
-Get it all night, give me mad love
-Don't be too nice, feel the mad love
-Yeah, don't let me down da-da-down
+const Marquee = styled.p`
+    top: 6em;
+    position: relative;
+    box-sizing: border-box;
+    animation: ${ scroll} 15s linear infinite;
+    &:hover{
+        animation-play-state: paused;
+    }
+    &:after{
+        left: 0;
+        z-index: 1;
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        width: 100%; height: 2em;
+        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
+        bottom: 0;
+        transform: rotate(180deg);
+    }
+    &::after{
+        left: 0;
+        z-index: 1;
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        width: 100%; height: 2em;
+        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
+        bottom: 0;
+        transform: rotate(180deg);
+    }
+    &:before{
+        left: 0;
+        z-index: 1;
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        width: 100%; height: 2em;
+        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
+        top: 0;
+    }
+    &::before{
+        left: 0;
+        z-index: 1;
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        width: 100%; height: 2em;
+        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
+        top: 0;
+    }
 `;
 
 class LyricsPlayer extends React.Component {
@@ -126,16 +113,23 @@ class LyricsPlayer extends React.Component {
         this.state = {
 
         }
+        this.refLyricsBox = React.createRef();
     }
 
     static getDerivedStateFromProps() {
         return {}
     }
 
+    replace = (str, a, b) => {
+        //Method 1 
+        return str.split(a).join(b)
+        //Method 2 - using regular expression
+    }
+
     render() {
         const { songDetails, mediaControl, mode, onClose, lyrics } = this.props
+        const lyricsArr = this.replace(lyrics ? lyrics : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
 
-        console.log(Sample)
         return (
             <Wrapper>
                 <Separator height="12" />
@@ -147,7 +141,11 @@ class LyricsPlayer extends React.Component {
                 </ButtonCollection>
                 <Separator height="14" />
                 <LyricsBox>
-                    <Text>{lyrics ? lyrics : Sample}</Text>
+                    <Marquee>
+                        {lyricsArr.map(lyric => (
+                            <Text >{lyric === ' ' ? <br /> : lyric}</Text>
+                        ))}
+                    </Marquee>
                 </LyricsBox>
             </Wrapper>
         );
