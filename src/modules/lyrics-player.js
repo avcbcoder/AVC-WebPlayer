@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     height:100%;
     background:transparent;
     text-align:center;
-    background:${COLOR.BLACK};
+    background:${COLOR.LIGHT_BLACK};
     display:flex;
     flex-direction:column;
     align-content:center;
@@ -41,6 +41,8 @@ const LyricsBox = styled.div`
     height:70%;
     overflow-x:hidden;
     overflow-y:scroll;
+    font-size:14px;
+    line-height:1.3em;
     position: relative;
     box-sizing: border-box;
 `;
@@ -54,55 +56,40 @@ const scroll = keyframes`
   }
 `;
 
+const TopGradient = styled.div`
+    width:100%;
+    height:20px;
+    background-image: linear-gradient(180deg, ${COLOR.LIGHT_BLACK}, rgba(30,30,30,0));
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:9999999;
+`;
+
+const BottomGradient = styled.div`
+    width:100%;
+    height:20px;
+    background-image: linear-gradient(180deg, rgba(30,30,30,0), ${COLOR.LIGHT_BLACK});
+    position:absolute;
+    left:0;
+    bottom:0;
+    z-index:9999999;
+`;
+
+const MarqueeWrapper = styled.div`
+    position:absolute;
+    top:0;
+    left:0;
+`;
+
 const Marquee = styled.p`
     top: 6em;
     position: relative;
     box-sizing: border-box;
-    animation: ${ scroll} 15s linear infinite;
+    /* animation: ${ scroll} ${({ time }) => time}s linear infinite; */
+    animation: ${ scroll} 3s linear infinite;
     &:hover{
         animation-play-state: paused;
-    }
-    &:after{
-        left: 0;
-        z-index: 1;
-        content: '';
-        position: absolute;
-        pointer-events: none;
-        width: 100%; height: 2em;
-        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
-        bottom: 0;
-        transform: rotate(180deg);
-    }
-    &::after{
-        left: 0;
-        z-index: 1;
-        content: '';
-        position: absolute;
-        pointer-events: none;
-        width: 100%; height: 2em;
-        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
-        bottom: 0;
-        transform: rotate(180deg);
-    }
-    &:before{
-        left: 0;
-        z-index: 1;
-        content: '';
-        position: absolute;
-        pointer-events: none;
-        width: 100%; height: 2em;
-        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
-        top: 0;
-    }
-    &::before{
-        left: 0;
-        z-index: 1;
-        content: '';
-        position: absolute;
-        pointer-events: none;
-        width: 100%; height: 2em;
-        background-image: linear-gradient(180deg, #FFF, rgba(255,255,255,0));
-        top: 0;
     }
 `;
 
@@ -128,6 +115,7 @@ class LyricsPlayer extends React.Component {
 
     render() {
         const { songDetails, mediaControl, mode, onClose, lyrics } = this.props
+        const { progressTime, totalTime } = songDetails;
         const lyricsArr = this.replace(lyrics ? lyrics : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
 
         return (
@@ -141,11 +129,15 @@ class LyricsPlayer extends React.Component {
                 </ButtonCollection>
                 <Separator height="14" />
                 <LyricsBox>
-                    <Marquee>
-                        {lyricsArr.map(lyric => (
-                            <Text >{lyric === ' ' ? <br /> : lyric}</Text>
-                        ))}
-                    </Marquee>
+                    <TopGradient />
+                    <MarqueeWrapper>
+                        <Marquee time={totalTime}>
+                            {lyricsArr.map(lyric => (
+                                <Text >{lyric === ' ' ? <br /> : lyric}</Text>
+                            ))}
+                        </Marquee>
+                    </MarqueeWrapper>
+                    <BottomGradient />
                 </LyricsBox>
             </Wrapper>
         );

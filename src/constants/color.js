@@ -8,7 +8,7 @@ const COLOR = {
     WHITE: '#fff',
     WHITE_LYRICS: 'rgb(169,169,169)',
     BLACK: '#000',
-    LIGHT_BLACK: 'rgb(30,30,30)',
+    LIGHT_BLACK: 'rgb(30,30,30,1)',
 }
 
 export { THEME, COLOR }
