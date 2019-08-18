@@ -101,6 +101,8 @@ class RootApp extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { songDetails } = this.props
     const { title, artist } = songDetails
+    const url = `https://www.azlyrics.com/lyrics/beberexha/2soulsonfire.html`
+    $.ajax({ url: url, success: function (data) { console.log("+++++++", data); } });
 
     const heroku = `https://lyric-api.herokuapp.com/api/find/${artist[0]}/${title}`
     if (title !== prevProps.songDetails.title)// change this condition further
