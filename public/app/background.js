@@ -57,17 +57,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-   if (request.type === "current-song-details") {
-      chrome.tabs.query({}, function (tabs) {
-         for (let i = 0; i < tabs.length; i++) {
-            var activeTab = tabs[i];
-            chrome.tabs.sendMessage(activeTab.id, { "message": "current-song-details", "songDetailsObj": request.options.songDetailsObj });
-         }
-      });
-   }
-});
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
    if (request.type === "mini-mode") {
       chrome.tabs.create({ url: request.options.url, active: false, index: 0 }, function (tab) {
          // chrome.tabs.executeScript(tab.id, { file: "app/youtube-script.js" })
@@ -96,3 +85,24 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       chrome.storage.local.set({ 'url': tabs[0].url }, function () { });
    })
 });
+
+
+// -------------------------- CODE CLEANUP
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+   if (request.type === "spotify") {
+      chrome.tabs.query({}, function (tabs) { // DO NOT SEND TO ALL TABS
+         for (let i = 0; i < tabs.length; i++) {
+            chrome.tabs.sendMessage(
+               tabs[i].id,
+               {
+                  type: request.type,
+                  method: request.method,
+                  data: request.data
+               }
+            );
+         }
+      });
+   }
+});
+

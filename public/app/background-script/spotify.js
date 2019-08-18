@@ -30,7 +30,7 @@ function main() {
         title: spotifyPageElements.songTitle ? spotifyPageElements.songTitle.innerText : '',
         artist: songArtist ? songArtist : [],
         albumArt: spotifyPageElements.rootAlbum ? spotifyPageElements.rootAlbum.style.backgroundImage.split(`"`)[1] : '',
-        playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'pause',
+        playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'play',
         progressTime: spotifyPageElements.progress[0].innerText,
         totalTime: spotifyPageElements.progress[1].innerText
     }
@@ -76,24 +76,21 @@ if (window.location.href.includes('open.spotify.com') && !window.set) {
 
         if (newDetailsObj.title !== songDetailsObj.title || isDiffArtist(newDetailsObj.artist, songDetailsObj.artist)) {// fire event that song is changed
             chrome.runtime.sendMessage({
-                type: "spotify", options: {
-                    type: "song-change",
-                    songDetailsObj,
-                }
+                type: "spotify",
+                method: "song-change",
+                data: songDetailsObj
             });
         } else if (Math.abs(newProgress - lastProgress > 2)) {// fire event that progress is changed
             chrome.runtime.sendMessage({
-                type: "spotify", options: {
-                    type: "progress-change",
-                    songDetailsObj,
-                }
+                type: "spotify",
+                method: "progress-change",
+                data: songDetailsObj,
             });
         } else if (songDetailsObj.playing !== newDetailsObj.playing) {// fire event that play-state-changed
             chrome.runtime.sendMessage({
-                type: "spotify", options: {
-                    type: "play-sgtate-change",
-                    songDetailsObj,
-                }
+                type: "spotify",
+                method: "play-state-change",
+                data: songDetailsObj,
             });
         }
         songDetailsObj = newDetailsObj;

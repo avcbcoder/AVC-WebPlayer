@@ -40,6 +40,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.type === "spotify")
+    console.log(request)
+});
+
 function toggle() {
   if (app.style.display === "none") {
     app.style.display = "block";
