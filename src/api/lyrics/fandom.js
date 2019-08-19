@@ -15,7 +15,6 @@ const getFandomLyrics = (track, artist, successCallback, failureCallback) => {
             let lyrics = []
             const allText = (ele) => {
                 ele.childNodes.forEach((val, idx) => {
-                    console.log((val.nodeName.toString().toLowerCase()))
                     if (val.nodeName.toString().toLowerCase() === '#text')
                         lyrics.push(val ? val.data ? replace(val.data, '\n', '') : '' : '')
                     else if (val.nodeName.toString().toLowerCase() === 'br')

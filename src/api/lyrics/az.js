@@ -5,8 +5,8 @@ const replace = (str, a, b) => {
 }
 
 const getAzLyrics = (track, artist, successCallback, failureCallback) => {
-    track = replace(track.substr(0, track.indexOf('(')).trim(), ' ', '').toLowerCase()
-    artist = replace(artist, ' ', '').toLowerCase()
+    track = track ? replace(track.substr(0, track.indexOf('(')).trim(), ' ', '').toLowerCase() : ''
+    artist = artist ? replace(artist, ' ', '').toLowerCase() : ''
     const azURL = `https://www.azlyrics.com/lyrics/${artist}/${track}.html`
     $.ajax({
         url: azURL,

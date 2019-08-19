@@ -7,4 +7,4 @@ const youtubeSearch = (keyword, successCallback) => {
     });
 }
 
-export default { youtubeSearch }
+export default youtubeSearch

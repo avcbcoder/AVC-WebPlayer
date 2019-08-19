@@ -1,5 +1,3 @@
-/*global chrome*/
-
 import React from 'react';
 import styled from 'styled-components';
 import App from '../app';
@@ -19,9 +17,6 @@ class RootApp extends React.Component {
     }
 
     componentDidUpdate(prevProvs) {
-        console.log('component did update')
-        console.log('prevProvs', prevProvs)
-        console.log('newProvs', this.props)
     }
 
     render() {

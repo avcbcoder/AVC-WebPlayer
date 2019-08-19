@@ -210,6 +210,8 @@ class SpotifyPlayer extends React.Component {
     }
 
     getProgress = (progressTime, totalTime) => {
+        if (!progressTime || !totalTime)
+            return 1
         var p = 60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)
         var t = 60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)
         return Math.floor((p / t) * 100);

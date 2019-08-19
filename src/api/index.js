@@ -1,24 +1,31 @@
 import { getFandomLyrics, getAzLyrics } from './lyrics'
-import { youtubeSearch } from './youtube-search'
+import youtubeSearch from './youtube-search'
+
+
+const saveAndRender = (storage, store, render) => {
+    storage.set({ 'store': store }, function () {
+        render(store.mode, store.song, store.lyrics, store.youtubeVideos)
+    })
+}
 
 const fetchApi = (storage, songDetails, render) => {
     const { title, artist } = songDetails
 
     const onSuccessLyrics = (lyrics) => {
-        storage.get('store', (store) => {
+        storage.get(['store'], (result) => {
+            const store = result.store
             if (store.lyrics.state !== 'success')
                 store.lyrics = { state: 'success', lyrics }
-            storage.set('store', store)
-            render(store.mode, store.song, store.lyrics, store.youtubeVideos)
+            saveAndRender(storage, store, render)
         })
     }
 
     const onFailureLyrics = () => {
-        storage.get('store', (store) => {
+        storage.get(['store'], (result) => {
+            const store = result.store
             if (store.lyrics.state === 'fetching')
                 store.lyrics = { state: 'fail', lyrics: '' }
-            storage.set('store', store)
-            render(store.mode, store.song, store.lyrics, store.youtubeVideos)
+            saveAndRender(storage, store, render)
         })
     }
 
@@ -28,10 +35,11 @@ const fetchApi = (storage, songDetails, render) => {
     }
 
     youtubeSearch(title + ' ' + artist.join(' '), (videos) => {
-        storage.get('store', (store) => {
+        console.log(432, videos)
+        storage.get(['store'], (result) => {
+            const store = result.store
             store.youtubeVideos = { state: 'success', videos }
-            storage.set('store', store)
-            render(store.mode, store.song, store.lyrics, store.youtubeVideos)
+            saveAndRender(storage, store, render)
         })
     })
 }
