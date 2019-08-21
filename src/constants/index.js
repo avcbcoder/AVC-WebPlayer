@@ -29,6 +29,8 @@ const DISPLAY_MODE = {
     MINI_SPOTIFY: 'mini-spotify',
 }
 
+const DEFAULT_VIDEO_ID = 'dfnCAmr569k'
+
 const DEFAULT_LYRICS = `Midnight,
 You come and pick me up, no headlights
 Long drive,
@@ -85,4 +87,11 @@ And when we go crashing down, we come back every time
 We never go out of style
 `;
 
-export { MODE, ID, CONTROLS, DISPLAY_MODE, DEFAULT_LYRICS }
+const STORE_VAR = {
+    SONG: "store_song",
+    YOUTUBE: "store_youtube",
+    LYRICS: "store_lyrics",
+    MODE: "mode"
+}
+
+export { MODE, ID, CONTROLS, DISPLAY_MODE, DEFAULT_LYRICS, DEFAULT_VIDEO_ID, STORE_VAR }

@@ -91,7 +91,6 @@ class App extends React.Component {
       selected: DISPLAY_MODE.SPOTIFY,
       lyrics: ''
     }
-    this.prevTitle = ''
   }
 
   static getDerivedStateFromProps() {
@@ -103,9 +102,10 @@ class App extends React.Component {
   }
 
   render() {
-    const { mode, songDetails, mediaControl, onClose, lyrics, videos } = this.props;
+    const { store, mediaControl, onClose } = this.props;
     const { selected } = this.state
 
+    console.log('APP', store)
     return (
       <Root >
         <MenuWrapper>
@@ -113,17 +113,17 @@ class App extends React.Component {
         </MenuWrapper>
         {selected === DISPLAY_MODE.SPOTIFY &&
           <WrapperSpotify>
-            <SpotifyPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose}></SpotifyPlayer>
+            <SpotifyPlayer store={store} mediaControl={mediaControl} onClose={onClose}></SpotifyPlayer>
           </WrapperSpotify>
         }
         {selected === DISPLAY_MODE.YOUTUBE &&
           <WrapperYoutube>
-            <YoutubePlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose} videos={videos}></YoutubePlayer>
+            <YoutubePlayer store={store} mediaControl={mediaControl} onClose={onClose} ></YoutubePlayer>
           </WrapperYoutube>
         }
         {selected === DISPLAY_MODE.LYRICS &&
           <WrapperLyrics>
-            <LyricsPlayer mode={mode} songDetails={songDetails} mediaControl={mediaControl} onClose={onClose} lyrics={lyrics}></LyricsPlayer>
+            <LyricsPlayer store={store} mediaControl={mediaControl} onClose={onClose} ></LyricsPlayer>
           </WrapperLyrics>
         }
       </Root>
@@ -131,25 +131,25 @@ class App extends React.Component {
   }
 }
 
-App.defaultProps = {
-  mode: MODE.NONE,
-  songDetails: {
-    title: 'style',
-    artist: ['taylor swift'],
-    albumArt: '',
-    progressTime: '0:01',
-    totalTime: '3:51',
-    playing: false,
-  },
-  lyrics: '404'
-}
+// App.defaultProps = {
+//   mode: MODE.NONE,
+//   songDetails: {
+//     title: 'style',
+//     artist: ['taylor swift'],
+//     albumArt: '',
+//     progressTime: '0:01',
+//     totalTime: '3:51',
+//     playing: false,
+//   },
+//   lyrics: '404'
+// }
 
-App.prototypes = {
-  mode: PropTypes.string,
-  songDetails: PropTypes.shape({}),
-  mediaControl: PropTypes.func,
-  onClose: PropTypes.func,
-  switchToYoutubeMode: PropTypes.func,
-}
+// App.prototypes = {
+//   mode: PropTypes.string,
+//   songDetails: PropTypes.shape({}),
+//   mediaControl: PropTypes.func,
+//   onClose: PropTypes.func,
+//   switchToYoutubeMode: PropTypes.func,
+// }
 
 export default App;

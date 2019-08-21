@@ -2,12 +2,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import RootApp from './modules/root-module';
-import { MODE } from './constants';
+import { MODE, STORE_VAR } from './constants';
 import fetchApi from './api';
 
 const DEFAULT_STORE = {
   mode: MODE.MODE_SPOTIFY,
-  song: {
+  store_song: {
     title: '',
     artist: [],
     albumArt: '',
@@ -15,18 +15,20 @@ const DEFAULT_STORE = {
     totalTime: '',
     playing: '',
   },
-  lyrics: {
+  store_lyrics: {
     state: '',
-    lyrics: ''
+    data: ''
   },
-  youtubeVideos: {
+  store_youtube: {
     state: '',
-    videos: ''
+    data: ''
   }
 }
 
 const storage = chrome.storage.local
-storage.set({ 'store': DEFAULT_STORE })
+storage.set({ 'store': DEFAULT_STORE }, () => {
+  renderComponent()
+})
 
 const app = document.createElement('div');
 app.id = "my-extension";
@@ -55,44 +57,50 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-const renderComponent = (mode, songDetails, lyrics, videos) => {
-  ReactDOM.render(
-    <RootApp
-      mode={mode}
-      songDetails={songDetails}
-      lyrics={lyrics}
-      mediaControl={mediaControl}
-      onClose={onClose}
-    />,
-    app
-  );
+const renderComponent = () => {
+  storage.get(['store'], (result) => {
+    console.log("RENDER", result)
+    ReactDOM.render(
+      <RootApp
+        store={result.store}
+        // mode={store.mode}
+        // songDetails={store.song}
+        // lyrics={store.lyrics}
+        mediaControl={mediaControl}
+        onClose={onClose}
+      // videos={store.videos}
+      />,
+      app
+    );
+  })
 }
-
-renderComponent(DEFAULT_STORE.mode, DEFAULT_STORE.song, DEFAULT_STORE.lyrics, DEFAULT_STORE.youtubeVideos)
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.type !== "spotify")
     return
 
   if (request.method === 'song-change') {
+    console.log("SONG CHANGE---------")
     storage.get(['store'], (result) => {// modify song details and set default state for fetch
       const store = result.store
-      store.song = request.data
-      store.lyrics = { state: 'fetching', lyrics: '' }
-      store.youtubeVideos = { state: 'fetching', videos: '' }
-      store.mode = ''
+      store[STORE_VAR.SONG] = request.data
+      store[STORE_VAR.LYRICS] = { state: 'fetching', data: '' }
+      store[STORE_VAR.YOUTUBE] = { state: 'fetching', data: '' }
+      store[STORE_VAR.MODE] = ''
       storage.set({ 'store': store }, () => {
+        renderComponent()
         fetchApi(storage, request.data, renderComponent)
       })
     })
   } else {
-    storage.get(['store'], (store) => {// modify song details
-      store.song = request.data
+    storage.get(['store'], (result) => {// modify song details
+      const store = result.store
+      store[STORE_VAR.SONG] = request.data
       storage.set({ 'store': store }, () => {
+        renderComponent()
       })
     })
   }
-  renderComponent(MODE.SPOTIFY, request.data, '', '')
 });
 
 function toggle() {

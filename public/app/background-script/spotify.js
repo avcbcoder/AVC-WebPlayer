@@ -13,9 +13,9 @@ var songDetailsObj = {
     title: '',
     artist: [],
     albumArt: '',
-    progressTime: '',
-    totalTime: '',
-    playing: '',
+    progressTime: '0:00',
+    totalTime: '3:51',
+    playing: false,
 }
 
 var spotifyPageElements = {}

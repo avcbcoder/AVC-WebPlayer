@@ -10,6 +10,7 @@ import '../css/circular-progress.css';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { THEME } from '../constants/color';
 import { getAllIcons } from '../constants/icon'
+import { STORE_VAR } from '../constants'
 
 const { playIcon, prevIcon, nextIcon, gifPause1, gifPause2, shuffleIcon, gifPlay, repeatIcon, menuIcon, closeIcon, pauseIcon, menuWhiteIcon, closeWhiteIcon } = getAllIcons(chrome);
 
@@ -241,8 +242,10 @@ class SpotifyPlayer extends React.Component {
     }
 
     render() {
-        const { songDetails, mediaControl, mode, onClose } = this.props
-        const { title, artist, albumArt, totalTime, progressTime, playing } = songDetails;
+        const { store, mediaControl, onClose } = this.props
+
+        console.log('SPOTIFY', store, store[STORE_VAR.SONG])
+        const { title, artist, albumArt, totalTime, progressTime, playing } = store[STORE_VAR.SONG];
 
         return (
             <Wrapper>

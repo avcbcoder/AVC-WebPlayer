@@ -20,10 +20,11 @@ class RootApp extends React.Component {
     }
 
     render() {
-        const { songDetails, mediaControl, onClose } = this.props;
+        const { store, mediaControl, onClose } = this.props;
 
+        console.log("ROOT", store)
         return (
-            <App songDetails={songDetails} mediaControl={mediaControl} onClose={onClose} />
+            <App store={store} mediaControl={mediaControl} onClose={onClose} />
         );
     }
 }

@@ -6,6 +6,7 @@ import styled, { css, keyframes } from 'styled-components';
 import { Col, Separator, Img, CenterHV } from '../components'
 import { getAllIcons } from '../constants/icon'
 import { COLOR } from '../constants/color'
+import { STORE_VAR } from '../constants'
 
 const { minimizeIcon, closeWhiteThinIcon } = getAllIcons(chrome);
 
@@ -123,10 +124,20 @@ class LyricsPlayer extends React.Component {
     }
 
     render() {
-        const { songDetails, mediaControl, mode, onClose, lyrics } = this.props
-        const { progressTime, totalTime } = songDetails;
-        const lyricsArr = this.replace(lyrics ? lyrics : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
-        const y = lyrics ? lyrics.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
+        const { store, onClose } = this.props
+        const lyrics = store[STORE_VAR.LYRICS]
+        const { progressTime, totalTime } = store[STORE_VAR.SONG]
+
+        console.log('LYRIC_PLAYER', store)
+
+        let lyric = DEFAULT_LYRICS
+        let y = 53
+        let lyricsArr = []
+        if (lyrics.state === 'success')
+            lyric = lyric.data
+
+        lyricsArr = this.replace(lyric ? lyric : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
+        y = lyric ? lyric.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
 
         return (
             <Wrapper>
