@@ -35,7 +35,6 @@ app.style.display = "none";
 document.body.appendChild(app);
 
 function mediaControl(media) {
-  console.log('media buttons clicked', media)
   chrome.runtime.sendMessage({
     type: "media", options: {
       type: media
@@ -44,7 +43,6 @@ function mediaControl(media) {
 }
 
 function onClose(c) {
-  console.log('called on close')
   app.style.display = "none";
 }
 
@@ -58,7 +56,6 @@ chrome.runtime.onMessage.addListener(
 );
 
 const renderComponent = (mode, songDetails, lyrics, videos) => {
-  console.log("RENDER432", { mode, songDetails, lyrics, videos })
   ReactDOM.render(
     <RootApp
       mode={mode}

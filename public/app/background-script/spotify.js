@@ -78,19 +78,25 @@ if (window.location.href.includes('open.spotify.com') && !window.set) {
             chrome.runtime.sendMessage({
                 type: "spotify",
                 method: "song-change",
-                data: songDetailsObj
+                data: newDetailsObj
+            });
+        } else if (newDetailsObj.albumArt !== songDetailsObj.albumArt) {
+            chrome.runtime.sendMessage({
+                type: "spotify",
+                method: "album-art-change",
+                data: newDetailsObj
             });
         } else if (Math.abs(newProgress - lastProgress > 2)) {// fire event that progress is changed
             chrome.runtime.sendMessage({
                 type: "spotify",
                 method: "progress-change",
-                data: songDetailsObj,
+                data: newDetailsObj,
             });
         } else if (songDetailsObj.playing !== newDetailsObj.playing) {// fire event that play-state-changed
             chrome.runtime.sendMessage({
                 type: "spotify",
                 method: "play-state-change",
-                data: songDetailsObj,
+                data: newDetailsObj,
             });
         }
         songDetailsObj = newDetailsObj;
