@@ -61,7 +61,7 @@ class MenuCollection extends React.Component {
 
     render() {
         const { selected, onSelected } = this.props
-        console.log(selected)
+
         return (
             <TabsWrapper>
                 <Tabs>

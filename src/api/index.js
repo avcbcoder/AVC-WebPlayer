@@ -35,7 +35,6 @@ const fetchApi = (storage, songDetails, render) => {
     }
 
     youtubeSearch(title + ' ' + artist.join(' '), (videos) => {
-        console.log(432, videos)
         storage.get(['store'], (result) => {
             const store = result.store
             store.youtubeVideos = { state: 'success', videos }
