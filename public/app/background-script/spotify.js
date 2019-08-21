@@ -30,7 +30,7 @@ function main() {
         title: spotifyPageElements.songTitle ? spotifyPageElements.songTitle.innerText : '',
         artist: songArtist ? songArtist : [],
         albumArt: spotifyPageElements.rootAlbum ? spotifyPageElements.rootAlbum.style.backgroundImage.split(`"`)[1] : '',
-        playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'play',
+        playing: spotifyPageElements.play.getAttribute('title').toLowerCase() === 'pause',
         progressTime: spotifyPageElements.progress[0].innerText,
         totalTime: spotifyPageElements.progress[1].innerText
     }
