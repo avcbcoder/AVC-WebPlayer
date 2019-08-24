@@ -49,13 +49,10 @@ class YoutubePlayer extends React.Component {
     render() {
         const { store, onClose } = this.props
         const youtubVideos=store[STORE_VAR.YOUTUBE]
-        console.log("YOUTUBE", store)
-
         let videoId = DEFAULT_VIDEO_ID
         
         if(youtubVideos.state==='success'){
             const videos=youtubVideos.data
-            // console.log("YOUTUBE",videos,"0:",videos[0])
             for(let i=0;i<videos.length;i++)
                 if(videos[i].id.kind==="youtube#video"){
                     videoId=videos[i].id.videoId

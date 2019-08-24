@@ -21,8 +21,7 @@ class RootApp extends React.Component {
 
     render() {
         const { store, mediaControl, onClose } = this.props;
-
-        console.log("ROOT", store)
+        
         return (
             <App store={store} mediaControl={mediaControl} onClose={onClose} />
         );

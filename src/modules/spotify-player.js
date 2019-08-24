@@ -243,8 +243,6 @@ class SpotifyPlayer extends React.Component {
 
     render() {
         const { store, mediaControl, onClose } = this.props
-
-        console.log('SPOTIFY', store, store[STORE_VAR.SONG])
         const { title, artist, albumArt, totalTime, progressTime, playing } = store[STORE_VAR.SONG];
 
         return (

@@ -105,7 +105,6 @@ class App extends React.Component {
     const { store, mediaControl, onClose } = this.props;
     const { selected } = this.state
 
-    console.log('APP', store)
     return (
       <Root >
         <MenuWrapper>

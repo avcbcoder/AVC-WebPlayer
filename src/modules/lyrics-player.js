@@ -124,31 +124,12 @@ class LyricsPlayer extends React.Component {
     }
 
     componentDidMount() {
-        // const { store } = this.props
-        // const lyrics = store[STORE_VAR.LYRICS]
-        // const { progressTime, totalTime } = store[STORE_VAR.SONG]
-
-        // console.log('LYRIC_PLAYER', store, lyrics, lyrics.state)
-
-        // let lyric = DEFAULT_LYRICS
-        // let y = 53
-        // let lyricsArr = []
-        // if (lyrics.state === 'success')
-        //     lyric = lyrics.data
-
-        // lyricsArr = this.replace(lyric ? lyric : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
-        // y = lyric ? lyric.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
-
-        // const scrollPos = Math.floor(((y / totalTime) * progressTime))
-        // this.refLyricsBox.current.scrollTop += scrollPos
     }
 
     render() {
         const { store, onClose } = this.props
         const lyrics = store[STORE_VAR.LYRICS]
         const { progressTime, totalTime } = store[STORE_VAR.SONG]
-
-        console.log('LYRIC_PLAYER', store, lyrics, lyrics.state)
 
         let lyric = DEFAULT_LYRICS
         let y = 53
@@ -158,10 +139,8 @@ class LyricsPlayer extends React.Component {
 
         lyricsArr = this.replace(lyric ? lyric : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
         y = lyric ? lyric.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
-
         const scrollPos = Math.floor(((y / totalTime) * progressTime))
 
-        console.log('432', totalTime, 60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10))
         return (
             <Wrapper>
                 <Separator height="12" />

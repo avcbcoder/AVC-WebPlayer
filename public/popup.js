@@ -4,12 +4,9 @@ window.onload = () => {
     chrome.storage.local.get(['url'], function (result) {
         chrome.extension.getBackgroundPage().console.log('current url', result);
         url = result.url
-        chrome.extension.getBackgroundPage().console.log('hanji', url)
         //show popup
         if (url.includes('chrome://') || url.includes('chrome-search://') || url.includes('chrome-extension://' || url.includes("chrome-error://chromewebdata/"))) {
-            chrome.extension.getBackgroundPage().console.log('default choice', url)
         } else { // disable popup
-            chrome.extension.getBackgroundPage().console.log('my choice', url)
             chrome.runtime.sendMessage({
                 type: "toggle", options: {
                     type: "basic"

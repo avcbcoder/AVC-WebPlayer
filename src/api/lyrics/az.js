@@ -40,11 +40,10 @@ const getAzLyrics = (track, artist, successCallback, failureCallback) => {
                 if (val.nodeName.toString().toLowerCase() === 'br')
                     lyrics.push('\n')
             });
-            console.log(432, 'az url', azURL, lyrics)
             successCallback(replace(lyrics.join(''), '\n\n\n', '\n\n'))
         },
         statusCode: {
-            404: function () { failureCallback(); console.log(432, 'az url', azURL, 'NOT FOUND', artist, track) }
+            404: function () { failureCallback(); }
         },
         error: function () { failureCallback() },
         fail: function () { failureCallback() },

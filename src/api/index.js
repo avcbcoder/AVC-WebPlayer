@@ -10,7 +10,6 @@ const saveAndRender = (storage, store, render) => {
 }
 
 const fetchApi = (storage, songDetails, render) => {
-    console.log('fetching api for', songDetails)
     const { title, artist } = songDetails
 
     const onSuccessLyrics = (lyrics) => {

@@ -59,16 +59,11 @@ chrome.runtime.onMessage.addListener(
 
 const renderComponent = () => {
   storage.get(['store'], (result) => {
-    console.log("RENDER", result)
     ReactDOM.render(
       <RootApp
         store={result.store}
-        // mode={store.mode}
-        // songDetails={store.song}
-        // lyrics={store.lyrics}
         mediaControl={mediaControl}
         onClose={onClose}
-      // videos={store.videos}
       />,
       app
     );
