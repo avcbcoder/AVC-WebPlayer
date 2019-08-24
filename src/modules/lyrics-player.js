@@ -89,8 +89,8 @@ const Marquee = styled.p`
     top: 6em;
     position: relative;
     box-sizing: border-box;
-    /* animation: $${ y => scroll(y)} ${({ time }) => time}s linear infinite; */
-    animation: ${ ({ y }) => scroll(y)} 20s linear infinite;
+    animation: ${ ({ y }) => scroll(y)} ${({ time }) => time}s linear infinite;
+    /* animation: ${ ({ y }) => scroll(y)} 20s linear infinite; */
     &:hover{
         animation-play-state: paused;
     }
@@ -123,22 +123,45 @@ class LyricsPlayer extends React.Component {
         return y
     }
 
+    componentDidMount() {
+        // const { store } = this.props
+        // const lyrics = store[STORE_VAR.LYRICS]
+        // const { progressTime, totalTime } = store[STORE_VAR.SONG]
+
+        // console.log('LYRIC_PLAYER', store, lyrics, lyrics.state)
+
+        // let lyric = DEFAULT_LYRICS
+        // let y = 53
+        // let lyricsArr = []
+        // if (lyrics.state === 'success')
+        //     lyric = lyrics.data
+
+        // lyricsArr = this.replace(lyric ? lyric : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
+        // y = lyric ? lyric.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
+
+        // const scrollPos = Math.floor(((y / totalTime) * progressTime))
+        // this.refLyricsBox.current.scrollTop += scrollPos
+    }
+
     render() {
         const { store, onClose } = this.props
         const lyrics = store[STORE_VAR.LYRICS]
         const { progressTime, totalTime } = store[STORE_VAR.SONG]
 
-        console.log('LYRIC_PLAYER', store)
+        console.log('LYRIC_PLAYER', store, lyrics, lyrics.state)
 
         let lyric = DEFAULT_LYRICS
         let y = 53
         let lyricsArr = []
         if (lyrics.state === 'success')
-            lyric = lyric.data
+            lyric = lyrics.data
 
         lyricsArr = this.replace(lyric ? lyric : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
         y = lyric ? lyric.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
 
+        const scrollPos = Math.floor(((y / totalTime) * progressTime))
+
+        console.log('432', totalTime, 60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10))
         return (
             <Wrapper>
                 <Separator height="12" />
@@ -151,8 +174,9 @@ class LyricsPlayer extends React.Component {
                 <Separator height="14" />
                 <LyricsBox>
                     <TopGradient />
-                    <MarqueeWrapper>
+                    <MarqueeWrapper >
                         <Marquee
+                            ref={this.refLyricsBox}
                             y={this.getY(y, lyricsArr)}
                             time={60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)}
                         >

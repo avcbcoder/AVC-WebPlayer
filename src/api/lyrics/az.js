@@ -4,9 +4,22 @@ const replace = (str, a, b) => {
     return str.split(a).join(b)
 }
 
+const filter = (str, space) => {
+    let track = []
+    for (let i = 0; i < str.length; i++)
+        if (str[i] === '(')
+            break;
+        else if (str[i] === ' ')
+            track.push(space)
+        else
+            track.push((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= '0' && str[i] <= '9') ? str[i] : '')
+    return track.join('')
+}
+
+
 const getAzLyrics = (track, artist, successCallback, failureCallback) => {
-    track = track ? replace(track.substr(0, track.indexOf('(')).trim(), ' ', '').toLowerCase() : ''
-    artist = artist ? replace(artist, ' ', '').toLowerCase() : ''
+    track = filter(track.toLowerCase(), '')
+    artist = filter(artist.toLowerCase(), '')
     const azURL = `https://www.azlyrics.com/lyrics/${artist}/${track}.html`
     $.ajax({
         url: azURL,
@@ -27,10 +40,11 @@ const getAzLyrics = (track, artist, successCallback, failureCallback) => {
                 if (val.nodeName.toString().toLowerCase() === 'br')
                     lyrics.push('\n')
             });
+            console.log(432, 'az url', azURL, lyrics)
             successCallback(replace(lyrics.join(''), '\n\n\n', '\n\n'))
         },
         statusCode: {
-            404: function () { failureCallback() }
+            404: function () { failureCallback(); console.log(432, 'az url', azURL, 'NOT FOUND', artist, track) }
         },
         error: function () { failureCallback() },
         fail: function () { failureCallback() },
