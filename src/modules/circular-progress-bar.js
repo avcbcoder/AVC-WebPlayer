@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
 import 'react-circular-progressbar/dist/styles.css';
 import '../css/circular-progress.css';
+
 import { Img } from '../components'
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 
 const REFRESH_INTERVAL = 500;
 const FLOW_SMOOTHNESS = 2;
-
 const STYLE = {
     ALBUM_ART_DIMENSION: 120,
 }
@@ -20,24 +19,34 @@ const CircularImg = styled(Img)`
 `;
 
 export default class CircularProgress extends React.Component {
+    // this.interval = setInterval(() => this.refresh(), REFRESH_INTERVAL);
+    // clearInterval(this.interval);
+    // {
+    //     albumArt,
+    //     playing,
+    //     progressTime: (60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)),
+    //     totalTime: (60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)),
+    // }
     constructor(props) {
         super(props)
         this.state = {
-            albumArt: '',
-            progressTime: 0.0,
-            totalTime: 351.0,
-            refreshing: false,
+            imageURL: '',
+            progress: 0.0,
+            total: 351.0,
+            timeStamp: 0,
         }
     }
 
-    static getDerivedStateFromProps({ albumArt, progressTime, totalTime, playing }, { refreshing }) {
-        if (!refreshing)
+    static getDerivedStateFromProps({ albumArt, progressTime, totalTime, timeStamp, playing }, prevState) {
+        if (prevState.timeStamp !== timeStamp) // new time stamp -> props changed
             return {
-                albumArt,
-                playing,
-                progressTime: (60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)),
-                totalTime: (60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)),
+                imageURL: albumArt,
+                progress: (60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)),
+                total: (60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)),
+                timeStamp,
+                playing
             }
+
         return {}
     }
 
@@ -50,22 +59,23 @@ export default class CircularProgress extends React.Component {
     }
 
     refresh() {
-        const { playing, progressTime } = this.state
+        const { playing, progress } = this.state
         console.log('refreshing')
-        if (playing)
-            this.setState({ refreshing: true, progressTime: progressTime + REFRESH_INTERVAL / 1000 });
+        if (playing) {
+            console.log('nv', progress + REFRESH_INTERVAL / 1000)
+            this.setState({ progress: progress + REFRESH_INTERVAL / 1000 });
+        }
     }
 
     render() {
-        const { albumArt, progressTime, totalTime } = this.state
+        const { imageURL, progress, total } = this.state
 
-        console.log(progressTime)
         return (
             <div>
                 <CircularProgressbarWithChildren
                     strokeWidth="3"
-                    value={Math.floor(progressTime * FLOW_SMOOTHNESS)}
-                    maxValue={totalTime * FLOW_SMOOTHNESS}
+                    value={Math.floor(progress * FLOW_SMOOTHNESS)}
+                    maxValue={total * FLOW_SMOOTHNESS}
                     styles={
                         buildStyles({
                             pathColor: `rgba(71, 143, 252, ${66 / 100})`,
@@ -73,7 +83,7 @@ export default class CircularProgress extends React.Component {
                             backgroundColor: '#3e98c7',
                         })}
                 >
-                    <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={albumArt} alt='' onError="this.style.display='none'"></CircularImg>
+                    <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={imageURL} alt='' onError="this.style.display='none'"></CircularImg>
                 </CircularProgressbarWithChildren>
             </div>
         );

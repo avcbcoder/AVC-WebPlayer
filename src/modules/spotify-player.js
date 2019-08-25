@@ -248,7 +248,13 @@ class SpotifyPlayer extends React.Component {
 
                 <Upper>
                     <AlbumArtImage>
-                        <CircularProgress playing={playing} albumArt={albumArt} progressTime={progressTime} totalTime={totalTime} />
+                        <CircularProgress
+                            playing={playing}
+                            albumArt={albumArt}
+                            progressTime={progressTime}
+                            totalTime={totalTime}
+                            timeStamp={new Date().getTime()}
+                        />
                     </AlbumArtImage>
                 </Upper>
                 <Bottom>
