@@ -11,6 +11,7 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import { THEME } from '../constants/color';
 import { getAllIcons } from '../constants/icon'
 import { STORE_VAR } from '../constants'
+import CircularProgress from './circular-progress-bar'
 
 const { playIcon, prevIcon, nextIcon, gifPause1, gifPause2, shuffleIcon, gifPlay, repeatIcon, menuIcon, closeIcon, pauseIcon, menuWhiteIcon, closeWhiteIcon } = getAllIcons(chrome);
 
@@ -75,12 +76,6 @@ const PlaylistControlShuffle = styled.div`
 
 const AlbumArtImage = styled.div`
     margin-top:50px;
-`;
-
-
-const CircularImg = styled(Img)`
-    border-radius:50%;
-    z-index:5;
 `;
 
 const Gif = styled.img`
@@ -253,18 +248,7 @@ class SpotifyPlayer extends React.Component {
 
                 <Upper>
                     <AlbumArtImage>
-                        <CircularProgressbarWithChildren
-                            strokeWidth="3"
-                            value={Math.floor(Math.abs(this.getProgress(progressTime, totalTime)))}
-                            styles={
-                                buildStyles({
-                                    pathColor: `rgba(71, 143, 252, ${66 / 100})`,
-                                    trailColor: '#d6d6d6',
-                                    backgroundColor: '#3e98c7',
-                                })}
-                        >
-                            <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={albumArt} alt='' onError="this.style.display='none'"></CircularImg>
-                        </CircularProgressbarWithChildren>
+                        <CircularProgress playing={playing} albumArt={albumArt} progressTime={progressTime} totalTime={totalTime} />
                     </AlbumArtImage>
                 </Upper>
                 <Bottom>

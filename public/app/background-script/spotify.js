@@ -54,6 +54,10 @@ function extractElements() {
 
     // Progress
     spotifyPageElements.progress = document.getElementsByClassName('playback-bar__progress-time');
+
+    // PictureInPicture
+    spotifyPageElements.pip = document.getElementsByClassName('picture-in-picture-button control-button')[0]
+
 }
 
 extractElements();

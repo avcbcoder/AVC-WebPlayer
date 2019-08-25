@@ -101,12 +101,15 @@ class LyricsPlayer extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            lyricsState: 'Lyrics will appear here',
+            lyrics: '',
+            progressTime: '',
+            totalTime: ''
         }
         this.refLyricsBox = React.createRef();
     }
 
-    static getDerivedStateFromProps() {
+    static getDerivedStateFromProps({ store }) {
         return {}
     }
 
@@ -139,7 +142,7 @@ class LyricsPlayer extends React.Component {
 
         lyricsArr = this.replace(lyric ? lyric : DEFAULT_LYRICS, `\n\n`, `\n \n`).split('\n')
         y = lyric ? lyric.split(`\n\n`).length : DEFAULT_LYRICS.split(`\n\n`).length
-        const scrollPos = Math.floor(((y / totalTime) * progressTime))
+        // const scrollPos = Math.floor(((y / totalTime) * progressTime))
 
         return (
             <Wrapper>
@@ -154,15 +157,19 @@ class LyricsPlayer extends React.Component {
                 <LyricsBox>
                     <TopGradient />
                     <MarqueeWrapper >
-                        <Marquee
-                            ref={this.refLyricsBox}
-                            y={this.getY(y, lyricsArr)}
-                            time={60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)}
-                        >
-                            {lyricsArr.map(lyric => (
-                                <Text >{lyric === ' ' ? <br /> : lyric}</Text>
-                            ))}
-                        </Marquee>
+                        {lyrics.state === 'fail' && <Text>Lyrics not found for this song</Text>}
+                        {lyrics.state === 'fetching' && <Text>Fetching lyrics for this song</Text>}
+                        {lyrics.state === 'success' &&
+                            <Marquee
+                                ref={this.refLyricsBox}
+                                y={this.getY(y, lyricsArr)}
+                                time={60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)}
+                            >
+                                {lyricsArr.map(lyric => (
+                                    <Text >{lyric === ' ' ? <br /> : lyric}</Text>
+                                ))}
+                            </Marquee>
+                        }
                     </MarqueeWrapper>
                     <BottomGradient />
                 </LyricsBox>
