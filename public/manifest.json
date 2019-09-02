@@ -13,7 +13,6 @@
         "js": ["/static/js/content.js"]
     }],
     "web_accessible_resources": [
-        "/static/css/content.css",
         "img/music_gif.gif",
         "img/*",
         "app/*",
