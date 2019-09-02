@@ -16,8 +16,6 @@
         "img/music_gif.gif",
         "img/*",
         "app/*",
-        "app/background.js",
-        "background.js",
         "app/background/cmmunication/index.js",
         "app/background/network/index.js"
     ],
