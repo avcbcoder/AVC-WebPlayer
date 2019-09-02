@@ -40,12 +40,6 @@ export default class CircularProgress extends React.Component {
     }
 
     static getDerivedStateFromProps({ albumArt, progressTime, totalTime, timeStamp, playing }, prevState) {
-        // let intervalId = prevState.intervalId
-        // if (!prevState.playing && playing) // Paused -> playing
-        //     intervalId = setInterval(() => this.refresh(), REFRESH_INTERVAL);
-        // else if (prevState.playing && !playing)// Playing -> pause
-        //     clearInterval(intervalId);
-
         if (prevState.timeStamp !== timeStamp) // new time stamp -> props changed
             return {
                 imageURL: albumArt,
@@ -64,16 +58,12 @@ export default class CircularProgress extends React.Component {
     }
 
     componentWillUnmount() {
-        // const { intervalId } = this.state
-
         clearInterval(this.interval);
     }
 
     refresh() {
         const { playing, progress } = this.state
-        console.log('refreshing')
         if (playing) {
-            console.log('nv', progress + REFRESH_INTERVAL / 1000)
             this.setState({ progress: progress + REFRESH_INTERVAL / 1000 });
         }
     }

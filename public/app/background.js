@@ -50,6 +50,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 chrome.tabs.onCreated.addListener(function (tab) {
    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.extension.getBackgroundPage().console.log('tab created');
       chrome.storage.local.set({ 'url': tabs[0].url }, function () { });
    })
 });

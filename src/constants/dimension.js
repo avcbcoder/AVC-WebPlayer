@@ -1,10 +1,10 @@
 const SPOTIFY_PLAYER = {
-    WIDTH: 24,
+    WIDTH: 22,
     HEIGHT: 74,
 }
 
 const YOUTUBE_PLAYER = {
-    WIDTH: 24,
+    WIDTH: 22,
 }
 
 export { SPOTIFY_PLAYER, YOUTUBE_PLAYER }
