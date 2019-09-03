@@ -7,6 +7,11 @@ const STORE_VAR = {
   MODE: "mode"
 };
 
+const CACHE_VAR = {
+  LYRICS: "cache_lyrics",
+  VIDEO: "cache_video"
+};
+
 const console = () => {
   //   chrome.extension.getBackgroundPage().console.log(arguments.join(" | "));
 };
@@ -38,25 +43,6 @@ const filter = (str, space) => {
           : ""
       );
   return track.join("");
-};
-
-const getYoutubeVideos = (searchString, successCallback) => {
-  chrome.extension.getBackgroundPage().console.log("searching in youtube");
-  const searchURL = `https://www.googleapis.com/youtube/v3/search`;
-  $.get(
-    searchURL,
-    {
-      part: "snippet",
-      q: searchString,
-      type: "video",
-      key: "AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ",
-      maxResults:"5",
-      order:"viewCount"
-    },
-    function(data) {
-      chrome.extension.getBackgroundPage().console.log("data found", data);
-    }
-  );
 };
 
 const getFandomLyrics = (track, artist, successCallback, failureCallback) => {
@@ -134,8 +120,69 @@ const getAzLyrics = (track, artist, successCallback, failureCallback) => {
     }
   });
 };
+const fetchYoutubeVideos = (storage, songDetails) => {
+  const { title, artist } = songDetails;
+  const searchString = title + " " + artist.join(" ");
+  const id = searchString; // will change it to hash later
 
-const fetchApi = (storage, songDetails) => {
+  function fetch(searchURL, callback) {
+    chrome.extension.getBackgroundPage().console.log("searching in youtube");
+    $.get(
+      searchURL,
+      {
+        part: "snippet",
+        q: searchString,
+        type: "video",
+        key: "AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ",
+        maxResults: "5",
+        order: "viewCount"
+      },
+      data => {
+        chrome.extension.getBackgroundPage().console.log("data found", data);
+        callback(data);
+      }
+    );
+  }
+
+  storage.get(["cache"], result => {
+    // search in the cache first
+    const cache = result.cache;
+    const cacheVideos = cache[CACHE_VAR.VIDEO];
+    const video = cacheVideos[id];
+
+    function save(data) {
+      storage.get(["store"], result => {
+        // save in store
+        const store = result.store;
+        store[STORE_VAR.YOUTUBE] = { state: "success", data };
+        storage.set({ store: store }, function() {
+          render();
+        });
+      });
+    }
+
+    if (video) {
+      chrome.extension
+        .getBackgroundPage()
+        .console.log("data found in cache", data);
+      save(video);
+    } else {
+      const searchURL = `https://www.googleapis.com/youtube/v3/search`;
+      fetch(searchURL, data => {
+        save(data);
+        storage.get(["cache"], result => {
+          // save in cache
+          const cache = result.cache;
+          cacheVideos = cache[CACHE_VAR.VIDEO];
+          cacheVideos[id] = data;
+          storage.set({ cache: cache }, function() {});
+        });
+      });
+    }
+  });
+};
+
+const fetchLyrics = (storage, songDetails) => {
   const { title, artist } = songDetails;
 
   const onSuccessLyrics = lyrics => {
@@ -164,9 +211,6 @@ const fetchApi = (storage, songDetails) => {
     getFandomLyrics(title, artist[i], onSuccessLyrics, onFailureLyrics);
     getAzLyrics(title, artist[i], onSuccessLyrics, onFailureLyrics);
   }
-
-  const searchString = title + " " + artist.join(" ");
-  getYoutubeVideos(searchString, videos => {});
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -191,6 +235,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   });
 
   if (request.method === "song-change") {
-    fetchApi(storage, request.data);
+    fetchLyrics(storage, request.data);
+    fetchYoutubeVideos(storage, request.data);
   }
 });
