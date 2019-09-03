@@ -1,7 +1,6 @@
 import { STORE_VAR,CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
 
 function fetch(searchString, callback) {
-  chrome.extension.getBackgroundPage().console.log("searching in youtube");
   $.get(
     YOUTUBE_V3_SEARCH,
     {
@@ -12,7 +11,6 @@ function fetch(searchString, callback) {
       maxResults: "3"
     },
     data => {
-      chrome.extension.getBackgroundPage().console.log("data found", data);
       callback(data);
     }
   );
@@ -49,15 +47,9 @@ const fetchYoutubeVideos = (storage, songDetails, render) => {
     const video = cacheVideos[id];
 
     if (video) {
-      chrome.extension
-        .getBackgroundPage()
-        .console.log("data found in cache", data);
       saveInStore(storage,video, render);
     } else {
       fetch(searchString, data => {
-        chrome.extension
-          .getBackgroundPage()
-          .console.log("data fetch from yt api", data);
         saveInStore(storage,data, render);
         saveInCache(storage,id, data);
       });

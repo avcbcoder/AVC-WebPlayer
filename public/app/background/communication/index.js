@@ -12,12 +12,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       }
     });
     chrome.tabs.query({}, function(tabs) {
-      for (let i = 0; i < tabs.length; i++)
+      for (let i = 0; i < tabs.length; i++) {
         if (tabs[i].url.includes("//open.spotify.com")) {
           chrome.tabs.executeScript(tabs[i].id, {
             file: "app/background-script/spotify.js"
           });
         }
+      }
     });
   }
 });
@@ -60,13 +61,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 chrome.tabs.onCreated.addListener(function(tab) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    chrome.extension.getBackgroundPage().console.log("tab created");
-    chrome.storage.local.set({ url: tabs[0].url }, function() {});
+    if (tabs && tabs.length > 0)
+      chrome.storage.local.set({ url: tabs[0].url }, function() {});
   });
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    chrome.storage.local.set({ url: tabs[0].url }, function() {});
+    if (tabs && tabs.length > 0)
+      chrome.storage.local.set({ url: tabs[0].url }, function() {});
   });
 });
