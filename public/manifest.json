@@ -4,7 +4,7 @@
     "version": "1.0",
     "manifest_version": 2,
     "background": {
-        "scripts":["app/background/communication/index.js", "app/background/network/index.js"]
+        "scripts":["app/background/jquery.js","app/background/communication/index.js", "app/background/network/index.js"]
     },
     "browser_action": { "default_popup": "app/popup/popup.html" },
     "content_scripts": [{
