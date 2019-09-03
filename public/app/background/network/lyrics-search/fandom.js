@@ -27,6 +27,7 @@ const getFandomLyrics = (track, artist, successCallback, failureCallback) => {
       const lyricBox = doc.body.getElementsByClassName("lyricbox")[0];
       let lyrics = [];
       const allText = ele => {
+        if (!ele) return;
         ele.childNodes.forEach((val, idx) => {
           if (val.nodeName.toString().toLowerCase() === "#text")
             lyrics.push(

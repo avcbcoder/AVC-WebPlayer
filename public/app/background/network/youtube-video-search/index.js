@@ -1,4 +1,18 @@
-import { STORE_VAR,CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
+import { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
+
+function getVideoIds(data) {
+  const items = data.items;
+  if (!items) return;
+
+  const videos = [];
+  items.forEach(video => {
+    const videoId = video["id"]["videoId"];
+    const thumbnailUrl = video["snippet"]["thumbnails"]["high"]["url"];
+    videos.push({ videoId, thumbnailUrl });
+  });
+
+  return videos;
+}
 
 function fetch(searchString, callback) {
   $.get(
@@ -11,12 +25,12 @@ function fetch(searchString, callback) {
       maxResults: "3"
     },
     data => {
-      callback(data);
+      callback(getVideoIds(data));
     }
   );
 }
 
-function saveInStore(storage,data, render) {
+function saveInStore(storage, data, render) {
   storage.get(["store"], result => {
     const store = result.store;
     store[STORE_VAR.YOUTUBE] = { state: "success", data };
@@ -26,7 +40,7 @@ function saveInStore(storage,data, render) {
   });
 }
 
-function saveInCache(storage,id, data) {
+function saveInCache(storage, id, data) {
   storage.get(["cache"], result => {
     const cache = result.cache;
     const cacheVideos = cache[CACHE_VAR.VIDEO];
@@ -47,11 +61,11 @@ const fetchYoutubeVideos = (storage, songDetails, render) => {
     const video = cacheVideos[id];
 
     if (video) {
-      saveInStore(storage,video, render);
+      saveInStore(storage, video, render);
     } else {
       fetch(searchString, data => {
-        saveInStore(storage,data, render);
-        saveInCache(storage,id, data);
+        saveInStore(storage, data, render);
+        saveInCache(storage, id, data);
       });
     }
   });
