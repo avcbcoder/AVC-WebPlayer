@@ -1,6 +1,6 @@
 /*global chrome*/
 
-import {STORE_VAR, CACHE_VAR} from '../constants'
+import {STORE_VAR, CACHE_VAR} from '../constants.js'
 
 function cacheCheck(storage, callback) {
   storage.get(["cache"], result => {
@@ -9,8 +9,8 @@ function cacheCheck(storage, callback) {
     if (cache) {
       callback();
     } else {
-      const cache = { cache_video: {}, cache_lyrics: {} };
-      storage.set({ cache }, callback);
+      const defaultCache = { cache_video: {}, cache_lyrics: {} };
+      storage.set({ cache:defaultCache }, callback);
     }
   });
 }
