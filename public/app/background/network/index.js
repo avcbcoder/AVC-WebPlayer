@@ -1,16 +1,6 @@
 /*global chrome*/
 
-const STORE_VAR = {
-  SONG: "store_song",
-  YOUTUBE: "store_youtube",
-  LYRICS: "store_lyrics",
-  MODE: "mode"
-};
-
-const CACHE_VAR = {
-  LYRICS: "cache_lyrics",
-  VIDEO: "cache_video"
-};
+import {STORE_VAR, CACHE_VAR} from '../constants'
 
 function cacheCheck(storage, callback) {
   storage.get(["cache"], result => {
@@ -144,8 +134,7 @@ const fetchYoutubeVideos = (storage, songDetails) => {
         q: searchString,
         type: "video",
         key: "AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ",
-        maxResults: "5",
-        order: "viewCount"
+        maxResults: "3"
       },
       data => {
         chrome.extension.getBackgroundPage().console.log("data found", data);
@@ -190,7 +179,7 @@ const fetchYoutubeVideos = (storage, songDetails) => {
               const cache = result.cache;
               cacheVideos = cache[CACHE_VAR.VIDEO];
               cacheVideos[id] = data;
-              storage.set({ cache: cache }, function() {});
+              storage.set({ cache }, function() {});
             });
           });
         }
