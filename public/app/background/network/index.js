@@ -12,9 +12,18 @@ const CACHE_VAR = {
   VIDEO: "cache_video"
 };
 
-const console = () => {
-  //   chrome.extension.getBackgroundPage().console.log(arguments.join(" | "));
-};
+function cacheCheck(storage, callback) {
+  storage.get(["cache"], result => {
+    // wheteher cache is initialised or not
+    const cache = result.cache;
+    if (cache) {
+      callback();
+    } else {
+      const cache = { cache_video: {}, cache_lyrics: {} };
+      storage.set({ cache }, callback);
+    }
+  });
+}
 
 const render = () => {
   chrome.tabs.query({}, function(tabs) {
@@ -120,6 +129,7 @@ const getAzLyrics = (track, artist, successCallback, failureCallback) => {
     }
   });
 };
+
 const fetchYoutubeVideos = (storage, songDetails) => {
   const { title, artist } = songDetails;
   const searchString = title + " " + artist.join(" ");
@@ -144,42 +154,48 @@ const fetchYoutubeVideos = (storage, songDetails) => {
     );
   }
 
-  storage.get(["cache"], result => {
-    // search in the cache first
-    const cache = result.cache;
-    const cacheVideos = cache[CACHE_VAR.VIDEO];
-    const video = cacheVideos[id];
-
-    function save(data) {
-      storage.get(["store"], result => {
-        // save in store
-        const store = result.store;
-        store[STORE_VAR.YOUTUBE] = { state: "success", data };
-        storage.set({ store: store }, function() {
-          render();
-        });
+  cacheCheck(storage,(cc)=>{
+    chrome.extension.getBackgroundPage().console.log("returned by cache check", cc);
+    storage.get(["cache"], result => {
+        // search in the cache first
+        const cache = result.cache;
+        const cacheVideos = cache[CACHE_VAR.VIDEO];
+        const video = cacheVideos[id];
+    
+        function save(data) {
+          storage.get(["store"], result => {
+            // save in store
+            const store = result.store;
+            store[STORE_VAR.YOUTUBE] = { state: "success", data };
+            storage.set({ store: store }, function() {
+              render();
+            });
+          });
+        }
+    
+        if (video) {
+          chrome.extension
+            .getBackgroundPage()
+            .console.log("data found in cache", data);
+          save(video);
+        } else {
+          const searchURL = `https://www.googleapis.com/youtube/v3/search`;
+          fetch(searchURL, data => {
+            chrome.extension
+            .getBackgroundPage()
+            .console.log("data fetch from yt api", data);
+            save(data);
+            storage.get(["cache"], result => {
+              // save in cache
+              const cache = result.cache;
+              cacheVideos = cache[CACHE_VAR.VIDEO];
+              cacheVideos[id] = data;
+              storage.set({ cache: cache }, function() {});
+            });
+          });
+        }
       });
-    }
-
-    if (video) {
-      chrome.extension
-        .getBackgroundPage()
-        .console.log("data found in cache", data);
-      save(video);
-    } else {
-      const searchURL = `https://www.googleapis.com/youtube/v3/search`;
-      fetch(searchURL, data => {
-        save(data);
-        storage.get(["cache"], result => {
-          // save in cache
-          const cache = result.cache;
-          cacheVideos = cache[CACHE_VAR.VIDEO];
-          cacheVideos[id] = data;
-          storage.set({ cache: cache }, function() {});
-        });
-      });
-    }
-  });
+  })
 };
 
 const fetchLyrics = (storage, songDetails) => {
