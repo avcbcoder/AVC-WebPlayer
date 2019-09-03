@@ -35,30 +35,15 @@ const ButtonCollection = styled.div`
 
 class YoutubePlayer extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-
-        }
-    }
-
-    static getDerivedStateFromProps() {
-        return {}
-    }
-
     render() {
         const { store, onClose } = this.props
-        const youtubVideos=store[STORE_VAR.YOUTUBE]
+        const videos=store[STORE_VAR.YOUTUBE]
+        
         let videoId = DEFAULT_VIDEO_ID
         
-        if(youtubVideos.state==='success'){
-            const videos=youtubVideos.data
-            for(let i=0;i<videos.length;i++)
-                if(videos[i].id.kind==="youtube#video"){
-                    videoId=videos[i].id.videoId
-                    break;
-                }
-            }
+        if(videos['state']==='success' && videos['data'] && videos['data'].length>0)
+        videoId=videos['data']['0']['videoId']
+        
         return (
             <Wrapper>
                 <Separator height="12"/>
