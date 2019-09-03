@@ -2,6 +2,7 @@ const STORE_VAR = {
   SONG: "store_song",
   YOUTUBE: "store_youtube",
   LYRICS: "store_lyrics",
+  HAPPI:"store_happi",
   MODE: "mode"
 };
 
@@ -13,7 +14,11 @@ const CACHE_VAR = {
 
 const HAPPI_OBJ={
   API_LYRICS:"api_lyrics",
-  COVER:"cover"
+  RESULT:"result",
+  LENGTH:"length",
+  COVER:"cover",
+  HAS_LYRICS:"haslyrics",
+  TRACK:"track"
 }
 
 const YOUTUBE_V3_SEARCH = `https://www.googleapis.com/youtube/v3/search`;

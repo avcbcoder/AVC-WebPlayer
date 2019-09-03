@@ -1,34 +1,40 @@
-import { STORE_VAR, CACHE_VAR } from "../../constants.js";
+import { STORE_VAR, CACHE_VAR, HAPPI_OBJ } from "../../constants.js";
 import { LYRICS_HAPPI_API_KEYS } from "../../../../config.js";
 
 const storage = chrome.storage.local;
 
 function fetch(searchString, callback) {
-  const searchUrl = `https://api.happi.dev/v1/music?q=${searchString}&limit=3&apikey=${
+  const searchUrl = `https://api.happi.dev/v1/music?q=${searchString}&limit=1&apikey=${
     LYRICS_HAPPI_API_KEYS[0]
   }`;
 
-  $.get(searchUrl, data => {
-    chrome.extension.getBackgroundPage().console.log("AFTER FETCH", data);
-    callback(data);
+  $.get(searchUrl, response => {
+    if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
+      callback("");
+      return;
+    }
+    const track = response[HAPPI_OBJ.RESULT][0];
+    const happi = {
+      cover: track[HAPPI_OBJ.COVER],
+      apiLyrics: track[HAPPI_OBJ.API_LYRICS]
+    };
+    callback(happi);
   });
 }
 
-function saveInStore( data, render) {
+function saveInStore(data, render) {
   storage.get(["store"], result => {
     const store = result.store;
-    store[STORE_VAR.YOUTUBE] = { state: "success", data };
-    storage.set({ store: store }, function() {
-      render();
-    });
+    store[STORE_VAR.HAPPI] = { state: "success", response: data };
+    storage.set({ store }, render);
   });
 }
 
 function saveInCache(id, data) {
   storage.get(["cache"], result => {
     const cache = result.cache;
-    const cacheVideos = cache[CACHE_VAR.VIDEO];
-    cacheVideos[id] = data;
+    const cacheHappi = cache[CACHE_VAR.HAPPI];
+    cacheHappi[id] = data;
     storage.set({ cache }, function() {});
   });
 }
@@ -45,11 +51,13 @@ const fetchHappiData = (songDetails, render) => {
     const happi = cacheHappi[id];
 
     if (happi) {
+      // if exist in cache -> modify store
       saveInStore(happi, render);
     } else {
-      fetch(searchString, data => {
-        saveInStore(data, render);
-        saveInCache(id, data);
+      // call api to fetch cover
+      fetch(searchString, happiData => {
+        saveInStore(happiData, render);
+        saveInCache(id, happiData);
       });
     }
   });
