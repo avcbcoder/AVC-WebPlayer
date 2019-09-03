@@ -2,7 +2,7 @@ import { getAzLyrics } from "./az.js";
 import { getFandomLyrics } from "./fandom.js";
 import { STORE_VAR, CACHE_VAR } from "../../constants.js";
 
-function saveInStore(data, render) {
+function saveInStore(storage,data, render) {
   storage.get(["store"], result => {
     const store = result.store;
     if (store[STORE_VAR.LYRICS].state !== "success")
@@ -11,7 +11,7 @@ function saveInStore(data, render) {
   });
 }
 
-function saveInCache(id, data) {
+function saveInCache(storage,id, data) {
   storage.get(["cache"], result => {
     const cache = result.cache;
     const cacheLyrics = cache[CACHE_VAR.LYRICS];
@@ -32,16 +32,16 @@ const fetchLyrics = (storage, songDetails, render) => {
     const lyrics = cacheLyrics[id];
 
     if (lyrics) {
-      saveInStore(lyrics, render);
+      saveInStore(storage,lyrics, render);
     } else {
       
       const onSuccessLyrics = data => {
-        saveInStore(data, render);
-        saveInCache(id, data);
+        saveInStore(storage,data, render);
+        saveInCache(storage,id, data);
       };
 
       const onFailureLyrics = () => {
-        saveInStore("", render);
+        saveInStore(storage,"", render);
       };
 
       for (let i = 0; i < artist.length; i++) {

@@ -1,4 +1,4 @@
-import { CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
+import { STORE_VAR,CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
 
 function fetch(searchString, callback) {
   chrome.extension.getBackgroundPage().console.log("searching in youtube");
@@ -18,7 +18,7 @@ function fetch(searchString, callback) {
   );
 }
 
-function saveInStore(data, render) {
+function saveInStore(storage,data, render) {
   storage.get(["store"], result => {
     const store = result.store;
     store[STORE_VAR.YOUTUBE] = { state: "success", data };
@@ -28,7 +28,7 @@ function saveInStore(data, render) {
   });
 }
 
-function saveInCache(id, data) {
+function saveInCache(storage,id, data) {
   storage.get(["cache"], result => {
     const cache = result.cache;
     const cacheVideos = cache[CACHE_VAR.VIDEO];
@@ -52,14 +52,14 @@ const fetchYoutubeVideos = (storage, songDetails, render) => {
       chrome.extension
         .getBackgroundPage()
         .console.log("data found in cache", data);
-      saveInStore(video, render);
+      saveInStore(storage,video, render);
     } else {
       fetch(searchString, data => {
         chrome.extension
           .getBackgroundPage()
           .console.log("data fetch from yt api", data);
-        saveInStore(data, render);
-        saveInCache(id, data);
+        saveInStore(storage,data, render);
+        saveInCache(storage,id, data);
       });
     }
   });
