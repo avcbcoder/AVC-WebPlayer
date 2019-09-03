@@ -7,9 +7,15 @@ const STORE_VAR = {
 
 const CACHE_VAR = {
   LYRICS: "cache_lyrics",
-  VIDEO: "cache_video"
+  VIDEO: "cache_video",
+  HAPPI:"cache_happi"
 };
+
+const HAPPI_OBJ={
+  API_LYRICS:"api_lyrics",
+  COVER:"cover"
+}
 
 const YOUTUBE_V3_SEARCH = `https://www.googleapis.com/youtube/v3/search`;
 
-export { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH };
+export { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH, HAPPI_OBJ };
