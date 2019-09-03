@@ -22,5 +22,4 @@ yarn-error.log*
 .history/
 
 #config
-/src/config.js
-config.js
+/public/config.js

@@ -1,4 +1,5 @@
 import { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
+import { YOUTUBE_API_KEYS } from "../../../../config.js";
 
 function getVideoIds(data) {
   const items = data.items;
@@ -21,7 +22,7 @@ function fetch(searchString, callback) {
       part: "snippet",
       q: searchString,
       type: "video",
-      key: "AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ",
+      key: YOUTUBE_API_KEYS[0],
       maxResults: "3"
     },
     data => {

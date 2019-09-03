@@ -1,11 +1,8 @@
 /*global chrome*/
-/*global gapi*/
 import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
 import { MODE, STORE_VAR } from "./constants";
-import fetchApi from "./api";
-import youtubeSearch from "./api/youtube-search";
 
 const DEFAULT_STORE = {
   mode: MODE.MODE_SPOTIFY,
@@ -26,9 +23,6 @@ const DEFAULT_STORE = {
     data: ""
   }
 };
-
-// gapi.client.setApiKey("AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ");
-// gapi.client.load("youtube", "v3", function() {});
 
 const storage = chrome.storage.local;
 
