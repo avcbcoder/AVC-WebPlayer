@@ -42,25 +42,21 @@ const filter = (str, space) => {
 
 const getYoutubeVideos = (searchString, successCallback) => {
   chrome.extension.getBackgroundPage().console.log("searching in youtube");
-  const searchURL = `https://www.youtube.com/results?search_query=${searchString}&page=&utm_source=opensearch`;
-  $.ajax({
-    url: searchURL,
-    success: function(htmlData) {
-      const videos = [];
-      const doc = new DOMParser().parseFromString(htmlData, "text/html");
-      const videoList = document.body.getElementsByTagName(
-        "ytd-video-renderer"
-      );
-      chrome.extension
-        .getBackgroundPage()
-        .console.log("Youtube res", doc, doc.body,videoList);
-      videoList.forEach(video => {
-        const videoLink = video.getElementsByTagName("a")[0].href;
-        videos.push(videoLink);
-      });
-      successCallback(videos);
+  const searchURL = `https://www.googleapis.com/youtube/v3/search`;
+  $.get(
+    searchURL,
+    {
+      part: "snippet",
+      q: searchString,
+      type: "video",
+      key: "AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ",
+      maxResults:"5",
+      order:"viewCount"
+    },
+    function(data) {
+      chrome.extension.getBackgroundPage().console.log("data found", data);
     }
-  });
+  );
 };
 
 const getFandomLyrics = (track, artist, successCallback, failureCallback) => {
@@ -169,25 +165,9 @@ const fetchApi = (storage, songDetails) => {
     getAzLyrics(title, artist[i], onSuccessLyrics, onFailureLyrics);
   }
 
-  // for youtube videos
-  const searchString = title + "+" + artist.join("+");
+  const searchString = title + " " + artist.join(" ");
   getYoutubeVideos(searchString, videos => {});
-  //   const ytSearchReq = gapi.client.youtube.search.list({
-  //     part: "snippet",
-  //     type: "video",
-  //     q: encodeURIComponent(searchString).replace(/%20/g, "+"),
-  //     maxResults: 3,
-  //     order: "viewCount",
-  //     publishedAfter: "2015-01-01T00:00:00Z"
-  //   });
-  //   ytSearchReq.execute(function(response) {
-  //     console("success yt search", response, response.result);
-  //   });
 };
-
-// api key -> AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ
-// gapi.client.setApiKey("AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ");
-// gapi.client.load("youtube", "v3", function() {});
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type !== "spotify") return;
@@ -211,9 +191,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   });
 
   if (request.method === "song-change") {
-    // console(gapi);
-    // gapi.client.setApiKey("AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ");
-    // gapi.client.load("youtube", "v3", function() {});
     fetchApi(storage, request.data);
   }
 });

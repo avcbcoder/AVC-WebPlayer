@@ -1,9 +1,11 @@
 /*global chrome*/
+/*global gapi*/
 import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
 import { MODE, STORE_VAR } from "./constants";
 import fetchApi from "./api";
+import youtubeSearch from "./api/youtube-search";
 
 const DEFAULT_STORE = {
   mode: MODE.MODE_SPOTIFY,
@@ -25,7 +27,11 @@ const DEFAULT_STORE = {
   }
 };
 
+// gapi.client.setApiKey("AIzaSyD91jOqElBJNXKvCFIfXd_VzyOXXiJuAZQ");
+// gapi.client.load("youtube", "v3", function() {});
+
 const storage = chrome.storage.local;
+
 storage.set({ store: DEFAULT_STORE }, () => {
   renderComponent();
 });
@@ -58,7 +64,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 const renderComponent = () => {
   storage.get(["store"], result => {
-    console.log('STORE=>',result.store)
+    console.log("STORE=>", result.store);
     ReactDOM.render(
       <RootApp
         store={result.store}
@@ -71,7 +77,8 @@ const renderComponent = () => {
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "store-modified") renderComponent();
+  if (request.type === "store-modified") 
+    renderComponent();
 });
 
 function toggle() {
