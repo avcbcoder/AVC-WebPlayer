@@ -60,24 +60,3 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       chrome.storage.local.set({ 'url': tabs[0].url }, function () { });
    })
 });
-
-
-// -------------------------- CODE CLEANUP
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-   if (request.type === "spotify") {
-      chrome.tabs.query({}, function (tabs) { // DO NOT SEND TO ALL TABS
-         for (let i = 0; i < tabs.length; i++) {
-            chrome.tabs.sendMessage(
-               tabs[i].id,
-               {
-                  type: request.type,
-                  method: request.method,
-                  data: request.data
-               }
-            );
-         }
-      });
-   }
-});
-
