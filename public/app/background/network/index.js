@@ -13,7 +13,7 @@ function cacheCheck(storage, callback) {
     } else {
       const defaultCache = {};
       defaultCache[CACHE_VAR.VIDEO] = {};
-      defaultCache[CACHE_VAR.YOUTUBE] = {};
+      defaultCache[CACHE_VAR.LYRICS] = {};
       storage.set({ cache: defaultCache }, callback);
     }
   });

@@ -1,9 +1,9 @@
-import { CACHE_VAR } from "../../constants.js";
+import { CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
 
-function fetch(searchURL, callback) {
+function fetch(searchString, callback) {
   chrome.extension.getBackgroundPage().console.log("searching in youtube");
   $.get(
-    searchURL,
+    YOUTUBE_V3_SEARCH,
     {
       part: "snippet",
       q: searchString,
@@ -54,8 +54,7 @@ const fetchYoutubeVideos = (storage, songDetails, render) => {
         .console.log("data found in cache", data);
       saveInStore(video, render);
     } else {
-      const searchURL = `https://www.googleapis.com/youtube/v3/search`;
-      fetch(searchURL, data => {
+      fetch(searchString, data => {
         chrome.extension
           .getBackgroundPage()
           .console.log("data fetch from yt api", data);
