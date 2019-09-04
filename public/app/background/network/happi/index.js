@@ -4,12 +4,29 @@ import { fetchHappiLyrics } from "./lyrics-search.js";
 
 const storage = chrome.storage.local;
 
+const filter = (str, space) => {
+  let track = [];
+  for (let i = 0; i < str.length; i++)
+    if (str[i] === "(") break;
+    else if (str[i] === " ") track.push(space ? space : " ");
+    else
+      track.push(
+        (str[i] >= "a" && str[i] <= "z") || (str[i] >= "0" && str[i] <= "9")
+          ? str[i]
+          : ""
+      );
+  return track.join("");
+};
+
 function fetch(searchString, callback) {
   const searchUrl = `https://api.happi.dev/v1/music?q=${searchString}&limit=1&apikey=${
     LYRICS_HAPPI_API_KEYS[0]
   }`;
 
   $.get(searchUrl, response => {
+    chrome.extension
+      .getBackgroundPage()
+      .console.log("happi search response ", searchUrl, response);
     if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
       callback("");
       return;
@@ -44,7 +61,7 @@ function saveInCache(id, data) {
 
 const fetchHappiData = (songDetails, render) => {
   const { title, artist } = songDetails;
-  const searchString = title + " " + artist.join(" ");
+  const searchString = filter(title, " ") + " " + filter(artist[0], " ");
   const id = searchString; //TODO: will change it to hash later
 
   storage.get(["cache"], result => {
@@ -62,7 +79,11 @@ const fetchHappiData = (songDetails, render) => {
         saveInStore(happiData, render);
         saveInCache(id, happiData);
         if (happiData[HAPPI_OBJ.HAS_LYRICS])
-          fetchHappiLyrics(songDetails,happiData[HAPPI_OBJ.API_LYRICS],render);
+          fetchHappiLyrics(
+            songDetails,
+            happiData[HAPPI_OBJ.API_LYRICS],
+            render
+          );
       });
     }
   });

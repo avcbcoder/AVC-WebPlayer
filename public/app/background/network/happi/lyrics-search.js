@@ -1,6 +1,5 @@
 import { STORE_VAR, CACHE_VAR, HAPPI_OBJ } from "../../constants.js";
 import { LYRICS_HAPPI_API_KEYS } from "../../../../config.js";
-import { fetchHappiLyrics } from "./lyrics-search.js";
 
 const storage = chrome.storage.local;
 
@@ -31,6 +30,7 @@ const fetchHappiLyrics = (songDetails, lyricsSearchUrl, render) => {
 
   lyricsSearchUrl = lyricsSearchUrl + `?apikey=${LYRICS_HAPPI_API_KEYS[0]}`;
   $.get(lyricsSearchUrl, response => {
+    chrome.extension.getBackgroundPage().console.log('lyrics search response ', response);
     if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
       callback("");
       return;

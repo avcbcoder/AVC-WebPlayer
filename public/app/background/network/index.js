@@ -3,7 +3,7 @@
 import { STORE_VAR, CACHE_VAR } from "../constants.js";
 import { fetchLyrics } from "./lyrics-search/index.js";
 import { fetchYoutubeVideos } from "./youtube-video-search/index.js";
-import {fetchHappiData} from './happi/index.js'
+import { fetchHappiData } from "./happi/index.js";
 
 function cacheCheck(storage, callback) {
   storage.get(["cache"], result => {
@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     cacheCheck(storage, function() {
       fetchLyrics(storage, request.data, render);
       fetchYoutubeVideos(storage, request.data, render);
-      fetchHappiData(request.data,render)
+      fetchHappiData(request.data, render);
     });
   }
 });
