@@ -1,5 +1,6 @@
 import { STORE_VAR, CACHE_VAR, HAPPI_OBJ } from "../../constants.js";
 import { LYRICS_HAPPI_API_KEYS } from "../../../../config.js";
+import { fetchHappiLyrics } from "./lyrics-search.js";
 
 const storage = chrome.storage.local;
 
@@ -60,6 +61,8 @@ const fetchHappiData = (songDetails, render) => {
       fetch(searchString, happiData => {
         saveInStore(happiData, render);
         saveInCache(id, happiData);
+        if (happiData[HAPPI_OBJ.HAS_LYRICS])
+          fetchHappiLyrics(songDetails,happiData[HAPPI_OBJ.API_LYRICS],render);
       });
     }
   });
