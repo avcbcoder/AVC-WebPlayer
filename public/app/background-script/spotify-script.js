@@ -36,8 +36,8 @@ function extractDetails() {
   const play = mediaButtons ? mediaButtons.childNodes[2] : null;
 
   const artists = [];
-  if (artistLinks)
-    artistLinks.forEach(link => {
+  if (artistLinks && artistLinks.length > 0)
+    [].forEach.call(artistLinks, function(link) {
       artists.push(link.innerText);
     });
 
