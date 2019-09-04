@@ -20,14 +20,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     //     }
     //   }
     // });
-    chrome.tabs.query({}, function(tabs) {
-      for (let i = 0; i < tabs.length; i++) {
-        if (tabs[i].url.includes("//open.spotify.com")) {
-          chrome.tabs.executeScript(tabs[i].id, {
+    chrome.tabs.query({}, tabs => {
+      tabs.forEach(tab => {
+        if (tab.url.includes("//open.spotify.com")) {
+          chrome.tabs.executeScript(tab.id, {
             file: "app/background-script/spotify-script.js"
           });
         }
-      }
+      });
     });
   }
 });
@@ -63,27 +63,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           }
         );
       });
-    });
-  }
-});
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "mini-mode") {
-    chrome.tabs.create(
-      { url: request.options.url, active: false, index: 0 },
-      function(tab) {
-        // chrome.tabs.executeScript(tab.id, { file: "app/youtube-script.js" })
-      }
-    );
-  }
-  if (request.type === "start-mini-mode") {
-    chrome.tabs.query({}, function(tabs) {
-      for (let i = 0; i < tabs.length; i++) {
-        const tab = tabs[i];
-        if (tab.url.includes("//www.youtube.com")) {
-          chrome.tabs.executeScript(tab.id, { file: "app/youtube-script.js" });
-        }
-      }
     });
   }
 });

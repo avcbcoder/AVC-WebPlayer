@@ -2,7 +2,7 @@
 
 var BUFFER_TIME = 500;
 
-var songDetailsObj = {
+var defaultDetails = {
   title: "",
   artist: [],
   albumArt: "",
@@ -12,74 +12,58 @@ var songDetailsObj = {
   time: new Date().getTime()
 };
 
-var spotifyPageElements = {};
+var songDetailsObj = defaultDetails;
 
-function main() {
-  const songArtist = [];
-  const artistLinks = spotifyPageElements.rootText.childNodes[1].getElementsByTagName(
-    "a"
-  );
-  for (let i = 0; i < artistLinks.length; i++)
-    songArtist.push(artistLinks[i].innerText);
+function extractDetails() {
+  const rootDetails = document.getElementsByClassName("now-playing")[0];
+  if (!rootDetails) return defaultDetails;
 
-  return {
-    title: spotifyPageElements.songTitle
-      ? spotifyPageElements.songTitle.innerText
-      : "",
-    artist: songArtist ? songArtist : [],
-    albumArt: spotifyPageElements.rootAlbum
-      ? spotifyPageElements.rootAlbum.style.backgroundImage.split(`"`)[1]
-      : "",
-    playing:
-      spotifyPageElements.play.getAttribute("title").toLowerCase() === "pause",
-    progressTime: spotifyPageElements.progress[0].innerText,
-    totalTime: spotifyPageElements.progress[1].innerText
-  };
-}
-
-function extractElements() {
-  // Details
-  spotifyPageElements.rootDetails = document.getElementsByClassName(
-    "now-playing"
-  )[0];
-  spotifyPageElements.rootText = spotifyPageElements.rootDetails.getElementsByClassName(
-    "track-info"
-  )[0];
-  spotifyPageElements.songTitle = spotifyPageElements.rootText.childNodes[0].getElementsByTagName(
-    "a"
-  )[0];
-  spotifyPageElements.rootAlbum = spotifyPageElements.rootDetails.getElementsByClassName(
-    "cover-art-image"
-  )[0];
-  spotifyPageElements.artistLinks = spotifyPageElements.rootText.childNodes[1].getElementsByTagName(
-    "a"
-  );
-
-  // Buttons
-  const mediaButtons = document.getElementsByClassName("player-controls")[0]
-    .childNodes[0];
-  spotifyPageElements.shuffle = mediaButtons.childNodes[0];
-  spotifyPageElements.previous = mediaButtons.childNodes[1];
-  spotifyPageElements.play = mediaButtons.childNodes[2];
-  spotifyPageElements.next = mediaButtons.childNodes[3];
-  spotifyPageElements.repeat = mediaButtons.childNodes[4];
-
-  // Progress
-  spotifyPageElements.progress = document.getElementsByClassName(
+  const rootText = rootDetails.getElementsByClassName("track-info")[0];
+  const songTitle = rootText
+    ? rootText.childNodes[0].getElementsByTagName("a")[0]
+    : null;
+  const rootAlbum = rootDetails
+    ? rootDetails.getElementsByClassName("cover-art-image")[0]
+    : null;
+  const artistLinks = rootText
+    ? rootText.childNodes[1].getElementsByTagName("a")
+    : null;
+  const progress = document.getElementsByClassName(
     "playback-bar__progress-time"
   );
 
-  // PictureInPicture
-  spotifyPageElements.pip = document.getElementsByClassName(
-    "picture-in-picture-button control-button"
-  )[0];
-}
+  // extract play button
+  const playerControls = document.getElementsByClassName("player-controls")[0];
+  const mediaButtons = playerControls ? playerControls.childNodes[0] : null;
+  const play = mediaButtons ? mediaButtons.childNodes[2] : null;
 
-extractElements();
+  const artists = [];
+  if (artistLinks)
+    artistLinks.forEach(link => {
+      artists.push(link.innerText);
+    });
+
+  const getTimeInSec = time =>
+    60 * parseInt(time.split(":")[0], 10) + parseInt(time.split(":")[1], 10);
+
+  return {
+    title: songTitle ? songTitle.innerText : "",
+    artist: artists,
+    albumArt: rootAlbum ? rootAlbum.style.backgroundImage.split(`"`)[1] : "",
+    playing: play.getAttribute("title").toLowerCase() === "pause",
+    progressTime: progress[0]
+      ? getTimeInSec(progress[0].innerText)
+      : getTimeInSec("0:00"),
+    totalTime: progress[0]
+      ? getTimeInSec(progress[1].innerText)
+      : getTimeInSec("3:51"),
+    time: new Date().getTime()
+  };
+}
 
 if (window.location.href.includes("open.spotify.com")) {
   setInterval(() => {
-    const newDetailsObj = main();
+    const newDetailsObj = extractDetails();
     const lastProgress =
       60 * parseInt(songDetailsObj.progressTime.split(":")[0], 10) +
       parseInt(songDetailsObj.progressTime.split(":")[1], 10);
