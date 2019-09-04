@@ -45,7 +45,7 @@ function fetch(searchString, callback) {
 function saveInStore(data, render) {
   storage.get(["store"], result => {
     const store = result.store;
-    store[STORE_VAR.HAPPI] = { state: "success", response: data };
+    store[STORE_VAR.HAPPI] = { state: data?"success":"fail", response: data };
     storage.set({ store }, render);
   });
 }

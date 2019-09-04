@@ -21,6 +21,10 @@ const DEFAULT_STORE = {
   store_youtube: {
     state: "",
     data: ""
+  },
+  store_happi: {
+    state: "",
+    data: ""
   }
 };
 
@@ -71,8 +75,7 @@ const renderComponent = () => {
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "store-modified") 
-    renderComponent();
+  if (request.type === "store-modified") renderComponent();
 });
 
 function toggle() {
