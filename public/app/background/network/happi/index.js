@@ -14,10 +14,12 @@ function fetch(searchString, callback) {
       return;
     }
     const track = response[HAPPI_OBJ.RESULT][0];
-    const happi = {
-      cover: track[HAPPI_OBJ.COVER],
-      apiLyrics: track[HAPPI_OBJ.API_LYRICS]
-    };
+    const happi = {};
+    happi[HAPPI_OBJ.COVER] = track[HAPPI_OBJ.COVER];
+    happi[HAPPI_OBJ.API_LYRICS] = track[HAPPI_OBJ.API_LYRICS];
+    happi[HAPPI_OBJ.HAS_LYRICS] = track[HAPPI_OBJ.HAS_LYRICS];
+    happi[HAPPI_OBJ.TRACK] = track[HAPPI_OBJ.TRACK];
+
     callback(happi);
   });
 }
@@ -42,7 +44,7 @@ function saveInCache(id, data) {
 const fetchHappiData = (songDetails, render) => {
   const { title, artist } = songDetails;
   const searchString = title + " " + artist.join(" ");
-  const id = searchString; // will change it to hash later
+  const id = searchString; //TODO: will change it to hash later
 
   storage.get(["cache"], result => {
     // search in the cache first
