@@ -25,8 +25,7 @@ function saveLyricsInCache(id, lyrics) {
 
 const fetchHappiLyrics = (songDetails, lyricsSearchUrl, render) => {
   const { title, artist } = songDetails;
-  const searchString = title + " " + artist.join(" ");
-  const id = searchString; //TODO: will change it to hash later
+  const id = title + " " + artist.join(" "); //TODO: will change it to hash later
 
   lyricsSearchUrl = lyricsSearchUrl + `?apikey=${LYRICS_HAPPI_API_KEYS[0]}`;
   $.get(lyricsSearchUrl, response => {
@@ -35,7 +34,7 @@ const fetchHappiLyrics = (songDetails, lyricsSearchUrl, render) => {
       callback("");
       return;
     }
-    const lyrics = response[HAPPI_OBJ.RESULT][0][HAPPI_OBJ.LYRICS];
+    const lyrics = response[HAPPI_OBJ.RESULT][HAPPI_OBJ.LYRICS];
     saveLyricsInStore(lyrics, render);
     saveLyricsInCache(id, lyrics);
   });

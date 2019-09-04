@@ -61,8 +61,8 @@ function saveInCache(id, data) {
 
 const fetchHappiData = (songDetails, render) => {
   const { title, artist } = songDetails;
-  const searchString = filter(title, " ") + " " + filter(artist[0], " ");
-  const id = searchString; //TODO: will change it to hash later
+  const searchString = filter(title.toLowerCase(), " ") + " " + filter(artist[0].toLowerCase(), " ");
+  const id = title + " " + artist.join(" "); //TODO: will change it to hash later
 
   storage.get(["cache"], result => {
     // search in the cache first
