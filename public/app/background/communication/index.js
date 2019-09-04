@@ -11,11 +11,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         });
       }
     });
+    // chrome.tabs.query({}, function(tabs) {
+    //   for (let i = 0; i < tabs.length; i++) {
+    //     if (tabs[i].url.includes("//open.spotify.com")) {
+    //       chrome.tabs.executeScript(tabs[i].id, {
+    //         file: "app/background-script/spotify.js"
+    //       });
+    //     }
+    //   }
+    // });
     chrome.tabs.query({}, function(tabs) {
       for (let i = 0; i < tabs.length; i++) {
         if (tabs[i].url.includes("//open.spotify.com")) {
           chrome.tabs.executeScript(tabs[i].id, {
-            file: "app/background-script/spotify.js"
+            file: "app/background-script/spotify-script.js"
           });
         }
       }
@@ -34,6 +43,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           });
         }
       }
+    });
+  }
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.type === "change-media") {
+    chrome.tabs.query({}, tabs => {
+      tabs.forEach(tab => {
+        if (!tab.url.includes("//open.spotify.com")) return;
+        chrome.tabs.executeScript(
+          tab.id,
+          { file: "app/background-script/spotify-buttons.js" },
+          () => {
+            chrome.tabs.executeScript(tab.id),
+              {
+                code: `if(${request.options.type})${request.options.type}.click();`
+              };
+          }
+        );
+      });
     });
   }
 });
