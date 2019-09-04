@@ -1,7 +1,5 @@
 /*global chrome*/
 
-var BUFFER_TIME = 500;
-
 var defaultDetails = {
   title: "",
   artist: [],
@@ -64,12 +62,9 @@ function extractDetails() {
 if (window.location.href.includes("open.spotify.com")) {
   setInterval(() => {
     const newDetailsObj = extractDetails();
-    const lastProgress =
-      60 * parseInt(songDetailsObj.progressTime.split(":")[0], 10) +
-      parseInt(songDetailsObj.progressTime.split(":")[1], 10);
-    const newProgress =
-      60 * parseInt(newDetailsObj.progressTime.split(":")[0], 10) +
-      parseInt(newDetailsObj.progressTime.split(":")[1], 10);
+    const lastProgress = songDetailsObj.progressTime;
+    const newProgress = newDetailsObj.progressTime;
+    let method = null;
 
     const isDiffArtist = (a, b) => {
       if (a.length !== b.length) return true;
@@ -82,32 +77,25 @@ if (window.location.href.includes("open.spotify.com")) {
       isDiffArtist(newDetailsObj.artist, songDetailsObj.artist)
     ) {
       // fire event that song is changed
-      chrome.runtime.sendMessage({
-        type: "spotify",
-        method: "song-change",
-        data: newDetailsObj
-      });
+      method = "song-change";
     } else if (newDetailsObj.albumArt !== songDetailsObj.albumArt) {
-      chrome.runtime.sendMessage({
-        type: "spotify",
-        method: "album-art-change",
-        data: newDetailsObj
-      });
+      // fire event for album art change
+      method = "album-art-change";
     } else if (Math.abs(newProgress - lastProgress > 2)) {
       // fire event that progress is changed
-      chrome.runtime.sendMessage({
-        type: "spotify",
-        method: "progress-change",
-        data: newDetailsObj
-      });
+      method = "progress-change";
     } else if (songDetailsObj.playing !== newDetailsObj.playing) {
       // fire event that play-state-changed
+      method = "play-state-change";
+    }
+
+    if (method)
       chrome.runtime.sendMessage({
         type: "spotify",
-        method: "play-state-change",
+        method,
         data: newDetailsObj
       });
-    }
+
     songDetailsObj = newDetailsObj;
-  }, BUFFER_TIME);
+  }, 500);
 }
