@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     cacheCheck(storage, function() {
       // fetchLyrics(storage, request.data, render);
       // fetchYoutubeVideos(storage, request.data, render);
-      // fetchHappiData(request.data, render);
+      fetchHappiData(request.data, render);
     });
   }
 });

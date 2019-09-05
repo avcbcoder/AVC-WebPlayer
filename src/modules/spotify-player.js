@@ -15,6 +15,7 @@ import { THEME } from "../constants/color";
 import { getAllIcons } from "../constants/icon";
 import { STORE_VAR, HAPPI_OBJ } from "../constants";
 import CircularProgress from "./circular-progress-bar";
+import { changeMedia } from "../extension-background/sender";
 
 const {
   playIcon,
@@ -249,7 +250,7 @@ class SpotifyPlayer extends React.Component {
   };
 
   render() {
-    const { store, mediaControl, onClose } = this.props;
+    const { store, onClose } = this.props;
     const { title, artist, albumArt, totalTime, progressTime, playing, time } = store[
       STORE_VAR.SONG
     ];
@@ -311,7 +312,7 @@ class SpotifyPlayer extends React.Component {
                   w={30}
                   h={30}
                   onClick={() => {
-                    mediaControl(CONTROLS.PREV);
+                    changeMedia(CONTROLS.PREV);
                   }}
                 ></Img>
               </PrevButton>
@@ -321,7 +322,7 @@ class SpotifyPlayer extends React.Component {
                   w={24}
                   h={24}
                   onClick={() => {
-                    mediaControl(CONTROLS.PLAY);
+                    changeMedia(CONTROLS.PLAY);
                   }}
                   style={playing ? {} : { "margin-left": "4px" }}
                 ></Img>
@@ -332,7 +333,7 @@ class SpotifyPlayer extends React.Component {
                   w={30}
                   h={30}
                   onClick={() => {
-                    mediaControl(CONTROLS.NEXT);
+                    changeMedia(CONTROLS.NEXT);
                   }}
                 ></Img>
               </NextButton>
@@ -346,7 +347,7 @@ class SpotifyPlayer extends React.Component {
               w={20}
               h={20}
               onClick={() => {
-                mediaControl(CONTROLS.SHUFFLE);
+                changeMedia(CONTROLS.SHUFFLE);
               }}
             ></ImgS>
           </Pie>
@@ -358,7 +359,7 @@ class SpotifyPlayer extends React.Component {
               w={20}
               h={20}
               onClick={() => {
-                mediaControl(CONTROLS.REPEAT);
+                changeMedia(CONTROLS.REPEAT);
               }}
             ></ImgR>
           </Pie>

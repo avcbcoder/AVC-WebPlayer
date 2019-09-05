@@ -22,6 +22,12 @@ const HAPPI_OBJ = {
   LYRICS: "lyrics"
 };
 
+const EXT_COMM={
+  GET_LYRICS:'get-lyrics',
+  GET_VIDEO_ID:'get-video-id',
+
+}
+
 const YOUTUBE_V3_SEARCH = `https://www.googleapis.com/youtube/v3/search`;
 
-export { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH, HAPPI_OBJ };
+export { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH, HAPPI_OBJ, EXT_COMM };
