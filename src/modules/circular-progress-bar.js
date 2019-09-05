@@ -30,11 +30,11 @@ export default class CircularProgress extends React.Component {
     };
   }
 
-  static getDerivedStateFromProps({ progressTime, timeStamp }, prevState) {
-    if (prevState.timeStamp !== timeStamp)
+  static getDerivedStateFromProps({ progressTime, timeStamp, time }, state) {
+    if (state.timeStamp !== timeStamp)
       // new time stamp -> props changed
       return {
-        progress: progressTime,
+        progress: progressTime + (new Date().getTime() - time) / 1000,
         timeStamp
       };
     return {};

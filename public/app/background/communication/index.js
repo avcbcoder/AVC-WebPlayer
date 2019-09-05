@@ -24,17 +24,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "media") {
-    chrome.tabs.query({}, function(tabs) {
-      for (let i = 0; i < tabs.length; i++) {
-        const tab = tabs[i];
-        if (tab.url.includes("//open.spotify.com")) {
-          chrome.tabs.executeScript(tab.id, {
-            code: `spotifyPageElements.${request.options.type}.click()`
-          });
-        }
-      }
-    });
+  if (request.type === "change-media") {
+    
   }
 });
 
