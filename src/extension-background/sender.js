@@ -1,22 +1,23 @@
 /*global chrome*/
+import {EXT_COMM} from '../constants'
 
 function changeMedia(media) {
   chrome.runtime.sendMessage({
-    type: "change-media",
+    type: EXT_COMM.CHANGE_MEDIA,
     button: media
   });
 }
 
 function getLyrics(songDetails) {
   chrome.runtime.sendMessage({
-    type: "get-lyrics",
+    type: EXT_COMM.GET_LYRICS,
     data: songDetails
   });
 }
 
 function getVideoId(songDetails) {
   chrome.runtime.sendMessage({
-    type: "get-video-id",
+    type: EXT_COMM.GET_VIDEO_ID,
     data: songDetails
   });
 }

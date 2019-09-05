@@ -51,6 +51,14 @@ const HAPPI_OBJ = {
   TRACK: "track"
 };
 
+const EXT_COMM = {
+  GET_LYRICS: "get-lyrics",
+  GET_VIDEO_ID: "get-video-id",
+  SPOTIFY: "spotify",
+  CHANGE_MEDIA: "change-media",
+  RENDER: "render-store-modified"
+};
+
 export {
   MODE,
   ID,
@@ -59,5 +67,6 @@ export {
   DEFAULT_LYRICS,
   DEFAULT_VIDEO_ID,
   STORE_VAR,
-  HAPPI_OBJ
+  HAPPI_OBJ,
+  EXT_COMM
 };

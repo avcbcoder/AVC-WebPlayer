@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
-import { MODE, STORE_VAR } from "./constants";
+import { MODE, STORE_VAR, EXT_COMM } from "./constants";
 
 const DEFAULT_STORE = {
   mode: MODE.MODE_SPOTIFY,
@@ -73,7 +73,7 @@ const renderComponent = () => {
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "store-modified") renderComponent();
+  if (request.type === EXT_COMM.RENDER) renderComponent();
 });
 
 function toggle() {
