@@ -52,7 +52,8 @@ class MenuCollection extends React.Component {
   }
 
   render() {
-    const { selected, onSelected } = this.props;
+    const { selected, onSelected, store } = this.props;
+    const songDetails = store[STORE_VAR.SONG];
 
     return (
       <>
@@ -71,7 +72,7 @@ class MenuCollection extends React.Component {
             <Link
               selected={selected === DISPLAY_MODE.LYRICS}
               onClick={() => {
-                getLyrics();
+                getLyrics(songDetails);
                 onSelected(DISPLAY_MODE.LYRICS);
               }}
             >
@@ -82,7 +83,7 @@ class MenuCollection extends React.Component {
             <Link
               selected={selected === DISPLAY_MODE.YOUTUBE}
               onClick={() => {
-                getVideoId();
+                getVideoId(songDetails);
                 onSelected(DISPLAY_MODE.YOUTUBE);
               }}
             >

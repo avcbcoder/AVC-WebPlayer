@@ -108,7 +108,7 @@ class App extends React.Component {
     return (
       <Root >
         <MenuWrapper>
-          <MenuCollection selected={selected} onSelected={this.onSelected} />
+          <MenuCollection selected={selected} onSelected={this.onSelected} store={store}/>
         </MenuWrapper>
         {selected === DISPLAY_MODE.SPOTIFY &&
           <WrapperSpotify>

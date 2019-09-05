@@ -1,5 +1,8 @@
 /*global chrome*/
-import { EXT_COMM } from "./constants.js";
+import { EXT_COMM, VALID_REQ_TYPE } from "./constants.js";
+import { fetchYoutubeVideos } from "./network/youtube-video-search/index.js";
+import {fetchLyrics} from './network/lyrics-search/index.js'
+import { fetchHappiData, fetchHappiLyrics } from './network/happi/index.js'
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type === "toggle") {
@@ -24,25 +27,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "change-media") {
-    chrome.tabs.query({}, tabs => {
-      tabs.forEach(tab => {
-        if (!tab.url.includes("//open.spotify.com")) return;
-        chrome.tabs.executeScript(
-          tab.id,
-          { file: "app/background-script/spotify-buttons.js" },
-          () => {
-            chrome.tabs.executeScript(
-              tab.id,
-              {
-                code: `console.log(${request.button});if(${request.button})${request.button}.click();`
-              },
-              () => {}
-            );
-          }
-        );
-      });
-    });
+chrome.runtime.onMessage.addListener(function(request) {
+  if (!VALID_REQ_TYPE.includes(request.type)) return;
+  switch (request.type) {
+    case EXT_COMM.GET_LYRICS:
+      break;
+    case EXT_COMM.GET_VIDEO_ID:
+      break;
+    case EXT_COMM.SPOTIFY:
+      break;
+    case EXT_COMM.CHANGE_MEDIA:
+      break;
   }
 });

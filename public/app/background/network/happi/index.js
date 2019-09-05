@@ -45,7 +45,10 @@ function fetch(searchString, callback) {
 function saveInStore(data, render) {
   storage.get(["store"], result => {
     const store = result.store;
-    store[STORE_VAR.HAPPI] = { state: data?"success":"fail", response: data };
+    store[STORE_VAR.HAPPI] = {
+      state: data ? "success" : "fail",
+      response: data
+    };
     storage.set({ store }, render);
   });
 }
@@ -61,7 +64,10 @@ function saveInCache(id, data) {
 
 const fetchHappiData = (songDetails, render) => {
   const { title, artist } = songDetails;
-  const searchString = filter(title.toLowerCase(), " ") + " " + filter(artist[0].toLowerCase(), " ");
+  const searchString =
+    filter(title.toLowerCase(), " ") +
+    " " +
+    filter(artist[0].toLowerCase(), " ");
   const id = title + " " + artist.join(" "); //TODO: will change it to hash later
 
   storage.get(["cache"], result => {
@@ -89,4 +95,4 @@ const fetchHappiData = (songDetails, render) => {
   });
 };
 
-export { fetchHappiData };
+export { fetchHappiData, fetchHappiLyrics };

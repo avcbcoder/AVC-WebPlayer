@@ -22,12 +22,23 @@ const HAPPI_OBJ = {
   LYRICS: "lyrics"
 };
 
-const EXT_COMM={
-  GET_LYRICS:'get-lyrics',
-  GET_VIDEO_ID:'get-video-id',
+const EXT_COMM = {
+  GET_LYRICS: "get-lyrics",
+  GET_VIDEO_ID: "get-video-id",
+  SPOTIFY: "spotify",
+  CHANGE_MEDIA: "change-media",
+  RENDER: "render-store-modified"
+};
 
-}
+const VALID_REQ_TYPE = "change-media get-video-id spotify get-lyrics";
 
 const YOUTUBE_V3_SEARCH = `https://www.googleapis.com/youtube/v3/search`;
 
-export { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH, HAPPI_OBJ, EXT_COMM };
+export {
+  STORE_VAR,
+  CACHE_VAR,
+  YOUTUBE_V3_SEARCH,
+  HAPPI_OBJ,
+  EXT_COMM,
+  VALID_REQ_TYPE
+};

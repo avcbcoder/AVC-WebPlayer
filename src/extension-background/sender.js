@@ -7,17 +7,17 @@ function changeMedia(media) {
   });
 }
 
-function getLyrics() {
+function getLyrics(songDetails) {
   chrome.runtime.sendMessage({
     type: "get-lyrics",
-    button: media
+    data: songDetails
   });
 }
 
-function getVideoId() {
+function getVideoId(songDetails) {
   chrome.runtime.sendMessage({
     type: "get-video-id",
-    button: media
+    data: songDetails
   });
 }
 
