@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       ? { state: "fetching", data: "" }
       : store[STORE_VAR.YOUTUBE];
     store[STORE_VAR.HAPPI] = isSongChanged
-      ? { state: "fetching", data: "" }
+      ? { state: "fetching", response: "" }
       : store[STORE_VAR.HAPPI];
     storage.set({ store: store }, () => {
       render();

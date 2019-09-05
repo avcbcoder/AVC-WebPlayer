@@ -1,9 +1,10 @@
 import { STORE_VAR, CACHE_VAR, HAPPI_OBJ } from "../../constants.js";
 import { LYRICS_HAPPI_API_KEYS } from "../../../../config.js";
+import { render } from "../../sender.js";
 
 const storage = chrome.storage.local;
 
-function saveLyricsInStore(lyrics, render) {
+function saveLyricsInStore(lyrics) {
   storage.get(["store"], result => {
     const store = result.store;
     const storeHappi = store[STORE_VAR.HAPPI];
@@ -23,19 +24,21 @@ function saveLyricsInCache(id, lyrics) {
   });
 }
 
-const fetchHappiLyrics = (songDetails, lyricsSearchUrl, render) => {
+const fetchHappiLyrics = (songDetails, lyricsSearchUrl) => {
   const { title, artist } = songDetails;
   const id = title + " " + artist.join(" "); //TODO: will change it to hash later
 
   lyricsSearchUrl = lyricsSearchUrl + `?apikey=${LYRICS_HAPPI_API_KEYS[0]}`;
   $.get(lyricsSearchUrl, response => {
-    chrome.extension.getBackgroundPage().console.log('lyrics search response ', response);
+    chrome.extension
+      .getBackgroundPage()
+      .console.log("lyrics search response ", response);
     if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
       callback("");
       return;
     }
     const lyrics = response[HAPPI_OBJ.RESULT][HAPPI_OBJ.LYRICS];
-    saveLyricsInStore(lyrics, render);
+    saveLyricsInStore(lyrics);
     saveLyricsInCache(id, lyrics);
   });
 };

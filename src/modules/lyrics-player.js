@@ -192,10 +192,7 @@ class LyricsPlayer extends React.Component {
               <Marquee
                 ref={this.refLyricsBox}
                 y={this.getY(y, lyricsArr)}
-                time={
-                  60 * parseInt(totalTime.split(":")[0], 10) +
-                  parseInt(totalTime.split(":")[1], 10)
-                }
+                time={totalTime}
               >
                 {lyricsArr.map(lyric => (
                   <Text>{lyric === " " ? <br /> : lyric}</Text>

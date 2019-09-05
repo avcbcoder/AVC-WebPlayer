@@ -1,8 +1,11 @@
 import { getAzLyrics } from "./az.js";
 import { getFandomLyrics } from "./fandom.js";
 import { STORE_VAR, CACHE_VAR } from "../../constants.js";
+import {render} from '../../sender.js'
 
-function saveInStore(storage,data, render) {
+const storage= chrome.storage.local
+
+function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
     if (store[STORE_VAR.LYRICS].state !== "success")
@@ -11,7 +14,7 @@ function saveInStore(storage,data, render) {
   });
 }
 
-function saveInCache(storage,id, data) {
+function saveInCache(id, data) {
   storage.get(["cache"], result => {
     const cache = result.cache;
     const cacheLyrics = cache[CACHE_VAR.LYRICS];
@@ -20,7 +23,7 @@ function saveInCache(storage,id, data) {
   });
 }
 
-const fetchLyrics = (storage, songDetails, render) => {
+const fetchLyrics = (songDetails) => {
   const { title, artist } = songDetails;
   const searchString = title + " " + artist.join(" ");
   const id = searchString; // will change it to hash later
@@ -32,16 +35,16 @@ const fetchLyrics = (storage, songDetails, render) => {
     const lyrics = cacheLyrics[id];
 
     if (lyrics) {
-      saveInStore(storage,lyrics, render);
+      saveInStore(lyrics);
     } else {
       
       const onSuccessLyrics = data => {
-        saveInStore(storage,data, render);
-        saveInCache(storage,id, data);
+        saveInStore(data);
+        saveInCache(id, data);
       };
 
       const onFailureLyrics = () => {
-        saveInStore(storage,"", render);
+        saveInStore("", render);
       };
 
       for (let i = 0; i < artist.length; i++) {

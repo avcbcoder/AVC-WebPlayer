@@ -1,5 +1,9 @@
+/*global chrome*/
 import { STORE_VAR, CACHE_VAR, YOUTUBE_V3_SEARCH } from "../../constants.js";
 import { YOUTUBE_API_KEYS } from "../../../../config.js";
+import { render } from "../../sender.js";
+
+const storage = chrome.storage.local;
 
 function getVideoIds(data) {
   const items = data.items;
@@ -31,17 +35,15 @@ function fetch(searchString, callback) {
   );
 }
 
-function saveInStore(storage, data, render) {
+function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
     store[STORE_VAR.YOUTUBE] = { state: "success", data };
-    storage.set({ store: store }, function() {
-      render();
-    });
+    storage.set({ store: store }, render);
   });
 }
 
-function saveInCache(storage, id, data) {
+function saveInCache(id, data) {
   storage.get(["cache"], result => {
     const cache = result.cache;
     const cacheVideos = cache[CACHE_VAR.VIDEO];
@@ -50,7 +52,7 @@ function saveInCache(storage, id, data) {
   });
 }
 
-const fetchYoutubeVideos = (storage, songDetails, render) => {
+const fetchYoutubeVideos = songDetails => {
   const { title, artist } = songDetails;
   const searchString = title + " " + artist.join(" ");
   const id = searchString; // will change it to hash later
@@ -62,11 +64,11 @@ const fetchYoutubeVideos = (storage, songDetails, render) => {
     const video = cacheVideos[id];
 
     if (video) {
-      saveInStore(storage, video, render);
+      saveInStore(video);
     } else {
       fetch(searchString, data => {
-        saveInStore(storage, data, render);
-        saveInCache(storage, id, data);
+        saveInStore(data);
+        saveInCache(id, data);
       });
     }
   });

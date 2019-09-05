@@ -1,5 +1,5 @@
 /*global chrome*/
-import {EXT_COMM} from '../constants'
+import { EXT_COMM } from "../constants";
 
 function changeMedia(media) {
   chrome.runtime.sendMessage({
@@ -8,10 +8,11 @@ function changeMedia(media) {
   });
 }
 
-function getLyrics(songDetails) {
+function getLyrics(songDetails, url) {
   chrome.runtime.sendMessage({
     type: EXT_COMM.GET_LYRICS,
-    data: songDetails
+    data: songDetails,
+    url
   });
 }
 

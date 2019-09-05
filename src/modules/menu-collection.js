@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import styled from "styled-components";
 import { THEME } from "../constants/color";
-import { DISPLAY_MODE } from "../constants/index";
+import { DISPLAY_MODE, HAPPI_OBJ , STORE_VAR } from "../constants/index";
 import { getLyrics, getVideoId } from "../extension-background/sender";
 
 const Tabs = styled.ul`
@@ -54,9 +54,12 @@ class MenuCollection extends React.Component {
   render() {
     const { selected, onSelected, store } = this.props;
     const songDetails = store[STORE_VAR.SONG];
+    const storeHappi = store[STORE_VAR.HAPPI];
+    const hasLyrics = storeHappi.response[HAPPI_OBJ.HAS_LYRICS];
+    const apiLyrics = storeHappi.response[HAPPI_OBJ.API_LYRICS];
 
     return (
-      <>
+      <React.Fragment>
         <Tabs>
           <TabItem>
             <Link
@@ -72,7 +75,7 @@ class MenuCollection extends React.Component {
             <Link
               selected={selected === DISPLAY_MODE.LYRICS}
               onClick={() => {
-                getLyrics(songDetails);
+                if (hasLyrics) getLyrics(songDetails, apiLyrics);
                 onSelected(DISPLAY_MODE.LYRICS);
               }}
             >
@@ -91,7 +94,7 @@ class MenuCollection extends React.Component {
             </Link>
           </TabItem>
         </Tabs>
-      </>
+      </React.Fragment>
     );
   }
 }

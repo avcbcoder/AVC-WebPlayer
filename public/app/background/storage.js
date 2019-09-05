@@ -1,4 +1,4 @@
-import { STORE_VAR, CACHE_VAR } from "../constants.js";
+import { STORE_VAR, CACHE_VAR } from "./constants.js";
 
 function cacheCheck(callback) {
   const storage = chrome.storage.local;

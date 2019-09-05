@@ -84,12 +84,12 @@ const fetchHappiData = (songDetails, render) => {
       fetch(searchString, happiData => {
         saveInStore(happiData, render);
         saveInCache(id, happiData);
-        if (happiData[HAPPI_OBJ.HAS_LYRICS])
-          fetchHappiLyrics(
-            songDetails,
-            happiData[HAPPI_OBJ.API_LYRICS],
-            render
-          );
+        // if (happiData[HAPPI_OBJ.HAS_LYRICS])
+        //   fetchHappiLyrics(
+        //     songDetails,
+        //     happiData[HAPPI_OBJ.API_LYRICS],
+        //     render
+        //   );
       });
     }
   });

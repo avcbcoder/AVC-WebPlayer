@@ -24,7 +24,7 @@ const DEFAULT_STORE = {
   },
   store_happi: {
     state: "",
-    data: ""
+    response: ""
   }
 };
 

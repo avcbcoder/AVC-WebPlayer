@@ -1,11 +1,13 @@
 /*global chrome*/
-import { EXT_COMM, VALID_REQ_TYPE } from "./constants.js";
+import { EXT_COMM, VALID_REQ_TYPE, STORE_VAR } from "./constants.js";
 import { fetchYoutubeVideos } from "./network/youtube-video-search/index.js";
 import { fetchLyrics as getAzFandomLyrics } from "./network/lyrics-search/index.js";
-import { fetchHappiLyrics } from "./network/happi/index.js";
+import { fetchHappiData, fetchHappiLyrics } from "./network/happi/index.js";
 import { cacheCheck } from "./storage.js";
+import { render } from "./sender.js";
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  chrome.extension.getBackgroundPage().console.log("RECIEVED REQ", request);
   if (request.type === "toggle") {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       for (let i = 0; i < tabs.length; i++) {
@@ -28,35 +30,49 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
-chrome.runtime.onMessage.addListener(function(request) {
-  if (!VALID_REQ_TYPE.includes(request.type)) return;
-  switch (request.type) {
-    case EXT_COMM.GET_LYRICS:
-      fetchHappiLyrics();
-      getAzFandomLyrics(request.data);
-      break;
-    case EXT_COMM.GET_VIDEO_ID:
-      fetchYoutubeVideos(request.data);
-      break;
-    case EXT_COMM.SPOTIFY:
-      break;
-    case EXT_COMM.CHANGE_MEDIA:
-      break;
-  }
+chrome.tabs.onCreated.addListener(function(tab) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    if (tabs && tabs.length > 0)
+      chrome.storage.local.set({ url: tabs[0].url }, function() {});
+  });
 });
 
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    if (tabs && tabs.length > 0)
+      chrome.storage.local.set({ url: tabs[0].url }, function() {});
+  });
+});
+
+// CALLED WHENEVER BUTTON IS CLICKED FROM APP
+function injectChangeMedia(request) {
+  chrome.tabs.query({}, tabs => {
+    tabs.forEach(tab => {
+      if (!tab.url.includes("//open.spotify.com")) return;
+      chrome.tabs.executeScript(
+        tab.id,
+        { file: "app/background-script/spotify-buttons.js" },
+        () => {
+          chrome.tabs.executeScript(tab.id, {
+            code: `if(${request.button})${request.button}.click();`
+          });
+        }
+      );
+    });
+  });
+}
+
+// CALLED WHENEVER SONG DETAILS CHANGE
 function handleSpotify(request) {
-  const isSongChanged = request.type === "spotify";
+  const isSongChanged = request.method === "song-change";
   const storage = chrome.storage.local;
 
-  if (request.method === "song-change") {
-    cacheCheck(storage, function() {
+  if (isSongChanged)
+    cacheCheck(function() {
       fetchHappiData(request.data, render);
     });
-  }
 
   storage.get(["store"], result => {
-    // modify song details and set default state for fetch
     const store = result.store;
     store[STORE_VAR.SONG] = request.data;
     store[STORE_VAR.LYRICS] = isSongChanged
@@ -66,10 +82,30 @@ function handleSpotify(request) {
       ? { state: "fetching", data: "" }
       : store[STORE_VAR.YOUTUBE];
     store[STORE_VAR.HAPPI] = isSongChanged
-      ? { state: "fetching", data: "" }
+      ? { state: "fetching", response: "" }
       : store[STORE_VAR.HAPPI];
     storage.set({ store: store }, () => {
       render();
     });
   });
 }
+
+// LISTENERS -----
+chrome.runtime.onMessage.addListener(function(request) {
+  if (!VALID_REQ_TYPE.includes(request.type)) return;
+  switch (request.type) {
+    case EXT_COMM.GET_LYRICS:
+      fetchHappiLyrics(request.data, request.url);
+      getAzFandomLyrics(request.data);
+      break;
+    case EXT_COMM.GET_VIDEO_ID:
+      fetchYoutubeVideos(request.data);
+      break;
+    case EXT_COMM.SPOTIFY:
+      handleSpotify(request);
+      break;
+    case EXT_COMM.CHANGE_MEDIA:
+      injectChangeMedia(request);
+      break;
+  }
+});
