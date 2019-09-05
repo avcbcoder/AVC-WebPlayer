@@ -88,7 +88,7 @@ if (window.location.href.includes("open.spotify.com")) {
       // fire event that play-state-changed
       method = "play-state-change";
     }
-
+    
     if (method)
       chrome.runtime.sendMessage({
         type: "spotify",

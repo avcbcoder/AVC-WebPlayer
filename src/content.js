@@ -42,10 +42,8 @@ document.body.appendChild(app);
 
 function mediaControl(media) {
   chrome.runtime.sendMessage({
-    type: "media",
-    options: {
-      type: media
-    }
+    type: "change-media",
+    button: media
   });
 }
 

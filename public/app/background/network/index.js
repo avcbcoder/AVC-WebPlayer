@@ -35,7 +35,7 @@ const render = () => {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type !== "spotify") return;
 
-  chrome.extension.getBackgroundPage().console.log("Spotify sent -> ",request);
+  chrome.extension.getBackgroundPage().console.log("Spotify sent -> ", request);
 
   const isSongChanged = request.type === "spotify";
   const storage = chrome.storage.local;
@@ -50,6 +50,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     store[STORE_VAR.YOUTUBE] = isSongChanged
       ? { state: "fetching", data: "" }
       : store[STORE_VAR.YOUTUBE];
+    store[STORE_VAR.HAPPI] = isSongChanged
+      ? { state: "fetching", data: "" }
+      : store[STORE_VAR.HAPPI];
     storage.set({ store: store }, () => {
       render();
     });
@@ -57,9 +60,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   if (request.method === "song-change") {
     cacheCheck(storage, function() {
-      fetchLyrics(storage, request.data, render);
-      fetchYoutubeVideos(storage, request.data, render);
-      fetchHappiData(request.data, render);
+      // fetchLyrics(storage, request.data, render);
+      // fetchYoutubeVideos(storage, request.data, render);
+      // fetchHappiData(request.data, render);
     });
   }
 });

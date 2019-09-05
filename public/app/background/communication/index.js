@@ -11,15 +11,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         });
       }
     });
-    // chrome.tabs.query({}, function(tabs) {
-    //   for (let i = 0; i < tabs.length; i++) {
-    //     if (tabs[i].url.includes("//open.spotify.com")) {
-    //       chrome.tabs.executeScript(tabs[i].id, {
-    //         file: "app/background-script/spotify.js"
-    //       });
-    //     }
-    //   }
-    // });
     chrome.tabs.query({}, tabs => {
       tabs.forEach(tab => {
         if (tab.url.includes("//open.spotify.com")) {
@@ -56,10 +47,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           tab.id,
           { file: "app/background-script/spotify-buttons.js" },
           () => {
-            chrome.tabs.executeScript(tab.id),
+            chrome.tabs.executeScript(
+              tab.id,
               {
-                code: `if(${request.options.type})${request.options.type}.click();`
-              };
+                code: `console.log(${request.button});if(${request.button})${request.button}.click();`
+              },
+              () => {}
+            );
           }
         );
       });

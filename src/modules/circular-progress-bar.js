@@ -1,92 +1,88 @@
-import React from 'react';
+import React from "react";
 
-import styled from 'styled-components';
-import 'react-circular-progressbar/dist/styles.css';
-import '../css/circular-progress.css';
+import styled from "styled-components";
+import "react-circular-progressbar/dist/styles.css";
+import "../css/circular-progress.css";
 
-import { Img } from '../components'
-import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
+import { Img } from "../components";
+import {
+  CircularProgressbarWithChildren,
+  buildStyles
+} from "react-circular-progressbar";
 
 const REFRESH_INTERVAL = 500;
 const FLOW_SMOOTHNESS = 2;
 const STYLE = {
-    ALBUM_ART_DIMENSION: 120,
-}
+  ALBUM_ART_DIMENSION: 120
+};
 
 const CircularImg = styled(Img)`
-    border-radius:50%;
-    z-index:5;
+  border-radius: 50%;
+  z-index: 5;
 `;
 
 export default class CircularProgress extends React.Component {
-    // this.interval = setInterval(() => this.refresh(), REFRESH_INTERVAL);
-    // clearInterval(this.interval);
-    // {
-    //     albumArt,
-    //     playing,
-    //     progressTime: (60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)),
-    //     totalTime: (60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)),
-    // }
-    constructor(props) {
-        super(props)
-        this.state = {
-            imageURL: '',
-            progress: 0.0,
-            total: 351.0,
-            timeStamp: 0,
-            playing: false,
-            intervalId: '',
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      progress: 0.0,
+      timeStamp: 0
+    };
+  }
+
+  static getDerivedStateFromProps({ progressTime, timeStamp }, prevState) {
+    if (prevState.timeStamp !== timeStamp)
+      // new time stamp -> props changed
+      return {
+        progress: progressTime,
+        timeStamp
+      };
+    return {};
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.refresh(), REFRESH_INTERVAL);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  refresh() {
+    const { playing, progressTime, time } = this.props;
+
+    if (playing) {
+      this.setState({
+        progress: progressTime + (new Date().getTime() - time) / 1000
+      });
     }
+  }
 
-    static getDerivedStateFromProps({ albumArt, progressTime, totalTime, timeStamp, playing }, prevState) {
-        if (prevState.timeStamp !== timeStamp) // new time stamp -> props changed
-            return {
-                imageURL: albumArt,
-                progress: (60 * parseInt(progressTime.split(':')[0], 10) + parseInt(progressTime.split(':')[1], 10)),
-                total: (60 * parseInt(totalTime.split(':')[0], 10) + parseInt(totalTime.split(':')[1], 10)),
-                timeStamp,
-                playing,
-                // intervalId,
-            }
+  render() {
+    const { albumArt, totalTime } = this.props;
+    const { progress } = this.state;
 
-        return {}
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => this.refresh(), REFRESH_INTERVAL);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
-    refresh() {
-        const { playing, progress } = this.state
-        if (playing) {
-            this.setState({ progress: progress + REFRESH_INTERVAL / 1000 });
-        }
-    }
-
-    render() {
-        const { imageURL, progress, total } = this.state
-
-        return (
-            <div>
-                <CircularProgressbarWithChildren
-                    strokeWidth="3"
-                    value={Math.floor(progress * FLOW_SMOOTHNESS)}
-                    maxValue={total * FLOW_SMOOTHNESS}
-                    styles={
-                        buildStyles({
-                            pathColor: `rgba(71, 143, 252, ${66 / 100})`,
-                            trailColor: '#d6d6d6',
-                            backgroundColor: '#3e98c7',
-                        })}
-                >
-                    <CircularImg w={STYLE.ALBUM_ART_DIMENSION} h={STYLE.ALBUM_ART_DIMENSION} src={imageURL} alt='' onError="this.style.display='none'"></CircularImg>
-                </CircularProgressbarWithChildren>
-            </div>
-        );
-    }
+    return (
+      <div>
+        <CircularProgressbarWithChildren
+          strokeWidth="3"
+          value={Math.floor(progress * FLOW_SMOOTHNESS)}
+          maxValue={totalTime * FLOW_SMOOTHNESS}
+          styles={buildStyles({
+            pathColor: `rgba(71, 143, 252, ${66 / 100})`,
+            trailColor: "#d6d6d6",
+            backgroundColor: "#3e98c7"
+          })}
+        >
+          <CircularImg
+            w={STYLE.ALBUM_ART_DIMENSION}
+            h={STYLE.ALBUM_ART_DIMENSION}
+            src={albumArt}
+            alt=""
+            onError="this.style.display='none'"
+          ></CircularImg>
+        </CircularProgressbarWithChildren>
+      </div>
+    );
+  }
 }

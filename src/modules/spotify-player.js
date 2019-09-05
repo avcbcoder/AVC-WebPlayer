@@ -221,13 +221,7 @@ class SpotifyPlayer extends React.Component {
 
   getProgress = (progressTime, totalTime) => {
     if (!progressTime || !totalTime) return 1;
-    var p =
-      60 * parseInt(progressTime.split(":")[0], 10) +
-      parseInt(progressTime.split(":")[1], 10);
-    var t =
-      60 * parseInt(totalTime.split(":")[0], 10) +
-      parseInt(totalTime.split(":")[1], 10);
-    return Math.floor((p / t) * 100);
+    return Math.floor((progressTime / totalTime) * 100);
   };
 
   trim = str => {
@@ -256,7 +250,7 @@ class SpotifyPlayer extends React.Component {
 
   render() {
     const { store, mediaControl, onClose } = this.props;
-    const { title, artist, albumArt, totalTime, progressTime, playing } = store[
+    const { title, artist, albumArt, totalTime, progressTime, playing, time } = store[
       STORE_VAR.SONG
     ];
     const { state, response } = store[STORE_VAR.HAPPI];
@@ -286,10 +280,11 @@ class SpotifyPlayer extends React.Component {
           <AlbumArtImage>
             <CircularProgress
               playing={playing}
-              albumArt={cover?cover:albumArt}
+              albumArt={cover ? cover : albumArt}
               progressTime={progressTime}
               totalTime={totalTime}
               timeStamp={new Date().getTime()}
+              time={time}
             />
           </AlbumArtImage>
         </Upper>
