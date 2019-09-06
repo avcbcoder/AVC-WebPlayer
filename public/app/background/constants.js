@@ -25,9 +25,17 @@ const HAPPI_OBJ = {
 const EXT_COMM = {
   GET_LYRICS: "get-lyrics",
   GET_VIDEO_ID: "get-video-id",
+  GET_HAPPI_DATA: "get-happi-data",
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
   RENDER: "render-store-modified"
+};
+
+const API_STATE = {
+  IDLE: "idle",
+  FETCHING: "fetching",
+  SUCCESS: "success",
+  FAIL: "fail"
 };
 
 const VALID_REQ_TYPE = "change-media get-video-id spotify get-lyrics";
@@ -40,5 +48,6 @@ export {
   YOUTUBE_V3_SEARCH,
   HAPPI_OBJ,
   EXT_COMM,
-  VALID_REQ_TYPE
+  VALID_REQ_TYPE,
+  API_STATE
 };

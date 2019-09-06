@@ -1,6 +1,7 @@
 import { STORE_VAR, CACHE_VAR, HAPPI_OBJ } from "../../constants.js";
 import { LYRICS_HAPPI_API_KEYS } from "../../../../config.js";
 import { fetchHappiLyrics } from "./lyrics-search.js";
+import { render } from "../../sender.js";
 
 const storage = chrome.storage.local;
 
@@ -42,7 +43,7 @@ function fetch(searchString, callback) {
   });
 }
 
-function saveInStore(data, render) {
+function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
     store[STORE_VAR.HAPPI] = {
@@ -62,7 +63,7 @@ function saveInCache(id, data) {
   });
 }
 
-const fetchHappiData = (songDetails, render) => {
+const fetchHappiData = songDetails => {
   const { title, artist } = songDetails;
   const searchString =
     filter(title.toLowerCase(), " ") +
@@ -78,11 +79,11 @@ const fetchHappiData = (songDetails, render) => {
 
     if (happi) {
       // if exist in cache -> modify store
-      saveInStore(happi, render);
+      saveInStore(happi);
     } else {
       // call api to fetch cover
       fetch(searchString, happiData => {
-        saveInStore(happiData, render);
+        saveInStore(happiData);
         saveInCache(id, happiData);
         // if (happiData[HAPPI_OBJ.HAS_LYRICS])
         //   fetchHappiLyrics(

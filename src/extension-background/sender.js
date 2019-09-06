@@ -8,6 +8,13 @@ function changeMedia(media) {
   });
 }
 
+function getHappiData(songDetails) {
+  chrome.runtime.sendMessage({
+    type: EXT_COMM.GET_HAPPI_DATA,
+    data: songDetails
+  });
+}
+
 function getLyrics(songDetails, url) {
   chrome.runtime.sendMessage({
     type: EXT_COMM.GET_LYRICS,
@@ -23,4 +30,4 @@ function getVideoId(songDetails) {
   });
 }
 
-export { changeMedia, getLyrics, getVideoId };
+export { changeMedia, getLyrics, getVideoId, getHappiData };

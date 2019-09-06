@@ -69,7 +69,7 @@ function handleSpotify(request) {
 
   if (isSongChanged)
     cacheCheck(function() {
-      fetchHappiData(request.data, render);
+      fetchHappiData(request.data);
     });
 
   storage.get(["store"], result => {
@@ -94,8 +94,11 @@ function handleSpotify(request) {
 chrome.runtime.onMessage.addListener(function(request) {
   if (!VALID_REQ_TYPE.includes(request.type)) return;
   switch (request.type) {
+    case EXT_COMM.GET_HAPPI_DATA:
+      fetchHappiData(request.data);
+      break;
     case EXT_COMM.GET_LYRICS:
-      fetchHappiLyrics(request.data, request.url);
+      if (request.url) fetchHappiLyrics(request.data, request.url);
       getAzFandomLyrics(request.data);
       break;
     case EXT_COMM.GET_VIDEO_ID:

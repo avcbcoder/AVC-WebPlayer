@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import styled from "styled-components";
 import { THEME } from "../constants/color";
-import { DISPLAY_MODE, HAPPI_OBJ , STORE_VAR } from "../constants/index";
+import { DISPLAY_MODE, HAPPI_OBJ, STORE_VAR } from "../constants/index";
 import { getLyrics, getVideoId } from "../extension-background/sender";
 
 const Tabs = styled.ul`
@@ -41,22 +41,12 @@ const TabItem = styled.li`
 `;
 
 class MenuCollection extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.refMenuWrapper = React.createRef();
-  }
-
-  static getDerivedStateFromProps() {
-    return {};
-  }
-
   render() {
     const { selected, onSelected, store } = this.props;
     const songDetails = store[STORE_VAR.SONG];
-    const storeHappi = store[STORE_VAR.HAPPI];
-    const hasLyrics = storeHappi.response[HAPPI_OBJ.HAS_LYRICS];
-    const apiLyrics = storeHappi.response[HAPPI_OBJ.API_LYRICS];
+    const happi = store[STORE_VAR.HAPPI].response;
+    const hasLyrics = happi[HAPPI_OBJ.HAS_LYRICS];
+    const apiLyrics = happi[HAPPI_OBJ.API_LYRICS];
 
     return (
       <React.Fragment>
@@ -75,7 +65,7 @@ class MenuCollection extends React.Component {
             <Link
               selected={selected === DISPLAY_MODE.LYRICS}
               onClick={() => {
-                if (hasLyrics) getLyrics(songDetails, apiLyrics);
+                getLyrics(songDetails, hasLyrics ? apiLyrics : "");
                 onSelected(DISPLAY_MODE.LYRICS);
               }}
             >

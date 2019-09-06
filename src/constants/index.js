@@ -54,9 +54,17 @@ const HAPPI_OBJ = {
 const EXT_COMM = {
   GET_LYRICS: "get-lyrics",
   GET_VIDEO_ID: "get-video-id",
+  GET_HAPPI_DATA: "get-happi-data",
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
   RENDER: "render-store-modified"
+};
+
+const API_STATE = {
+  IDLE: "idle",
+  FETCHING: "fetching",
+  SUCCESS: "success",
+  FAIL: "fail"
 };
 
 export {
@@ -68,5 +76,6 @@ export {
   DEFAULT_VIDEO_ID,
   STORE_VAR,
   HAPPI_OBJ,
-  EXT_COMM
+  EXT_COMM,
+  API_STATE
 };
