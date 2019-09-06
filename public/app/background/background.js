@@ -1,5 +1,5 @@
 /*global chrome*/
-import { EXT_COMM, VALID_REQ_TYPE, STORE_VAR } from "./constants.js";
+import { EXT_COMM, VALID_REQ_TYPE, STORE_VAR, API_STATE } from "./constants.js";
 import { fetchYoutubeVideos } from "./network/youtube-video-search/index.js";
 import { fetchLyrics as getAzFandomLyrics } from "./network/lyrics-search/index.js";
 import { fetchHappiData, fetchHappiLyrics } from "./network/happi/index.js";
@@ -76,13 +76,13 @@ function handleSpotify(request) {
     const store = result.store;
     store[STORE_VAR.SONG] = request.data;
     store[STORE_VAR.LYRICS] = isSongChanged
-      ? { state: "fetching", data: "" }
+      ? { state: API_STATE.IDLE, response: "" }
       : store[STORE_VAR.LYRICS];
     store[STORE_VAR.YOUTUBE] = isSongChanged
-      ? { state: "fetching", data: "" }
+      ? { state: API_STATE.IDLE, response: "" }
       : store[STORE_VAR.YOUTUBE];
     store[STORE_VAR.HAPPI] = isSongChanged
-      ? { state: "fetching", response: "" }
+      ? { state: API_STATE.IDLE, response: "" }
       : store[STORE_VAR.HAPPI];
     storage.set({ store: store }, () => {
       render();

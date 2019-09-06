@@ -38,7 +38,7 @@ function fetch(searchString, callback) {
 function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
-    store[STORE_VAR.YOUTUBE] = { state: "success", data };
+    store[STORE_VAR.YOUTUBE] = { state: "success", response:data };
     storage.set({ store: store }, render);
   });
 }

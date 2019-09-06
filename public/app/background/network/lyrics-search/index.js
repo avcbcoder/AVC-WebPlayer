@@ -9,7 +9,7 @@ function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
     if (store[STORE_VAR.LYRICS].state !== "success")
-      store[STORE_VAR.LYRICS] = { state: data ? "success" : "fail", data };
+      store[STORE_VAR.LYRICS] = { state: data ? "success" : "fail", response:data };
     storage.set({ store }, render);
   });
 }

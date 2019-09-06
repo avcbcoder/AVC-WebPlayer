@@ -16,11 +16,11 @@ const DEFAULT_STORE = {
   },
   store_lyrics: {
     state: "",
-    data: ""
+    response: ""
   },
   store_youtube: {
     state: "",
-    data: ""
+    response: ""
   },
   store_happi: {
     state: "",

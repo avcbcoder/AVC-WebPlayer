@@ -6,7 +6,7 @@ import styled, { css, keyframes } from "styled-components";
 import { Col, Separator, Img, CenterHV } from "../components";
 import { getAllIcons } from "../constants/icon";
 import { COLOR } from "../constants/color";
-import { STORE_VAR, HAPPI_OBJ } from "../constants";
+import { STORE_VAR, HAPPI_OBJ, API_STATE } from "../constants";
 
 const { minimizeIcon, closeWhiteThinIcon } = getAllIcons(chrome);
 
@@ -91,6 +91,9 @@ const MarqueeWrapper = styled.div`
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Marquee = styled.p`
@@ -105,21 +108,6 @@ const Marquee = styled.p`
 `;
 
 class LyricsPlayer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lyricsState: "Lyrics will appear here",
-      lyrics: "",
-      progressTime: "",
-      totalTime: ""
-    };
-    this.refLyricsBox = React.createRef();
-  }
-
-  static getDerivedStateFromProps({ store }) {
-    return {};
-  }
-
   replace = (str, a, b) => {
     //Method 1
     return str.split(a).join(b);
@@ -133,30 +121,43 @@ class LyricsPlayer extends React.Component {
     return y;
   };
 
-  componentDidMount() {}
+  getScrollableLyrics = () => {
+    const { store } = this.props;
+    const { totalTime } = store[STORE_VAR.SONG];
+    const { response: happiResponse } = store[STORE_VAR.HAPPI];
+    const { state: azState, response: azResponse } = store[STORE_VAR.LYRICS];
 
-  render() {
-    const { store, onClose } = this.props;
-    const lyrics = store[STORE_VAR.LYRICS];
-    const { progressTime, totalTime } = store[STORE_VAR.SONG];
-    const { state, response } = store[STORE_VAR.HAPPI];
-    let happiLyrics = "";
-    if (state === "success") happiLyrics = response[HAPPI_OBJ.LYRICS];
+    let lyrics = happiResponse[HAPPI_OBJ.LYRICS];
 
-    let lyric = happiLyrics;
+    if (!lyrics && azState === API_STATE.SUCCESS) lyrics = azResponse;
     let y = 53;
     let lyricsArr = [];
-    if (!lyric && lyrics.state === "success") lyric = lyrics.data;
 
     lyricsArr = this.replace(
-      lyric ? lyric : DEFAULT_LYRICS,
+      lyrics ? lyrics : DEFAULT_LYRICS,
       `\n\n`,
       `\n \n`
     ).split("\n");
-    y = lyric
-      ? lyric.split(`\n\n`).length
+    y = lyrics
+      ? lyrics.split(`\n\n`).length
       : DEFAULT_LYRICS.split(`\n\n`).length;
-    // const scrollPos = Math.floor(((y / totalTime) * progressTime))
+
+    if (lyrics)
+      return (
+        <Marquee y={this.getY(y, lyricsArr)} time={totalTime}>
+          {lyricsArr.map(lyric => (
+            <Text>{lyric === " " ? <br /> : lyric}</Text>
+          ))}
+        </Marquee>
+      );
+    if (azState === API_STATE.FAIL)
+      return <Text>Lyrics not found for this song</Text>;
+    if (azState === API_STATE.FETCHING)
+      return <Text>Fetching lyrics for this song</Text>;
+  };
+
+  render() {
+    const { onClose } = this.props;
 
     return (
       <Wrapper>
@@ -181,25 +182,7 @@ class LyricsPlayer extends React.Component {
         <Separator height="14" />
         <LyricsBox>
           <TopGradient />
-          <MarqueeWrapper>
-            {lyrics.state === "fail" && (
-              <Text>Lyrics not found for this song</Text>
-            )}
-            {lyrics.state === "fetching" && (
-              <Text>Fetching lyrics for this song</Text>
-            )}
-            {lyrics.state === "success" && (
-              <Marquee
-                ref={this.refLyricsBox}
-                y={this.getY(y, lyricsArr)}
-                time={totalTime}
-              >
-                {lyricsArr.map(lyric => (
-                  <Text>{lyric === " " ? <br /> : lyric}</Text>
-                ))}
-              </Marquee>
-            )}
-          </MarqueeWrapper>
+          <MarqueeWrapper>{this.getScrollableLyrics()}</MarqueeWrapper>
           <BottomGradient />
         </LyricsBox>
       </Wrapper>

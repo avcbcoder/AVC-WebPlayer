@@ -4,7 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import $ from "jquery";
-import { MODE, API_STATE, STORE_VAR } from "./constants";
+import { MODE, API_STATE, STORE_VAR, HAPPI_OBJ } from "./constants";
 
 import styled from "styled-components";
 import SpotifyPlayer from "./modules/spotify-player";
@@ -20,7 +20,7 @@ import {
   getHappiData,
   getLyrics,
   getVideoId
-} from "../extension-background/sender";
+} from "./extension-background/sender";
 
 const { ytBkg1 } = getAllIcons(chrome);
 
