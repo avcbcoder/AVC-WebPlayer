@@ -24,22 +24,35 @@ function saveLyricsInCache(id, lyrics) {
   });
 }
 
-const fetchHappiLyrics = (songDetails, lyricsSearchUrl) => {
+const fetchHappiLyrics = (songDetails) => {
   const { title, artist } = songDetails;
   const id = title + " " + artist.join(" "); //TODO: will change it to hash later
 
-  lyricsSearchUrl = lyricsSearchUrl + `?apikey=${LYRICS_HAPPI_API_KEYS[0]}`;
-  $.get(lyricsSearchUrl, response => {
-    chrome.extension
-      .getBackgroundPage()
-      .console.log("lyrics search response ", response);
-    if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
-      callback("");
-      return;
+  storage.get(["cache"], result => {
+    // search in the cache first
+    const cache = result.cache;
+    const cacheHappi = cache[CACHE_VAR.HAPPI];
+    const happi = cacheHappi[id];
+
+    if (happi && happi[HAPPI_OBJ.HAS_LYRICS] && happi[HAPPI_OBJ.LYRICS]) {
+      // if exist in cache -> modify store
+      saveInStore(happi);
+    } else {
+      const lyricsSearchUrl =
+        happi[HAPPI_OBJ.API_LYRICS] + `?apikey=${LYRICS_HAPPI_API_KEYS[0]}`;
+      $.get(lyricsSearchUrl, response => {
+        chrome.extension
+          .getBackgroundPage()
+          .console.log("lyrics search response ", response);
+        if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
+          callback("");
+          return;
+        }
+        const lyrics = response[HAPPI_OBJ.RESULT][HAPPI_OBJ.LYRICS];
+        saveLyricsInStore(lyrics);
+        saveLyricsInCache(id, lyrics);
+      });
     }
-    const lyrics = response[HAPPI_OBJ.RESULT][HAPPI_OBJ.LYRICS];
-    saveLyricsInStore(lyrics);
-    saveLyricsInCache(id, lyrics);
   });
 };
 

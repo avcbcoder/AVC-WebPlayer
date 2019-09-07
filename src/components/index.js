@@ -1,28 +1,29 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Row = styled.div`
-    display:flex;
-    flex-direction:row;
+  display: flex;
+  flex-direction: row;
 `;
 
 const Col = styled.div`
-    display:flex;
-    flex-direction:column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Separator = styled.div`
-    width:${({ width }) => width ? width : 0}px;
-    height:${({ height }) => height ? height : 0}px;
+  width: ${({ width }) => (width ? width : 0)}px;
+  height: ${({ height }) => (height ? height : 0)}px;
 `;
 
 const CenterHV = styled(Row)`
-    justify-content:center;
-    align-items:center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Img = styled.img`
-    width:${({ w }) => w}px;
-    height:${({ h }) => h}px;
+  width: ${({ w }) => w}px;
+  height: ${({ h }) => h}px;
+  cursor: pointer;
 `;
 
-export { Row, Col, Separator, CenterHV, Img }
+export { Row, Col, Separator, CenterHV, Img };

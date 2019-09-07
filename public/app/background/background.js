@@ -98,7 +98,7 @@ chrome.runtime.onMessage.addListener(function(request) {
       fetchHappiData(request.data);
       break;
     case EXT_COMM.GET_LYRICS:
-      if (request.url) fetchHappiLyrics(request.data, request.url);
+      fetchHappiLyrics(request.data);
       getAzFandomLyrics(request.data);
       break;
     case EXT_COMM.GET_VIDEO_ID:

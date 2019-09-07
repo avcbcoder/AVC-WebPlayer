@@ -1,12 +1,11 @@
 /*global chrome */
 import React from "react";
-import { MODE, ID, DEFAULT_LYRICS } from "../constants/index";
 
 import styled, { css, keyframes } from "styled-components";
 import { Col, Separator, Img, CenterHV } from "../components";
 import { getAllIcons } from "../constants/icon";
 import { COLOR } from "../constants/color";
-import { STORE_VAR, HAPPI_OBJ, API_STATE } from "../constants";
+import { STORE_VAR, HAPPI_OBJ, API_STATE, DEFAULT_LYRICS } from "../constants";
 
 const { minimizeIcon, closeWhiteThinIcon } = getAllIcons(chrome);
 
@@ -122,16 +121,15 @@ class LyricsPlayer extends React.Component {
   };
 
   getScrollableLyrics = () => {
-    const { store } = this.props;
-    const { totalTime } = store[STORE_VAR.SONG];
-    const { response: happiResponse } = store[STORE_VAR.HAPPI];
-    const { state: azState, response: azResponse } = store[STORE_VAR.LYRICS];
-
-    let lyrics = happiResponse[HAPPI_OBJ.LYRICS];
+    const { store } = this.props,
+      { totalTime } = store[STORE_VAR.SONG],
+      { response: happiResponse } = store[STORE_VAR.HAPPI],
+      { state: azState, response: azResponse } = store[STORE_VAR.LYRICS];
+    let lyrics = happiResponse[HAPPI_OBJ.LYRICS],
+      y = 53,
+      lyricsArr = [];
 
     if (!lyrics && azState === API_STATE.SUCCESS) lyrics = azResponse;
-    let y = 53;
-    let lyricsArr = [];
 
     lyricsArr = this.replace(
       lyrics ? lyrics : DEFAULT_LYRICS,
@@ -168,14 +166,12 @@ class LyricsPlayer extends React.Component {
             h="15"
             src={minimizeIcon}
             onClick={() => onClose()}
-            style={{ cursor: "pointer" }}
           ></Img>
           <Separator width="16" />
           <Img
             w="15"
             h="15"
             src={closeWhiteThinIcon}
-            style={{ cursor: "pointer" }}
           ></Img>
           <Separator width="16" />
         </ButtonCollection>

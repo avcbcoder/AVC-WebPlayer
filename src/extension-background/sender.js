@@ -15,11 +15,10 @@ function getHappiData(songDetails) {
   });
 }
 
-function getLyrics(songDetails, url) {
+function getLyrics(songDetails) {
   chrome.runtime.sendMessage({
     type: EXT_COMM.GET_LYRICS,
-    data: songDetails,
-    url
+    data: songDetails
   });
 }
 

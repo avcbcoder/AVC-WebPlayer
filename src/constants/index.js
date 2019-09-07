@@ -48,7 +48,8 @@ const HAPPI_OBJ = {
   LENGTH: "length",
   COVER: "cover",
   HAS_LYRICS: "haslyrics",
-  TRACK: "track"
+  TRACK: "track",
+  LYRICS: "lyrics"
 };
 
 const EXT_COMM = {

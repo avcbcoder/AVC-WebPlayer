@@ -206,6 +206,10 @@ const HoverMenu = styled.div`
   transition: all 1s ease-out;
 `;
 
+const PlayPauseIcon = styled(Img)`
+  margin-left: ${({ playing }) => (playing ? 4 : 0)}px;
+`;
+
 class SpotifyPlayer extends React.Component {
   constructor(props) {
     super(props);
@@ -251,9 +255,15 @@ class SpotifyPlayer extends React.Component {
 
   render() {
     const { store, onClose } = this.props;
-    const { title, artist, albumArt, totalTime, progressTime, playing, time } = store[
-      STORE_VAR.SONG
-    ];
+    const {
+      title,
+      artist,
+      albumArt,
+      totalTime,
+      progressTime,
+      playing,
+      time
+    } = store[STORE_VAR.SONG];
     const { state, response } = store[STORE_VAR.HAPPI];
 
     let cover = "";
@@ -317,15 +327,14 @@ class SpotifyPlayer extends React.Component {
                 ></Img>
               </PrevButton>
               <PlayPauseButton>
-                <Img
+                <PlayPauseIcon
                   src={playing ? playIcon : pauseIcon}
                   w={24}
                   h={24}
                   onClick={() => {
                     changeMedia(CONTROLS.PLAY);
                   }}
-                  style={playing ? {} : { "margin-left": "4px" }}
-                ></Img>
+                ></PlayPauseIcon>
               </PlayPauseButton>
               <NextButton>
                 <Img
