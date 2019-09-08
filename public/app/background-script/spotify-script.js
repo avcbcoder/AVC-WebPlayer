@@ -60,7 +60,8 @@ function extractDetails() {
 }
 
 if (window.location.href.includes("open.spotify.com")) {
-  setInterval(() => {
+  clearInterval(window.miniIntervalId);
+  window.miniIntervalId = setInterval(() => {
     const newDetailsObj = extractDetails();
     const lastProgress = songDetailsObj.progressTime;
     const newProgress = newDetailsObj.progressTime;
@@ -88,7 +89,7 @@ if (window.location.href.includes("open.spotify.com")) {
       // fire event that play-state-changed
       method = "play-state-change";
     }
-    
+
     if (method)
       chrome.runtime.sendMessage({
         type: "spotify",
