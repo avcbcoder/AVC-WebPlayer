@@ -56,6 +56,9 @@ function miniWindow(type) {
     case MINI_MODE.none:
       break;
     case MINI_MODE.spotify:
+      const v = document.getElementsByTagName("video")[0];
+      console.log(v);
+      v.requestPictureInPicture();
       break;
     case MINI_MODE.lyrics:
       break;

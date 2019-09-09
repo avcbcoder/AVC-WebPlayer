@@ -167,6 +167,12 @@ class LyricsPlayer extends React.Component {
       return <Text>Fetching lyrics for this song</Text>;
   };
 
+  startMiniWindow = () => {
+    const v = document.getElementsByTagName("video")[0];
+    console.log(v);
+    v.requestPictureInPicture();
+  };
+
   render() {
     const { onClose, miniWindow } = this.props;
 
@@ -178,7 +184,8 @@ class LyricsPlayer extends React.Component {
             w="15"
             h="15"
             src={minimizeIcon}
-            onClick={() => miniWindow(MINI_MODE.spotify)}
+            // onClick={() => miniWindow(MINI_MODE.spotify)}
+            onClick={this.startMiniWindow}
           ></Img>
           <Separator width="16" />
           <Img w="15" h="15" src={closeWhiteThinIcon} onClick={onClose}></Img>
