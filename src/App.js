@@ -9,6 +9,7 @@ import { MODE, API_STATE, STORE_VAR, HAPPI_OBJ } from "./constants";
 import styled from "styled-components";
 import SpotifyPlayer from "./modules/spotify-player";
 import LyricsPlayer from "./modules/lyrics-player";
+import R2C from "./modules/picture-in-picture/render-to-canvas";
 import MenuCollection from "./modules/menu-collection";
 
 import { YOUTUBE_PLAYER, SPOTIFY_PLAYER } from "./constants/dimension";
@@ -166,11 +167,12 @@ class App extends React.Component {
         )}
         {selected === DISPLAY_MODE.LYRICS && (
           <WrapperLyrics>
-            <LyricsPlayer
+            {/* <LyricsPlayer
               store={store}
               mediaControl={mediaControl}
               onClose={onClose}
-            ></LyricsPlayer>
+            ></LyricsPlayer> */}
+            <R2C />
           </WrapperLyrics>
         )}
       </Root>
