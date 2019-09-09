@@ -5,7 +5,13 @@ import styled, { css, keyframes } from "styled-components";
 import { Col, Separator, Img, CenterHV } from "../components";
 import { getAllIcons } from "../constants/icon";
 import { COLOR } from "../constants/color";
-import { STORE_VAR, HAPPI_OBJ, API_STATE, DEFAULT_LYRICS } from "../constants";
+import {
+  STORE_VAR,
+  HAPPI_OBJ,
+  API_STATE,
+  DEFAULT_LYRICS,
+  MINI_MODE
+} from "../constants";
 import domtoimage from "dom-to-image";
 
 const { minimizeIcon, closeWhiteThinIcon } = getAllIcons(chrome);
@@ -161,67 +167,18 @@ class LyricsPlayer extends React.Component {
       return <Text>Fetching lyrics for this song</Text>;
   };
 
-  captureFrame = () => {
-    // const ele = this.refBox;
-    const ele = document.getElementById("id432");
-    domtoimage
-      .toPng(ele)
-      .then(function(dataUrl) {
-        const img = new Image();
-        img.src = dataUrl;
-        let canvas = document.getElementById("canvas432");
-        if (!canvas) {
-          canvas = document.createElement("canvas");
-          canvas.id = "canvas432";
-          document.body.appendChild(canvas);
-          canvas.width = 500;
-          canvas.height = 200;
-          const context = canvas.getContext("2d");
-          context.drawImage(img, 0, 0);
-          const video = document.createElement("video");
-          video.id = "video432";
-          document.body.appendChild(video);
-          video.srcObject = canvas.captureStream();
-          video.play();
-        }
-        // const video = document.getElementById("video432");
-        const context = canvas.getContext("2d");
-        context.drawImage(img, 0, 0);
-      })
-      .catch(function(error) {
-        console.error("oops, something went wrong!", error);
-      });
-  };
-
-  startVideoCapture = () => {
-    this.videoId = setTimeout(() => {
-      this.captureFrame();
-    }, 1000);
-  };
-
-  stopVideoCapture = () => {
-    clearInterval(this.videoId);
-  };
-
   render() {
-    const { onClose } = this.props;
+    const { onClose, miniWindow } = this.props;
 
     return (
-      <Wrapper ref={this.refBox} id="id432">
+      <Wrapper ref={this.refBox}>
         <Separator height="12" />
         <ButtonCollection>
           <Img
             w="15"
             h="15"
             src={minimizeIcon}
-            onClick={this.startVideoCapture}
-          ></Img>
-          <Separator width="16" />
-          <Img
-            w="15"
-            h="15"
-            src={minimizeIcon}
-            onClick={this.stopVideoCapture}
+            onClick={() => miniWindow(MINI_MODE.spotify)}
           ></Img>
           <Separator width="16" />
           <Img w="15" h="15" src={closeWhiteThinIcon} onClick={onClose}></Img>

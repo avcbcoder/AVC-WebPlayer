@@ -61,10 +61,6 @@ class R2C extends React.Component {
 
   componentDidMount() {
     setInterval(() => {
-    //   const p = document.getElementById("p432");
-    //   const box = document.getElementById("box432");
-    //   p.innerText = Math.random();
-    //   box.style.backgroundColor = this.getRandomColor();
       this.capture();
     }, 1000);
   }
@@ -80,7 +76,6 @@ class R2C extends React.Component {
       <Wrap id="wrap432">
         <h1>Head</h1>
         <Box id="box432">
-          {/* <p id="p432" /> */}
           <img
             id="img432"
             width="200px"

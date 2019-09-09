@@ -9,6 +9,13 @@ const MODE = {
   MINI_WINDOW: "min_youtube"
 };
 
+const MINI_MODE = {
+  none: "none",
+  spotify: "spotify",
+  youtube: "youtube",
+  lyrics: "lyrics"
+};
+
 const ID = {
   YOUTUBE_IFRAME: "yt_401"
 };
@@ -78,5 +85,6 @@ export {
   STORE_VAR,
   HAPPI_OBJ,
   EXT_COMM,
-  API_STATE
+  API_STATE,
+  MINI_MODE
 };

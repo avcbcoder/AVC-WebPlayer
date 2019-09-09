@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
-import { MODE, STORE_VAR, EXT_COMM } from "./constants";
+import { MODE, STORE_VAR, EXT_COMM, MINI_MODE } from "./constants";
 
 const DEFAULT_STORE = {
   mode: MODE.MODE_SPOTIFY,
@@ -51,6 +51,19 @@ function onClose(c) {
   app.style.display = "none";
 }
 
+function miniWindow(type) {
+  switch (type) {
+    case MINI_MODE.none:
+      break;
+    case MINI_MODE.spotify:
+      break;
+    case MINI_MODE.lyrics:
+      break;
+    case MINI_MODE.youtube:
+      break;
+  }
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
     console.log(request.tabs);
@@ -66,6 +79,7 @@ const renderComponent = () => {
         store={result.store}
         mediaControl={mediaControl}
         onClose={onClose}
+        miniWindow={miniWindow}
       />,
       app
     );
