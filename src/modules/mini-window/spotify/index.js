@@ -48,21 +48,28 @@ class Window extends React.Component {
         img.src = dataUrl;
         img.onload = () => {
           let canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+          let video = document.getElementById(ID.VIDEO.SPOTIFY);
           if (!canvas) {
+            // create canvas
             canvas = document.createElement("canvas");
-            canvas.id =ID.CANVAS.SPOTIFY;
+            canvas.id = ID.CANVAS.SPOTIFY;
             canvas.width = img.width;
             canvas.height = img.height;
             document.body.appendChild(canvas);
-            const video = document.createElement("video");
+            // draw image on canvas
+            const context = canvas.getContext("2d");
+            context.drawImage(img, 0, 0);
+            // create video element
+            video = document.createElement("video");
             video.id = ID.VIDEO.SPOTIFY;
             document.body.appendChild(video);
-            // const video = document.getElementById("video-432");
             video.srcObject = canvas.captureStream();
             video.play();
+          } else {
+            // draw image repeatedly
+            const context = canvas.getContext("2d");
+            context.drawImage(img, 0, 0);
           }
-          const context = canvas.getContext("2d");
-          context.drawImage(img, 0, 0);
         };
       })
       .catch(function(error) {
@@ -71,7 +78,12 @@ class Window extends React.Component {
   };
 
   onLoad = () => {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
+      if (this.count === 10) {
+        clearInterval(this.intervalId);
+        return;
+      }
+      this.count++;
       this.capture();
     }, 1000);
   };
