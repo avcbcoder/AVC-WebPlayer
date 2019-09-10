@@ -2,32 +2,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
-import { MODE, STORE_VAR, EXT_COMM, MINI_MODE, ID } from "./constants";
+import {
+  MODE,
+  STORE_VAR,
+  EXT_COMM,
+  MINI_MODE,
+  ID,
+  DEFAULT_STORE
+} from "./constants";
 import { createSpotifyWindow } from "./modules/mini-window";
-
-const DEFAULT_STORE = {
-  mode: MODE.MODE_SPOTIFY,
-  store_song: {
-    title: "",
-    artist: [],
-    albumArt: "",
-    progressTime: "0:00",
-    totalTime: "3:51",
-    playing: ""
-  },
-  store_lyrics: {
-    state: "",
-    response: ""
-  },
-  store_youtube: {
-    state: "",
-    response: ""
-  },
-  store_happi: {
-    state: "",
-    response: ""
-  }
-};
 
 const storage = chrome.storage.local;
 
@@ -95,3 +78,15 @@ function toggle() {
     app.style.display = "none";
   }
 }
+
+// Working for onBlur listeners
+// 1-> whenever tab goes in background, if pip is not enabled, remove extension body
+document.addEventListener("visibilitychange", function() {
+  if (document.hidden) {
+    if (document.pictureInPictureElement) return;
+    const extensionBody = document.getElementById(ID.EXTENSION_BODY);
+    if (extensionBody) extensionBody.parentNode.removeChild(extensionBody);
+  } else {
+    console.log("Browser tab is visible");
+  }
+});

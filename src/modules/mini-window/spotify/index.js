@@ -27,6 +27,8 @@ const createSpotifyWindow = store => {
   ReactDOM.render(<Window store={store} />, spotifyMiniWindow);
 };
 
+const onSongChange = () => {};
+
 class Window extends React.Component {
   constructor(props) {
     super(props);
@@ -85,69 +87,7 @@ class Window extends React.Component {
       }
       this.count++;
       this.capture();
-    }, 1000);
-  };
-
-  onLoad2 = () => {
-    const spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
-    const ele = document.getElementById(ID.FRAME.SPOTIFY);
-    this.count = 0;
-    this.intervalId = setInterval(() => {
-      domtoimage
-        .toPng(ele)
-        .then(dataUrl => {
-          const img = new Image();
-          img.src = dataUrl;
-          img.onload = () => {
-            let canvas = document.getElementById(ID.CANVAS.SPOTIFY);
-            let video = document.getElementById(ID.VIDEO.SPOTIFY);
-            switch (this.count) {
-              case 0:
-                console.log("IN CASE ", 0);
-                if (!canvas) {
-                  canvas = document.createElement("canvas");
-                  canvas.id = ID.CANVAS.SPOTIFY;
-                  canvas.width = img.width;
-                  canvas.height = img.height;
-                  const context = canvas.getContext("2d");
-                  context.drawImage(img, 0, 0);
-                  spotifyMiniWindow.appendChild(canvas);
-                }
-                break;
-              case 1:
-                console.log("IN CASE ", 1);
-              case 2:
-                console.log("IN CASE ", 2);
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const context = canvas.getContext("2d");
-                context.drawImage(img, 0, 0);
-                break;
-              case 3:
-                console.log("IN CASE ", 3);
-                if (!video) {
-                  video = document.createElement("video");
-                  video.id = ID.VIDEO.SPOTIFY;
-                  video.srcObject = canvas.captureStream();
-                  spotifyMiniWindow.appendChild(video);
-                }
-                break;
-              case 4:
-                console.log("IN CASE ", 4);
-                video.play();
-                break;
-              default:
-                console.log("IN CASE ", 5);
-                clearInterval(this.intervalId);
-                break;
-            }
-            this.count++;
-          };
-        })
-        .catch(function(error) {
-          console.error("oops, something went wrong!", error);
-        });
-    }, 1000);
+    }, 100);
   };
 
   render() {

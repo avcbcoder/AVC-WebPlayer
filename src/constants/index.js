@@ -37,6 +37,30 @@ const ID = {
   }
 };
 
+const DEFAULT_STORE = {
+  mode: MODE.MODE_SPOTIFY,
+  store_song: {
+    title: "",
+    artist: [],
+    albumArt: "",
+    progressTime: "0:00",
+    totalTime: "3:51",
+    playing: ""
+  },
+  store_lyrics: {
+    state: "",
+    response: ""
+  },
+  store_youtube: {
+    state: "",
+    response: ""
+  },
+  store_happi: {
+    state: "",
+    response: ""
+  }
+};
+
 const CONTROLS = {
   NEXT: "next",
   PREV: "previous",
@@ -103,5 +127,6 @@ export {
   HAPPI_OBJ,
   EXT_COMM,
   API_STATE,
-  MINI_MODE
+  MINI_MODE,
+  DEFAULT_STORE
 };
