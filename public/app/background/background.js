@@ -85,7 +85,7 @@ function handleSpotify(request) {
       ? { state: API_STATE.IDLE, response: "" }
       : store[STORE_VAR.HAPPI];
     storage.set({ store: store }, () => {
-      render();
+      render(request);
     });
   });
 }

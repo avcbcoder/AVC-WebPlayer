@@ -154,7 +154,6 @@ class App extends React.Component {
               store={store}
               mediaControl={mediaControl}
               onClose={onClose}
-              miniWindow={miniWindow}
             ></SpotifyPlayer>
           </WrapperSpotify>
         )}
@@ -164,7 +163,6 @@ class App extends React.Component {
               store={store}
               mediaControl={mediaControl}
               onClose={onClose}
-              miniWindow={miniWindow}
             ></YoutubePlayer>
           </WrapperYoutube>
         )}
@@ -174,7 +172,6 @@ class App extends React.Component {
               store={store}
               mediaControl={mediaControl}
               onClose={onClose}
-              miniWindow={miniWindow}
             ></LyricsPlayer>
             {/* <R2C /> */}
           </WrapperLyrics>

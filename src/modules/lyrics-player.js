@@ -173,7 +173,7 @@ class LyricsPlayer extends React.Component {
   };
 
   render() {
-    const { onClose, miniWindow } = this.props;
+    const { onClose } = this.props;
 
     return (
       <Wrapper ref={this.refBox}>
@@ -183,7 +183,6 @@ class LyricsPlayer extends React.Component {
             w="15"
             h="15"
             src={minimizeIcon}
-            // onClick={() => miniWindow(MINI_MODE.spotify)}
             onClick={this.startMiniWindow}
           ></Img>
           <Separator width="16" />

@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
-import { MODE, STORE_VAR, EXT_COMM, MINI_MODE } from "./constants";
+import { MODE, STORE_VAR, EXT_COMM, MINI_MODE, ID } from "./constants";
 import { createSpotifyWindow } from "./modules/mini-window";
 
 const DEFAULT_STORE = {
@@ -52,30 +52,23 @@ function onClose(c) {
   app.style.display = "none";
 }
 
-function miniWindow(type) {
-  switch (type) {
-    case MINI_MODE.none:
-      break;
-    case MINI_MODE.spotify:
-      const v = document.getElementsByTagName("video")[0];
-      console.log(v);
-      v.requestPictureInPicture();
-      break;
-    case MINI_MODE.lyrics:
-      break;
-    case MINI_MODE.youtube:
-      break;
-  }
-}
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
     console.log(request.tabs);
     toggle();
+    // const spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
+    // if (spotifyMiniWindow) {
+    //   if (!document.pictureInPictureElement)
+    //     spotifyMiniWindow.parentNode.removeChild(spotifyMiniWindow);
+    // } else {
+    //   storage.get(["store"], result => {
+    //     createSpotifyWindow(result.store);
+    //   });
+    // }
   }
 });
 
-const renderComponent = () => {
+const renderComponent = request => {
   storage.get(["store"], result => {
     console.log("STORE=>", result.store);
     ReactDOM.render(
@@ -83,16 +76,16 @@ const renderComponent = () => {
         store={result.store}
         mediaControl={mediaControl}
         onClose={onClose}
-        miniWindow={miniWindow}
       />,
       app
     );
-    createSpotifyWindow(result.store);
+    if (request && request.method === "song-change")
+      createSpotifyWindow(result.store);
   });
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === EXT_COMM.RENDER) renderComponent();
+  if (request.type === EXT_COMM.RENDER) renderComponent(request);
 });
 
 function toggle() {

@@ -17,6 +17,7 @@ const WindowWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index:1000;
 `;
 
 const Body = styled.div`
@@ -64,7 +65,7 @@ const Progress = styled.div`
     `}
 `;
 
-const Text = styled.p`
+const Text = styled.div`
   color: #fff;
 `;
 
@@ -97,14 +98,14 @@ export default class WindowView extends React.Component {
             src="https://images7.alphacoders.com/905/905837.jpg"
           ></Background>
           <Bottom>
-            <ProgressBar>
+            {/* <ProgressBar>
               <Progress
                 initialWidth={initialWidth}
                 finalWidth={width}
                 time={time}
                 playing={playing}
               ></Progress>
-            </ProgressBar>
+            </ProgressBar> */}
             <Text>{`${artist[0]} : ${title}`}</Text>
           </Bottom>
         </Body>
