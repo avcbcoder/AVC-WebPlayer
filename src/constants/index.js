@@ -17,7 +17,24 @@ const MINI_MODE = {
 };
 
 const ID = {
-  YOUTUBE_IFRAME: "yt_401"
+  YOUTUBE_IFRAME: "yt_401",
+  EXTENSION_BODY: "extension-body",
+  CANVAS: {
+    SPOTIFY: "id-spotify-canvas",
+    LYRICS: "id-lyrics-canvas"
+  },
+  VIDEO: {
+    SPOTIFY: "id-spotify-video",
+    LYRICS: "id-lyrics-video"
+  },
+  WINDOW: {
+    SPOTIFY: "id-spotify-window",
+    LYRICS: "id-lyrics-window"
+  },
+  FRAME:{
+    SPOTIFY: "id-spotify-frame",
+    LYRICS: "id-lyrics-frame"
+  }
 };
 
 const CONTROLS = {

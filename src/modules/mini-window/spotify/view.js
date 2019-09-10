@@ -1,28 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import domtoimage from "dom-to-image";
-import $ from "jquery";
-
-const Wrap = styled.div`
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
-  position: fixed;
-  top: 0;
-  left: 0;
-`;
+import {ID} from '../../../constants'
 
 const Box = styled.div`
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  left: 0;
-`;
-
-const Video = styled.video`
-  position: fixed;
-  bottom: ${({ height }) => -2 * height}px;
-  left: ${({ width }) => -2 * width}px;
+  left: 0; */
 `;
 
 export default class WindowView extends React.Component {
@@ -39,7 +24,7 @@ export default class WindowView extends React.Component {
     const width = ratio * 16;
     const height = ratio * 9;
     return (
-      <Box id="box-432" width={width} height={height}>
+      <Box id={ID.FRAME.SPOTIFY} width={width} height={height}>
         <img
           id="img-432"
           width={width + "px"}
@@ -51,14 +36,3 @@ export default class WindowView extends React.Component {
     );
   }
 }
-
-//     {/*<Wrap>*/}
-
-//     {/* <Video
-//       id="spotify-video-432"
-//       controls="controls"
-//       autoplay
-//       width={width}
-//       height={height}
-//     ></Video> */}
-//   {/* </Wrap> */}

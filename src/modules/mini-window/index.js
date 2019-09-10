@@ -1,3 +1,3 @@
-import createSpotifyWindow from "./spotify";
+import {createSpotifyWindow, removeSpotifyWindow} from "./spotify";
 
-export { createSpotifyWindow };
+export { createSpotifyWindow , removeSpotifyWindow};
