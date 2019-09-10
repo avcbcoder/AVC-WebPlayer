@@ -17,7 +17,6 @@ import { DISPLAY_MODE } from "./constants/index";
 import YoutubePlayer from "./modules/youtube-player";
 import { getAllIcons } from "./constants/icon";
 
-import { createSpotifyWindow } from "./modules/mini-window";
 
 import {
   getHappiData,
@@ -123,7 +122,6 @@ class App extends React.Component {
           const apiLyrics = happi[HAPPI_OBJ.API_LYRICS];
           getLyrics(song, hasLyrics ? apiLyrics : "");
         }
-        createSpotifyWindow()
         break;
       case DISPLAY_MODE.YOUTUBE:
         const storeYoutube = store[STORE_VAR.YOUTUBE];

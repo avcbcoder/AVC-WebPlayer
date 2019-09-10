@@ -10,7 +10,7 @@ import {
   HAPPI_OBJ,
   API_STATE,
   DEFAULT_LYRICS,
-  MINI_MODE
+  ID
 } from "../constants";
 import domtoimage from "dom-to-image";
 
@@ -168,9 +168,8 @@ class LyricsPlayer extends React.Component {
   };
 
   startMiniWindow = () => {
-    const v = document.getElementsByTagName("video")[0];
-    console.log(v);
-    v.requestPictureInPicture();
+    const v = document.getElementById(ID.VIDEO.SPOTIFY);
+    if (v) v.requestPictureInPicture();
   };
 
   render() {

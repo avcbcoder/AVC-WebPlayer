@@ -253,6 +253,11 @@ class SpotifyPlayer extends React.Component {
     }
   };
 
+  startMiniWindow = () => {
+    const v = document.getElementById(ID.VIDEO.SPOTIFY);
+    if (v) v.requestPictureInPicture();
+  };
+
   render() {
     const { store, onClose } = this.props;
     const {

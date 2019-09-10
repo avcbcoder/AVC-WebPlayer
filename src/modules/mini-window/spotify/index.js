@@ -2,18 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import domtoimage from "dom-to-image";
-import { ID } from "../../../constants";
+import { ID, STORE_VAR } from "../../../constants";
 import $ from "jquery";
 
 import WindowView from "./view";
 
-const removeSpotifyWindow = () => {
-  let spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
-  if (spotifyMiniWindow) return;
-  spotifyMiniWindow.parentNode.removeChild(spotifyMiniWindow);
-};
-
-const createSpotifyWindow = () => {
+const createSpotifyWindow = store => {
   let extensionBody = document.getElementById(ID.EXTENSION_BODY);
   if (!extensionBody) {
     extensionBody = document.createElement("div");
@@ -25,11 +19,12 @@ const createSpotifyWindow = () => {
   }
 
   let spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
-  if (spotifyMiniWindow) return;
-  spotifyMiniWindow = document.createElement("div");
-  spotifyMiniWindow.id = ID.WINDOW.SPOTIFY;
-  extensionBody.appendChild(spotifyMiniWindow);
-  ReactDOM.render(<Window />, spotifyMiniWindow);
+  if (!spotifyMiniWindow) {
+    spotifyMiniWindow = document.createElement("div");
+    spotifyMiniWindow.id = ID.WINDOW.SPOTIFY;
+    extensionBody.appendChild(spotifyMiniWindow);
+  }
+  ReactDOM.render(<Window store={store} />, spotifyMiniWindow);
 };
 
 class Window extends React.Component {
@@ -79,8 +74,11 @@ class Window extends React.Component {
   };
 
   render() {
-    return <WindowView ratio="70" onLoad={this.onLoad} />;
+    const { store } = this.props;
+    const song = store[STORE_VAR.SONG];
+
+    return <WindowView song={song} ratio="70" onLoad={this.onLoad} />;
   }
 }
 
-export { createSpotifyWindow, removeSpotifyWindow };
+export default createSpotifyWindow;

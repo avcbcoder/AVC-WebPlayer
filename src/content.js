@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import RootApp from "./modules/root-module";
 import { MODE, STORE_VAR, EXT_COMM, MINI_MODE } from "./constants";
+import { createSpotifyWindow } from "./modules/mini-window";
 
 const DEFAULT_STORE = {
   mode: MODE.MODE_SPOTIFY,
@@ -86,6 +87,7 @@ const renderComponent = () => {
       />,
       app
     );
+    createSpotifyWindow(result.store);
   });
 };
 
