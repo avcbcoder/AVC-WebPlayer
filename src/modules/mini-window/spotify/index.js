@@ -24,12 +24,19 @@ const onSongChange = () => {};
 function attachListenersToVideo(video) {
   if (!video) return;
   video.addEventListener("enterpictureinpicture", () => {
+    console.log("PIP ENTER");
     window.pip = true;
-    storage.set({ pip: true });
+    storage.set({ pip: true }); //remove it later
   });
   video.addEventListener("leavepictureinpicture", () => {
+    console.log("PIP EXIT");
     window.pip = false;
-    storage.set({ pip: false });
+    storage.set({ pip: false }); //remove it later
+    if (document.visibilityState === "hidden") {
+      console.log("REMOVING EXT BODY SINCE PIP EXITED");
+      const extBody = document.getElementById(ID.EXTENSION_BODY);
+      if (extBody) extBody.parentNode.removeChild(extBody);
+    }
   });
 }
 
