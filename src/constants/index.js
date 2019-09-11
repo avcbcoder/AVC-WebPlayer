@@ -19,6 +19,7 @@ const MINI_MODE = {
 const ID = {
   YOUTUBE_IFRAME: "yt_401",
   EXTENSION_BODY: "extension-body",
+  EXTENSION_PLAYER:"extension-player",
   CANVAS: {
     SPOTIFY: "id-spotify-canvas",
     LYRICS: "id-lyrics-canvas"

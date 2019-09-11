@@ -9,14 +9,6 @@ import WindowView from "./view";
 
 const createSpotifyWindow = store => {
   let extensionBody = document.getElementById(ID.EXTENSION_BODY);
-  if (!extensionBody) {
-    extensionBody = document.createElement("div");
-    extensionBody.id = ID.EXTENSION_BODY;
-    extensionBody.style.width = "0px";
-    extensionBody.style.height = "0px";
-    // extensionBody.style.overflow = "hidden";
-    document.body.appendChild(extensionBody);
-  }
 
   let spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
   if (!spotifyMiniWindow) {
@@ -28,6 +20,18 @@ const createSpotifyWindow = store => {
 };
 
 const onSongChange = () => {};
+
+function attachListenersToVideo(video) {
+  if (!video) return;
+  video.addEventListener("enterpictureinpicture", () => {
+    window.pip = true;
+    storage.set({ pip: true });
+  });
+  video.addEventListener("leavepictureinpicture", () => {
+    window.pip = false;
+    storage.set({ pip: false });
+  });
+}
 
 class Window extends React.Component {
   constructor(props) {
@@ -67,6 +71,7 @@ class Window extends React.Component {
             document.body.appendChild(video);
             video.srcObject = canvas.captureStream();
             video.play();
+            attachListenersToVideo(video);
           } else {
             // draw image repeatedly
             const context = canvas.getContext("2d");
