@@ -1,3 +1,4 @@
+/*global chrome*/
 import React from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -6,6 +7,8 @@ import { ID, STORE_VAR } from "../../../constants";
 import $ from "jquery";
 
 import WindowView from "./view";
+
+const storage = chrome.storage.local;
 
 const createSpotifyWindow = store => {
   let extensionBody = document.getElementById(ID.EXTENSION_BODY);
@@ -64,18 +67,19 @@ class Window extends React.Component {
           let video = document.getElementById(ID.VIDEO.SPOTIFY);
           if (!canvas) {
             // create canvas
+            const extBody = document.getElementById(ID.EXTENSION_BODY);
             canvas = document.createElement("canvas");
             canvas.id = ID.CANVAS.SPOTIFY;
             canvas.width = img.width;
             canvas.height = img.height;
-            document.body.appendChild(canvas);
+            extBody.appendChild(canvas);
             // draw image on canvas
             const context = canvas.getContext("2d");
             context.drawImage(img, 0, 0);
             // create video element
             video = document.createElement("video");
             video.id = ID.VIDEO.SPOTIFY;
-            document.body.appendChild(video);
+            extBody.appendChild(video);
             video.srcObject = canvas.captureStream();
             video.play();
             attachListenersToVideo(video);
