@@ -32,7 +32,6 @@ function addPlayer() {
   extPlayer.style.zIndex = 9999999;
   // extPlayer.style.display = "none";
   document.body.appendChild(extPlayer);
-  console.log("added player", extPlayer);
   storage.set({ store: DEFAULT_STORE }, () => {
     ReactDOM.render(
       <RootApp
@@ -70,15 +69,12 @@ function removePip() {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log("RECIEVED REQ ->", request);
   if (request.message === "clicked_browser_action") {
     let extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-    if (extPlayer) {
-      console.log("removing player");
+    if (extPlayer) {  
       removePlayer();
       removePip();
     } else {
-      console.log("adding player");
       addPlayer();
       addPip();
     }
@@ -91,7 +87,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   const extBody = document.getElementById(ID.EXTENSION_BODY);
   storage.get(["store"], result => {
     if (extPlayer) {
-      console.log("Updating ext player");
       ReactDOM.render(
         <RootApp
           store={result.store}
@@ -102,7 +97,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       );
     }
     if (extBody && request && request.method === "song-change") {
-      console.log("Updating ext window");
       createSpotifyWindow(result.store);
     }
   });
@@ -119,7 +113,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 // tabChage : onBackground -> remove player and remove pip(if pip not enabled)
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    console.log("document hidden removing things");
     removePlayer();
     removePip();
   }
