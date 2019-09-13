@@ -10,6 +10,41 @@ import WindowView from "./view";
 
 const storage = chrome.storage.local;
 
+function videoLoaded() {
+  let count = 0;
+  const ele = document.getElementById(ID.FRAME.SPOTIFY);
+  const intervalId = setInterval(() => {
+    if (count === 10) {
+      const video = document.getElementById(ID.VIDEO.SPOTIFY);
+      console.log("Trying to play it");
+      try {
+        video.play();
+      } catch (err) {
+        console.log("Err", err);
+      }
+      clearInterval(intervalId);
+    } else {
+      domtoimage
+        .toPng(ele)
+        .then(function(dataUrl) {
+          const img = new Image();
+          img.src = dataUrl;
+          img.onload = () => {
+            const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+            const context = canvas.getContext("2d");
+            context.drawImage(img, 0, 0);
+          };
+        })
+        .catch(function(error) {
+          window.alert(
+            "This version of chrome does not support pictureInPicture"
+          );
+        });
+    }
+    count++;
+  }, 100);
+}
+
 function attachListenersToVideo(video) {
   if (!video) return;
   video.addEventListener("enterpictureinpicture", () => {
@@ -28,6 +63,13 @@ function attachListenersToVideo(video) {
       if (extBody) extBody.parentNode.removeChild(extBody);
     }
   });
+  video.addEventListener(
+    "loadeddata",
+    function() {
+      videoLoaded();
+    },
+    false
+  );
 }
 
 const createSpotifyWindow = store => {
@@ -50,30 +92,44 @@ const createSpotifyWindow = store => {
   ReactDOM.render(<Window store={store} />, comp);
 };
 
-function registerFrame(img) {
-  const spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
-  const canvas = document.createElement("canvas");
-  canvas.id = ID.CANVAS.SPOTIFY;
-  canvas.width = img.width;
-  canvas.height = img.height;
-  const context = canvas.getContext("2d");
-  context.drawImage(img, 0, 0);
-  spotifyMiniWindow.appendChild(canvas);
-  const video = document.createElement("video");
-  video.id = ID.VIDEO.SPOTIFY;
-  video.srcObject = canvas.captureStream();
-  video.play();
-  attachListenersToVideo(video);
-  spotifyMiniWindow.appendChild(video);
-}
-
-function refreshFrame(canvas, img) {
-  const context = canvas.getContext("2d");
-  context.drawImage(img, 0, 0);
+function registerFrame() {
+  const ele = document.getElementById(ID.FRAME.SPOTIFY);
+  domtoimage
+    .toPng(ele)
+    .then(function(dataUrl) {
+      const img = new Image();
+      img.src = dataUrl;
+      img.onload = () => {
+        const spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
+        const canvas = document.createElement("canvas");
+        canvas.id = ID.CANVAS.SPOTIFY;
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const context = canvas.getContext("2d");
+        context.drawImage(img, 0, 0);
+        spotifyMiniWindow.appendChild(canvas);
+        const video = document.createElement("video");
+        video.id = ID.VIDEO.SPOTIFY;
+        video.muted="muted";
+        video.autoplay="true"
+        video.srcObject = canvas.captureStream();
+        attachListenersToVideo(video);
+        video.load();
+        spotifyMiniWindow.appendChild(video);
+      };
+    })
+    .catch(function(error) {
+      window.alert("This version of chrome does not support pictureInPicture");
+    });
 }
 
 function onLoad() {
   console.log("UPDATING CANVAS");
+  const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+  if (!canvas) {
+    registerFrame();
+    return;
+  }
   let count = 0;
   const ele = document.getElementById(ID.FRAME.SPOTIFY);
   const intervalId = setInterval(() => {
@@ -86,12 +142,9 @@ function onLoad() {
           const img = new Image();
           img.src = dataUrl;
           img.onload = () => {
-            let canvas = document.getElementById(ID.CANVAS.SPOTIFY);
-            if (!canvas) {
-              registerFrame(img);
-            } else {
-              refreshFrame(canvas, img);
-            }
+            const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+            const context = canvas.getContext("2d");
+            context.drawImage(img, 0, 0);
           };
         })
         .catch(function(error) {
