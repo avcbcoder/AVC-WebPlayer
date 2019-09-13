@@ -17,7 +17,7 @@ const WindowWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index:1000;
+  z-index: 1000;
 `;
 
 const Body = styled.div`
@@ -70,23 +70,31 @@ const Text = styled.div`
 `;
 
 export default class WindowView extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+    this.state = { image: "", imageUpdated: "" };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.image !== state.image)
+      return { image: props.image, imageUpdated: true };
+    else return { imageUpdated: false };
+  }
+
+  componentDidUpdate() {
     const { onLoad } = this.props;
-    const img = document.getElementById("img-432");
-    img.onload = () => {
-      onLoad();
-    };
+    const { imageUpdated } = this.state;
+    if (!imageUpdated) onLoad();
   }
 
   render() {
-    const { ratio, song, images } = this.props;
-    const { title, artist, playing, progressTime, totalTime } = song;
-    const width = ratio * 16;
-    const height = ratio * 9;
-    const widthInOneSec = width / totalTime;
-    const initialWidth = widthInOneSec * progressTime;
-    const time = totalTime - progressTime;
-    // initial width final width playing time
+    const ratio = 20,
+      { song, onLoad } = this.props,
+      { image, imageUpdated } = this.state;
+    const { title, artist, playing } = song,
+      width = ratio * 16,
+      height = ratio * 9;
+
     return (
       <WindowWrapper w={width} h={height}>
         <Body w={width} h={height} id={ID.FRAME.SPOTIFY}>
@@ -95,17 +103,10 @@ export default class WindowView extends React.Component {
             w={width}
             h={height}
             alt=""
-            src="https://images7.alphacoders.com/905/905837.jpg"
+            src={image}
+            onLoad={imageUpdated ? onLoad : () => {}}
           ></Background>
           <Bottom>
-            {/* <ProgressBar>
-              <Progress
-                initialWidth={initialWidth}
-                finalWidth={width}
-                time={time}
-                playing={playing}
-              ></Progress>
-            </ProgressBar> */}
             <Text>{`${artist[0]} : ${title}`}</Text>
           </Bottom>
         </Body>

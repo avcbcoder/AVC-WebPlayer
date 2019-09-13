@@ -71,7 +71,7 @@ function removePip() {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
     let extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-    if (extPlayer) {  
+    if (extPlayer) {
       removePlayer();
       removePip();
     } else {

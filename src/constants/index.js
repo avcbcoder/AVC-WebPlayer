@@ -35,6 +35,10 @@ const ID = {
   FRAME:{
     SPOTIFY: "id-spotify-frame",
     LYRICS: "id-lyrics-frame"
+  },
+  COMP:{
+    SPOTIFY: "id-spotify-comp",
+    LYRICS: "id-lyrics-comp"
   }
 };
 
