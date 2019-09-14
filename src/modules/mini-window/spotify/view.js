@@ -14,9 +14,9 @@ const progressAnimation = (initialWidth, finalWidth) => keyframes`
 const WindowWrapper = styled.div`
   width: ${({ w }) => w}px;
   height: ${({ h }) => h}px;
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  left: 0;
+  left: 0; */
   z-index: 1000;
 `;
 
@@ -30,14 +30,14 @@ const Background = styled.img`
   width: ${({ w }) => w}px;
   height: ${({ h }) => h}px;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   z-index: -5;
 `;
 
 const Bottom = styled.div`
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 20px;
@@ -88,7 +88,7 @@ export default class WindowView extends React.Component {
   }
 
   render() {
-    const ratio = 20,
+    const ratio = 70,
       { song, onLoad } = this.props,
       { image, imageUpdated } = this.state;
     const { title, artist, playing } = song,

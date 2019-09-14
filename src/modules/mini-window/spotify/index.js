@@ -10,6 +10,10 @@ import WindowView from "./view";
 
 const storage = chrome.storage.local;
 
+/** Refrences => https://stackoverflow.com/questions/49930680/how-to-handle-uncaught-in-promise-domexception-play-failed-because-the-use*/
+/** https://developers.google.com/web/updates/2017/09/autoplay-policy-changes */
+/** chrome://flags/#autoplay-policy */
+
 function videoLoaded() {
   let count = 0;
   const ele = document.getElementById(ID.FRAME.SPOTIFY);
@@ -56,20 +60,25 @@ function attachListenersToVideo(video) {
     console.log("PIP EXIT");
     window.pip = false;
     storage.set({ pip: false }); //remove it later
+    video.play();
     const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
     if (document.visibilityState === "hidden" || !extPlayer) {
       console.log("REMOVING EXT BODY SINCE PIP EXITED");
       const extBody = document.getElementById(ID.EXTENSION_BODY);
       if (extBody) extBody.parentNode.removeChild(extBody);
+    } else {
+      const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+      const video = document.getElementById(ID.VIDEO.SPOTIFY);
+      if (video) {
+        video.src = "";
+        video.parentNode.removeChild(video);
+      }
+      if (canvas) canvas.parentNode.removeChild(canvas);
+      // remove comp as well
+      registerFrame();
     }
   });
-  video.addEventListener(
-    "loadeddata",
-    function() {
-      videoLoaded();
-    },
-    false
-  );
+  video.addEventListener("loadeddata", videoLoaded, false);
 }
 
 const createSpotifyWindow = store => {
@@ -93,6 +102,7 @@ const createSpotifyWindow = store => {
 };
 
 function registerFrame() {
+  console.log("REGISTER FRAME");
   const ele = document.getElementById(ID.FRAME.SPOTIFY);
   domtoimage
     .toPng(ele)
@@ -110,8 +120,8 @@ function registerFrame() {
         spotifyMiniWindow.appendChild(canvas);
         const video = document.createElement("video");
         video.id = ID.VIDEO.SPOTIFY;
-        video.muted="muted";
-        video.autoplay="true"
+        video.muted = "muted";
+        video.autoplay = "true";
         video.srcObject = canvas.captureStream();
         attachListenersToVideo(video);
         video.load();

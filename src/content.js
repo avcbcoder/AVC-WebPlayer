@@ -13,6 +13,7 @@ import {
 import { createSpotifyWindow } from "./modules/mini-window";
 
 const storage = chrome.storage.local;
+storage.set({ store: DEFAULT_STORE });
 
 function mediaControl(media) {
   chrome.runtime.sendMessage({
@@ -27,15 +28,16 @@ function onClose() {
 }
 
 function addPlayer() {
+  console.log("add player");
   const extPlayer = document.createElement("div");
   extPlayer.id = ID.EXTENSION_PLAYER;
   extPlayer.style.zIndex = 9999999;
   // extPlayer.style.display = "none";
   document.body.appendChild(extPlayer);
-  storage.set({ store: DEFAULT_STORE }, () => {
+  storage.get(["store"], result => {
     ReactDOM.render(
       <RootApp
-        store={DEFAULT_STORE}
+        store={result.store}
         mediaControl={mediaControl}
         onClose={onClose}
       />,
@@ -45,18 +47,20 @@ function addPlayer() {
 }
 
 function addPip() {
+  console.log("add pip");
   let extBody = document.getElementById(ID.EXTENSION_BODY);
   if (!extBody) {
     extBody = document.createElement("div");
     extBody.id = ID.EXTENSION_BODY;
     extBody.style.width = "0px";
     extBody.style.height = "0px";
-    // extBody.style.overflow = "hidden";
+    extBody.style.overflow = "hidden";
     document.body.appendChild(extBody);
   }
 }
 
 function removePlayer() {
+  console.log("remove player");
   // remove extension injected player component
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   if (extPlayer) extPlayer.parentNode.removeChild(extPlayer);
@@ -64,17 +68,23 @@ function removePlayer() {
 
 function removePip() {
   // remove extension injected pip component
+  console.log("remove pip");
   const extBody = document.getElementById(ID.EXTENSION_BODY);
+  console.log("TRYING TO REMOVE PIP=>", window.pip, extBody);
   if (!window.pip && extBody) extBody.parentNode.removeChild(extBody);
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
+    console.log("BROWSER ACTION =>", request);
+
     let extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
     if (extPlayer) {
+      console.log("ext player found");
       removePlayer();
       removePip();
     } else {
+      console.log("ext player not found");
       addPlayer();
       addPip();
     }
@@ -83,6 +93,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type !== EXT_COMM.RENDER) return;
+  console.log("RENDER this =>", request);
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   const extBody = document.getElementById(ID.EXTENSION_BODY);
   storage.get(["store"], result => {
@@ -102,18 +113,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   });
 });
 
-// function toggle() {
-//   if (extPlayer.style.display === "none") {
-//     extPlayer.style.display = "block";
-//   } else {
-//     extPlayer.style.display = "none";
-//   }
-// }
-
-// tabChage : onBackground -> remove player and remove pip(if pip not enabled)
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
+    console.log("DOCUMENT HIDDEN");
     removePlayer();
     removePip();
-  }
+  } else console.log("DOCUMENT SHOWN");
 });
