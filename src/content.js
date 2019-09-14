@@ -15,6 +15,13 @@ import { createSpotifyWindow } from "./modules/mini-window";
 const storage = chrome.storage.local;
 storage.set({ store: DEFAULT_STORE });
 
+window.tabInfo = {
+  isDocVisible: document.visibilityState,
+  isPipEnabled: false,
+  isFirstTime: true,
+  isAcceptingChanges: false
+};
+
 function mediaControl(media) {
   chrome.runtime.sendMessage({
     type: "change-media",
