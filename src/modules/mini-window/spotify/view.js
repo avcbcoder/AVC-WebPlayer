@@ -39,13 +39,16 @@ const Bottom = styled.div`
   flex-direction: column;
   z-index: 5;
   align-items: center;
+  justify-content:center;
 `;
 
 const Text = styled.div`
   width: 100%;
   text-align: center;
   color: ${COLOR.WHITE_LYRICS};
-  font-size: 34px;
+  font-size: ${({ fontSize }) => fontSize}px;
+  padding-left:4px;
+  padding-right:4px;
 `;
 
 export default class WindowView extends React.Component {
@@ -67,13 +70,13 @@ export default class WindowView extends React.Component {
   }
 
   render() {
-    const ratio = 70,
+    const ratio = 30,
       { song, onLoad } = this.props,
       { image, imageUpdated } = this.state;
     const { title, artist } = song,
       width = ratio * 16,
       height = ratio * 9,
-      labelHeight = Math.floor(height / 30);
+      labelHeight = Math.floor((height * 24) / 100);
 
     return (
       <WindowWrapper w={width} h={height + labelHeight}>
@@ -87,10 +90,14 @@ export default class WindowView extends React.Component {
             onLoad={imageUpdated ? onLoad : () => {}}
           ></Background>
           <Bottom h={labelHeight}>
-            <Text>{title}</Text>
-            {/* <Separator height="20" /> */}
-            <br />
-            <Text>{artist[0]}</Text>
+            <Text fontSize={24}>
+              {title.length > 20 ? title.substr(0, 20) : title}
+            </Text>
+            <Separator height="6" />
+            {/* <br /> */}
+            <Text fontSize={18}>
+              {artist[0].length > 20 ? artist[0].substr(0, 20) : artist[0]}
+            </Text>
           </Bottom>
         </Body>
       </WindowWrapper>
