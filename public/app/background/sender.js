@@ -6,7 +6,7 @@ const render = request => {
     for (let i = 0; i < tabs.length; i++) {
       chrome.tabs.sendMessage(tabs[i].id, {
         type: EXT_COMM.RENDER,
-        method: request.method
+        method: request ? request.method : "store-modified"
       });
     }
   });

@@ -52,17 +52,3 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
   }
 });
-
-chrome.tabs.onCreated.addListener(function(tab) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (tabs && tabs.length > 0)
-      chrome.storage.local.set({ url: tabs[0].url }, function() {});
-  });
-});
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (tabs && tabs.length > 0)
-      chrome.storage.local.set({ url: tabs[0].url }, function() {});
-  });
-});

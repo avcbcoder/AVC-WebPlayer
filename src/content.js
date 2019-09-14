@@ -31,8 +31,12 @@ function mediaControl(media) {
 }
 
 function onClose() {
-  removePlayer();
-  removePip();
+  // removePlayer();
+  // removePip();
+  const tabInfo = window.tabInfo;
+  tabInfo.isPlayerVisible = false;
+  const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
+  if (extPlayer) extPlayer.style.display = "none";
 }
 
 function addPlayer() {
