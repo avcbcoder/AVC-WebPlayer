@@ -1,15 +1,8 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
 import { ID } from "../../../constants";
-
-const progressAnimation = (initialWidth, finalWidth) => keyframes`
-  from{
-    width:${initialWidth}px;
-  }
-  to{
-    width:${finalWidth}px;
-  }
-`;
+import { COLOR } from "../../../constants/color";
+import { Separator } from "../../../components";
 
 const WindowWrapper = styled.div`
   width: ${({ w }) => w}px;
@@ -21,52 +14,38 @@ const WindowWrapper = styled.div`
 `;
 
 const Body = styled.div`
-  width: ${({ w }) => w}px;
-  height: ${({ h }) => h}px;
   position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Background = styled.img`
   width: ${({ w }) => w}px;
   height: ${({ h }) => h}px;
-  position: absolute;
+  /* position: absolute;
   top: 0;
-  left: 0;
+  left: 0; */
   z-index: -5;
 `;
 
 const Bottom = styled.div`
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
-  left: 0;
+  left: 0; */
   width: 100%;
-  height: 20px;
-  background-color: black;
+  height: ${({ h }) => h}px;
+  background-color: ${COLOR.LIGHT_BLACK};
   display: flex;
   flex-direction: column;
   z-index: 5;
-`;
-
-const ProgressBar = styled.div`
-  background-color: "rgb(30,30,30,1)";
-  height: 5px;
-`;
-
-const Progress = styled.div`
-  background-color: #fff;
-  height: 5px;
-  width: ${({ initialWidth }) => initialWidth}px;
-  ${({ playing }) =>
-    playing &&
-    css`
-      animation: ${({ initialWidth, finalWidth }) =>
-          progressAnimation(initialWidth, finalWidth)}
-        ${({ time }) => time}s linear;
-    `}
+  align-items: center;
 `;
 
 const Text = styled.div`
-  color: #fff;
+  width: 100%;
+  text-align: center;
+  color: ${COLOR.WHITE_LYRICS};
+  font-size: 34px;
 `;
 
 export default class WindowView extends React.Component {
@@ -93,11 +72,12 @@ export default class WindowView extends React.Component {
       { image, imageUpdated } = this.state;
     const { title, artist } = song,
       width = ratio * 16,
-      height = ratio * 9;
+      height = ratio * 9,
+      labelHeight = Math.floor(height / 30);
 
     return (
-      <WindowWrapper w={width} h={height}>
-        <Body w={width} h={height} id={ID.FRAME.SPOTIFY}>
+      <WindowWrapper w={width} h={height + labelHeight}>
+        <Body id={ID.FRAME.SPOTIFY}>
           <Background
             id="img-432"
             w={width}
@@ -106,8 +86,11 @@ export default class WindowView extends React.Component {
             src={image}
             onLoad={imageUpdated ? onLoad : () => {}}
           ></Background>
-          <Bottom>
-            <Text>{`${artist[0]} : ${title}`}</Text>
+          <Bottom h={labelHeight}>
+            <Text>{title}</Text>
+            {/* <Separator height="20" /> */}
+            <br />
+            <Text>{artist[0]}</Text>
           </Bottom>
         </Body>
       </WindowWrapper>
