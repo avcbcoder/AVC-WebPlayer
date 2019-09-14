@@ -54,29 +54,33 @@ function attachListenersToVideo(video) {
   video.addEventListener("enterpictureinpicture", () => {
     console.log("PIP ENTER");
     window.pip = true;
+    const tabInfo = window.tabInfo;
+    tabInfo.isPipEnabled = true;
     storage.set({ pip: true }); //remove it later
   });
   video.addEventListener("leavepictureinpicture", () => {
     console.log("PIP EXIT");
     window.pip = false;
+    const tabInfo = window.tabInfo;
+    tabInfo.isPipEnabled = false;
     storage.set({ pip: false }); //remove it later
-    video.play();
-    const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-    if (document.visibilityState === "hidden" || !extPlayer) {
-      console.log("REMOVING EXT BODY SINCE PIP EXITED");
-      const extBody = document.getElementById(ID.EXTENSION_BODY);
-      if (extBody) extBody.parentNode.removeChild(extBody);
-    } else {
-      const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
-      const video = document.getElementById(ID.VIDEO.SPOTIFY);
-      if (video) {
-        video.src = "";
-        video.parentNode.removeChild(video);
-      }
-      if (canvas) canvas.parentNode.removeChild(canvas);
-      // remove comp as well
-      registerFrame();
+    // video.play();
+    // const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
+    // if (tabInfo.isPlayerVisible) {
+    // console.log("REMOVING EXT BODY SINCE PIP EXITED");
+    // const extBody = document.getElementById(ID.EXTENSION_BODY);
+    // if (extBody) extBody.parentNode.removeChild(extBody);
+    // } else {
+    const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+    const video = document.getElementById(ID.VIDEO.SPOTIFY);
+    if (video) {
+      video.src = "";
+      video.parentNode.removeChild(video);
     }
+    if (canvas) canvas.parentNode.removeChild(canvas);
+    // remove comp as well
+    registerFrame();
+    // }
   });
   video.addEventListener("loadeddata", videoLoaded, false);
 }

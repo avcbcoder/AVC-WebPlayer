@@ -15,11 +15,12 @@ import { createSpotifyWindow } from "./modules/mini-window";
 const storage = chrome.storage.local;
 storage.set({ store: DEFAULT_STORE });
 
+// initial setup
 window.tabInfo = {
   isDocVisible: document.visibilityState,
   isPipEnabled: false,
   isFirstTime: true,
-  isAcceptingChanges: false
+  isPlayerVisible: false
 };
 
 function mediaControl(media) {
@@ -41,16 +42,6 @@ function addPlayer() {
   extPlayer.style.zIndex = 9999999;
   // extPlayer.style.display = "none";
   document.body.appendChild(extPlayer);
-  storage.get(["store"], result => {
-    ReactDOM.render(
-      <RootApp
-        store={result.store}
-        mediaControl={mediaControl}
-        onClose={onClose}
-      />,
-      extPlayer
-    );
-  });
 }
 
 function addPip() {
@@ -81,30 +72,10 @@ function removePip() {
   if (!window.pip && extBody) extBody.parentNode.removeChild(extBody);
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.message === "clicked_browser_action") {
-    console.log("BROWSER ACTION =>", request);
-
-    let extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-    if (extPlayer) {
-      console.log("ext player found");
-      removePlayer();
-      removePip();
-    } else {
-      console.log("ext player not found");
-      addPlayer();
-      addPip();
-    }
-  }
-});
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type !== EXT_COMM.RENDER) return;
-  console.log("RENDER this =>", request);
+function renderPlayer() {
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-  const extBody = document.getElementById(ID.EXTENSION_BODY);
   storage.get(["store"], result => {
-    if (extPlayer) {
+    if (extPlayer)
       ReactDOM.render(
         <RootApp
           store={result.store}
@@ -113,17 +84,85 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         />,
         extPlayer
       );
-    }
-    if (extBody && request && request.method === "song-change") {
-      createSpotifyWindow(result.store);
-    }
   });
+}
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.message === "clicked_browser_action") {
+    const tabInfo = window.tabInfo;
+    console.log("BROWSER ACTION =>", request, tabInfo);
+    if (tabInfo.isFirstTime) {
+      tabInfo.isFirstTime = false;
+      tabInfo.isPlayerVisible = true;
+      addPlayer();
+      addPip();
+      renderPlayer();
+    } else {
+      // make all things invisible
+      const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
+      if (tabInfo.isPlayerVisible) {
+        tabInfo.isPlayerVisible = false;
+        if (extPlayer) extPlayer.style.display = "none";
+      } else {
+        tabInfo.isPlayerVisible = true;
+        if (extPlayer) extPlayer.style.display = "block";
+        renderPlayer();
+      }
+    }
+    console.log("After changing", tabInfo, window.tabInfo);
+    // let extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
+    // if (extPlayer) {
+    //   console.log("ext player found");
+    //   removePlayer();
+    //   removePip();
+    // } else {
+    //   console.log("ext player not found");
+    //   addPlayer();
+    //   addPip();
+    // }
+  }
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.type !== EXT_COMM.RENDER) return;
+  const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
+  const extBody = document.getElementById(ID.EXTENSION_BODY);
+  const tabInfo = window.tabInfo;
+  console.log("RENDER this =>", request, tabInfo);
+  if (tabInfo.isPlayerVisible) {
+    renderPlayer();
+  }
+  if (tabInfo.isPlayerVisible || tabInfo.isPipEnabled) {
+    if (request && request.method === "song-change")
+      storage.get(["store"], result => {
+        createSpotifyWindow(result.store);
+      });
+  }
+  // storage.get(["store"], result => {
+  //   if (extPlayer) {
+  //     ReactDOM.render(
+  //       <RootApp
+  //         store={result.store}
+  //         mediaControl={mediaControl}
+  //         onClose={onClose}
+  //       />,
+  //       extPlayer
+  //     );
+  //   }
+  //   if (extBody && request && request.method === "song-change") {
+  //     createSpotifyWindow(result.store);
+  //   }
+  // });
 });
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     console.log("DOCUMENT HIDDEN");
-    removePlayer();
-    removePip();
+    // removePlayer();
+    // removePip();
+    const tabInfo = window.tabInfo;
+    tabInfo.isPlayerVisible = false;
+    const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
+    if (extPlayer) extPlayer.style.display = "none";
   } else console.log("DOCUMENT SHOWN");
 });
