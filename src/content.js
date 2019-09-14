@@ -31,8 +31,6 @@ function mediaControl(media) {
 }
 
 function onClose() {
-  // removePlayer();
-  // removePip();
   const tabInfo = window.tabInfo;
   tabInfo.isPlayerVisible = false;
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
@@ -40,7 +38,6 @@ function onClose() {
 }
 
 function addPlayer() {
-  console.log("add player");
   const extPlayer = document.createElement("div");
   extPlayer.id = ID.EXTENSION_PLAYER;
   extPlayer.style.zIndex = 9999999;
@@ -49,7 +46,6 @@ function addPlayer() {
 }
 
 function addPip() {
-  console.log("add pip");
   let extBody = document.getElementById(ID.EXTENSION_BODY);
   if (!extBody) {
     extBody = document.createElement("div");
@@ -59,21 +55,6 @@ function addPip() {
     extBody.style.overflow = "hidden";
     document.body.appendChild(extBody);
   }
-}
-
-function removePlayer() {
-  console.log("remove player");
-  // remove extension injected player component
-  const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-  if (extPlayer) extPlayer.parentNode.removeChild(extPlayer);
-}
-
-function removePip() {
-  // remove extension injected pip component
-  console.log("remove pip");
-  const extBody = document.getElementById(ID.EXTENSION_BODY);
-  console.log("TRYING TO REMOVE PIP=>", window.pip, extBody);
-  if (!window.pip && extBody) extBody.parentNode.removeChild(extBody);
 }
 
 function renderPlayer() {
@@ -94,7 +75,6 @@ function renderPlayer() {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
     const tabInfo = window.tabInfo;
-    console.log("BROWSER ACTION =>", request, tabInfo);
     if (tabInfo.isFirstTime) {
       tabInfo.isFirstTime = false;
       tabInfo.isPlayerVisible = true;
@@ -113,17 +93,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         renderPlayer();
       }
     }
-    console.log("After changing", tabInfo, window.tabInfo);
-    // let extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-    // if (extPlayer) {
-    //   console.log("ext player found");
-    //   removePlayer();
-    //   removePip();
-    // } else {
-    //   console.log("ext player not found");
-    //   addPlayer();
-    //   addPip();
-    // }
   }
 });
 
@@ -132,7 +101,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   const extBody = document.getElementById(ID.EXTENSION_BODY);
   const tabInfo = window.tabInfo;
-  console.log("RENDER this =>", request, tabInfo);
   if (tabInfo.isPlayerVisible) {
     renderPlayer();
   }
@@ -142,31 +110,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         createSpotifyWindow(result.store);
       });
   }
-  // storage.get(["store"], result => {
-  //   if (extPlayer) {
-  //     ReactDOM.render(
-  //       <RootApp
-  //         store={result.store}
-  //         mediaControl={mediaControl}
-  //         onClose={onClose}
-  //       />,
-  //       extPlayer
-  //     );
-  //   }
-  //   if (extBody && request && request.method === "song-change") {
-  //     createSpotifyWindow(result.store);
-  //   }
-  // });
 });
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    console.log("DOCUMENT HIDDEN");
-    // removePlayer();
-    // removePip();
     const tabInfo = window.tabInfo;
     tabInfo.isPlayerVisible = false;
     const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
     if (extPlayer) extPlayer.style.display = "none";
-  } else console.log("DOCUMENT SHOWN");
+  }
 });
