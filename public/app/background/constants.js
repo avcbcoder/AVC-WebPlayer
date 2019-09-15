@@ -3,13 +3,15 @@ const STORE_VAR = {
   YOUTUBE: "store_youtube",
   LYRICS: "store_lyrics",
   HAPPI: "store_happi",
-  MODE: "mode"
+  MODE: "mode",
+  ALPHA:"alpha"
 };
 
 const CACHE_VAR = {
   LYRICS: "cache_lyrics",
   VIDEO: "cache_video",
-  HAPPI: "cache_happi"
+  HAPPI: "cache_happi",
+  ALPHA: "cache_happi"
 };
 
 const HAPPI_OBJ = {

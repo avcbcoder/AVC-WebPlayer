@@ -92,7 +92,8 @@ const STORE_VAR = {
   YOUTUBE: "store_youtube",
   LYRICS: "store_lyrics",
   HAPPI: "store_happi",
-  MODE: "mode"
+  MODE: "mode",
+  ALPHA:"alpha"
 };
 
 const HAPPI_OBJ = {

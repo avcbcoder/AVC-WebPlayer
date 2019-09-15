@@ -60,6 +60,7 @@ function addPip() {
 function renderPlayer() {
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   storage.get(["store"], result => {
+    console.log("STORE=>", result.store);
     if (extPlayer)
       ReactDOM.render(
         <RootApp
@@ -69,6 +70,13 @@ function renderPlayer() {
         />,
         extPlayer
       );
+  });
+}
+
+function renderPip() {
+  storage.get(["store"], result => {
+    console.log("STORE=>", result.store);
+    createSpotifyWindow(result.store);
   });
 }
 
@@ -91,6 +99,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         tabInfo.isPlayerVisible = true;
         if (extPlayer) extPlayer.style.display = "block";
         renderPlayer();
+        renderPip();
       }
     }
   }
@@ -105,10 +114,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     renderPlayer();
   }
   if (tabInfo.isPlayerVisible || tabInfo.isPipEnabled) {
-    if (request && request.method === "song-change")
-      storage.get(["store"], result => {
-        createSpotifyWindow(result.store);
-      });
+    if (
+      request &&
+      (request.method === "song-change" || request.method === "image-change")
+    )
+      renderPip();
   }
 });
 

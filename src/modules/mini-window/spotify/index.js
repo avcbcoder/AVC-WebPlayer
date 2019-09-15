@@ -171,12 +171,24 @@ function onLoad() {
   }, 100);
 }
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function Window({ store }) {
+  console.log("Called to render");
   const song = store[STORE_VAR.SONG];
+  const images = store[STORE_VAR.ALPHA];
+  const image = images[getRandomInt(0, images.length) % images.length];
+
   return (
     <WindowView
       song={song}
-      image="https://images7.alphacoders.com/905/905837.jpg"
+      image={
+        image ? image.imageUrl : "https://images.alphacoders.com/906/906319.jpg"
+      }
       onLoad={onLoad}
     />
   );

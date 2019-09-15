@@ -3,6 +3,7 @@ import { EXT_COMM, VALID_REQ_TYPE, STORE_VAR, API_STATE } from "./constants.js";
 import { fetchYoutubeVideos } from "./network/youtube-video-search/index.js";
 import { fetchLyrics as getAzFandomLyrics } from "./network/lyrics-search/index.js";
 import { fetchHappiData, fetchHappiLyrics } from "./network/happi/index.js";
+import { fetchAlphaImages } from "./network/alpha-image-search/index.js";
 import { cacheCheck } from "./storage.js";
 import { render } from "./sender.js";
 
@@ -70,6 +71,7 @@ function handleSpotify(request) {
   if (isSongChanged)
     cacheCheck(function() {
       fetchHappiData(request.data);
+      fetchAlphaImages(request.data);
     });
 
   storage.get(["store"], result => {
@@ -84,6 +86,9 @@ function handleSpotify(request) {
     store[STORE_VAR.HAPPI] = isSongChanged
       ? { state: API_STATE.IDLE, response: "" }
       : store[STORE_VAR.HAPPI];
+    store[STORE_VAR.ALPHA] = isSongChanged
+      ? { state: API_STATE.IDLE, response: "" }
+      : store[STORE_VAR.ALPHA];
     storage.set({ store: store }, () => {
       render(request);
     });
