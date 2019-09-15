@@ -39,7 +39,7 @@ const Bottom = styled.div`
   flex-direction: column;
   z-index: 5;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
 `;
 
 const Text = styled.div`
@@ -47,8 +47,8 @@ const Text = styled.div`
   text-align: center;
   color: ${COLOR.WHITE_LYRICS};
   font-size: ${({ fontSize }) => fontSize}px;
-  padding-left:4px;
-  padding-right:4px;
+  padding-left: 4px;
+  padding-right: 4px;
 `;
 
 export default class WindowView extends React.Component {

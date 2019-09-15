@@ -178,11 +178,10 @@ function getRandomInt(min, max) {
 }
 
 function Window({ store }) {
-  console.log("Called to render");
   const song = store[STORE_VAR.SONG];
-  const images = store[STORE_VAR.ALPHA];
+  const images = store[STORE_VAR.ALPHA].response;
   const image = images[getRandomInt(0, images.length) % images.length];
-
+  console.log("deployed");
   return (
     <WindowView
       song={song}
