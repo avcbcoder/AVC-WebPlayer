@@ -20,9 +20,7 @@
         "app/background/network/index.js",
         "app/background/jquery.js",
         "app/background/*",
-        "app/background/constants.js",
-        "app/dom-to-image.js",
-        "dom-to-image.js"
+        "app/background/constants.js"
     ],
     "permissions": [
         "activeTab",

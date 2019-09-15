@@ -60,7 +60,6 @@ function addPip() {
 function renderPlayer() {
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   storage.get(["store"], result => {
-    console.log("STORE=>", result.store);
     if (extPlayer)
       ReactDOM.render(
         <RootApp
@@ -75,7 +74,6 @@ function renderPlayer() {
 
 function renderPip() {
   storage.get(["store"], result => {
-    console.log("STORE=>", result.store);
     createSpotifyWindow(result.store);
   });
 }

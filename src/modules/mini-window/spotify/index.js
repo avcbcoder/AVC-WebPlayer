@@ -20,30 +20,18 @@ function videoLoaded() {
   const intervalId = setInterval(() => {
     if (count === 10) {
       const video = document.getElementById(ID.VIDEO.SPOTIFY);
-      console.log("Trying to play it");
-      try {
-        video.play();
-      } catch (err) {
-        console.log("Err", err);
-      }
+      video.play();
       clearInterval(intervalId);
     } else {
-      domtoimage
-        .toPng(ele)
-        .then(function(dataUrl) {
-          const img = new Image();
-          img.src = dataUrl;
-          img.onload = () => {
-            const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
-            const context = canvas.getContext("2d");
-            context.drawImage(img, 0, 0);
-          };
-        })
-        .catch(function(error) {
-          window.alert(
-            "This version of chrome does not support pictureInPicture"
-          );
-        });
+      domtoimage.toPng(ele).then(function(dataUrl) {
+        const img = new Image();
+        img.src = dataUrl;
+        img.onload = () => {
+          const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+          const context = canvas.getContext("2d");
+          context.drawImage(img, 0, 0);
+        };
+      });
     }
     count++;
   }, 100);
@@ -52,25 +40,14 @@ function videoLoaded() {
 function attachListenersToVideo(video) {
   if (!video) return;
   video.addEventListener("enterpictureinpicture", () => {
-    console.log("PIP ENTER");
     window.pip = true;
     const tabInfo = window.tabInfo;
     tabInfo.isPipEnabled = true;
-    storage.set({ pip: true }); //remove it later
   });
   video.addEventListener("leavepictureinpicture", () => {
-    console.log("PIP EXIT");
     window.pip = false;
     const tabInfo = window.tabInfo;
     tabInfo.isPipEnabled = false;
-    storage.set({ pip: false }); //remove it later
-    // video.play();
-    // const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
-    // if (tabInfo.isPlayerVisible) {
-    // console.log("REMOVING EXT BODY SINCE PIP EXITED");
-    // const extBody = document.getElementById(ID.EXTENSION_BODY);
-    // if (extBody) extBody.parentNode.removeChild(extBody);
-    // } else {
     const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
     const video = document.getElementById(ID.VIDEO.SPOTIFY);
     if (video) {
@@ -78,9 +55,7 @@ function attachListenersToVideo(video) {
       video.parentNode.removeChild(video);
     }
     if (canvas) canvas.parentNode.removeChild(canvas);
-    // remove comp as well
     registerFrame();
-    // }
   });
   video.addEventListener("loadeddata", videoLoaded, false);
 }
@@ -106,39 +81,32 @@ const createSpotifyWindow = store => {
 };
 
 function registerFrame() {
-  console.log("REGISTER FRAME");
   const ele = document.getElementById(ID.FRAME.SPOTIFY);
-  domtoimage
-    .toPng(ele)
-    .then(function(dataUrl) {
-      const img = new Image();
-      img.src = dataUrl;
-      img.onload = () => {
-        const spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
-        const canvas = document.createElement("canvas");
-        canvas.id = ID.CANVAS.SPOTIFY;
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const context = canvas.getContext("2d");
-        context.drawImage(img, 0, 0);
-        spotifyMiniWindow.appendChild(canvas);
-        const video = document.createElement("video");
-        video.id = ID.VIDEO.SPOTIFY;
-        video.muted = "muted";
-        video.autoplay = "true";
-        video.srcObject = canvas.captureStream();
-        attachListenersToVideo(video);
-        video.load();
-        spotifyMiniWindow.appendChild(video);
-      };
-    })
-    .catch(function(error) {
-      window.alert("This version of chrome does not support pictureInPicture");
-    });
+  domtoimage.toPng(ele).then(function(dataUrl) {
+    const img = new Image();
+    img.src = dataUrl;
+    img.onload = () => {
+      const spotifyMiniWindow = document.getElementById(ID.WINDOW.SPOTIFY);
+      const canvas = document.createElement("canvas");
+      canvas.id = ID.CANVAS.SPOTIFY;
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const context = canvas.getContext("2d");
+      context.drawImage(img, 0, 0);
+      spotifyMiniWindow.appendChild(canvas);
+      const video = document.createElement("video");
+      video.id = ID.VIDEO.SPOTIFY;
+      video.muted = "muted";
+      video.autoplay = "true";
+      video.srcObject = canvas.captureStream();
+      attachListenersToVideo(video);
+      video.load();
+      spotifyMiniWindow.appendChild(video);
+    };
+  });
 }
 
 function onLoad() {
-  console.log("UPDATING CANVAS");
   const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
   if (!canvas) {
     registerFrame();
@@ -150,22 +118,15 @@ function onLoad() {
     if (count === 10) {
       clearInterval(intervalId);
     } else {
-      domtoimage
-        .toPng(ele)
-        .then(function(dataUrl) {
-          const img = new Image();
-          img.src = dataUrl;
-          img.onload = () => {
-            const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
-            const context = canvas.getContext("2d");
-            context.drawImage(img, 0, 0);
-          };
-        })
-        .catch(function(error) {
-          window.alert(
-            "This version of chrome does not support pictureInPicture"
-          );
-        });
+      domtoimage.toPng(ele).then(function(dataUrl) {
+        const img = new Image();
+        img.src = dataUrl;
+        img.onload = () => {
+          const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
+          const context = canvas.getContext("2d");
+          context.drawImage(img, 0, 0);
+        };
+      });
     }
     count++;
   }, 100);
@@ -181,7 +142,6 @@ function Window({ store }) {
   const song = store[STORE_VAR.SONG];
   const images = store[STORE_VAR.ALPHA].response;
   const image = images[getRandomInt(0, images.length) % images.length];
-  console.log("deployed");
   return (
     <WindowView
       song={song}
