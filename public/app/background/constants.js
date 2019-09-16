@@ -31,7 +31,7 @@ const EXT_COMM = {
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
   RENDER: "render-store-modified",
-  YOUTUBE_MINI_MODE: "start-youtube-mini-moe"
+  YOUTUBE_MINI_MODE: "start-youtube-mini-mode"
 };
 
 const API_STATE = {
@@ -41,7 +41,7 @@ const API_STATE = {
   FAIL: "fail"
 };
 
-const VALID_REQ_TYPE = "change-media get-video-id spotify get-lyrics";
+const VALID_REQ_TYPE = "change-media get-video-id spotify get-lyrics start-youtube-mini-mode";
 
 const YOUTUBE_V3_SEARCH = `https://www.googleapis.com/youtube/v3/search`;
 

@@ -30,6 +30,7 @@ function getVideoId(songDetails) {
 }
 
 function startYoutubeMiniMode(videoId) {
+  console.log("Sending request for yt mini mode")
   chrome.runtime.sendMessage({
     type: EXT_COMM.YOUTUBE_MINI_MODE,
     videoId

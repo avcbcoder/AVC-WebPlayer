@@ -6,7 +6,7 @@ import { fetchHappiData, fetchHappiLyrics } from "./network/happi/index.js";
 import { fetchAlphaImages } from "./network/alpha-image-search/index.js";
 import { cacheCheck } from "./storage.js";
 import { render } from "./sender.js";
-import startYoutubeMiniMode from "./tabs/youtube.js"
+import startYoutubeMiniMode from "./tabs/youtube.js";
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.extension.getBackgroundPage().console.log("RECIEVED REQ", request);
@@ -117,7 +117,7 @@ chrome.runtime.onMessage.addListener(function(request) {
       injectChangeMedia(request);
       break;
     case EXT_COMM.YOUTUBE_MINI_MODE:
-      if (request && request.videoId) startYoutubeMiniMode(request);
+      if (request && request.videoId) startYoutubeMiniMode(request.videoId);
       break;
   }
 });

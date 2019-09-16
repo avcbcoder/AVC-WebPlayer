@@ -2,16 +2,19 @@
 import React from "react";
 
 import styled from "styled-components";
-import { Col, Separator, Img, CenterHV } from "components";
-import { getAllIcons } from "constants/icon";
+import { Col, Separator, Img, CenterHV } from "../../../components";
+import { getAllIcons } from "../../../constants/icon";
 import {
   ID,
   DEFAULT_VIDEO_ID,
   STORE_VAR,
   API_STATE,
   CONTROLS
-} from "constants";
-import { changeMedia } from "extension-background/sender";
+} from "../../../constants";
+import {
+  changeMedia,
+  startYoutubeMiniMode
+} from "../../../extension-background/sender";
 
 const { minimizeWhiteIcon1, closeWhiteThinIcon } = getAllIcons(chrome);
 
@@ -57,17 +60,14 @@ class YoutubePlayer extends React.Component {
             w="15"
             h="15"
             src={minimizeWhiteIcon1}
-            onClick={() => onClose()}
-          ></Img>
-          <Separator width="16" />
-          <Img
-            w="15"
-            h="15"
-            src={closeWhiteThinIcon}
             onClick={() => {
-              changeMedia(CONTROLS.PLAY);
+              // pause if playing
+              // changeMedia(CONTROLS.PLAY);
+              startYoutubeMiniMode(videoId);
             }}
           ></Img>
+          <Separator width="16" />
+          <Img w="15" h="15" src={closeWhiteThinIcon} onClick={onClose}></Img>
           <Separator width="16" />
         </ButtonCollection>
         <Separator height="14" />

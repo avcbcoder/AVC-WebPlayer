@@ -14,7 +14,8 @@ import MenuCollection from "./modules/menu-collection";
 
 import { YOUTUBE_PLAYER, SPOTIFY_PLAYER } from "./constants/dimension";
 import { DISPLAY_MODE } from "./constants/index";
-import YoutubePlayer from "./modules/youtube-player";
+// import YoutubePlayer from "./modules/youtube-player";
+import YoutubePlayer from "./modules/player/youtube";
 import { getAllIcons } from "./constants/icon";
 
 

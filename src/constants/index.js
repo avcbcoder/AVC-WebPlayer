@@ -113,7 +113,7 @@ const EXT_COMM = {
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
   RENDER: "render-store-modified",
-  YOUTUBE_MINI_MODE: "start-youtube-mini-moe"
+  YOUTUBE_MINI_MODE: "start-youtube-mini-mode"
 };
 
 const API_STATE = {

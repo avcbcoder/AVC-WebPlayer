@@ -20,7 +20,8 @@
         "app/background/network/index.js",
         "app/background/jquery.js",
         "app/background/*",
-        "app/background/constants.js"
+        "app/background/constants.js",
+        "window.html"
     ],
     "permissions": [
         "activeTab",
