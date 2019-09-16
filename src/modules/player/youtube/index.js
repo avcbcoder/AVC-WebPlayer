@@ -1,0 +1,92 @@
+/*global chrome */
+import React from "react";
+
+import styled from "styled-components";
+import { Col, Separator, Img, CenterHV } from "components";
+import { getAllIcons } from "constants/icon";
+import {
+  ID,
+  DEFAULT_VIDEO_ID,
+  STORE_VAR,
+  API_STATE,
+  CONTROLS
+} from "constants";
+import { changeMedia } from "extension-background/sender";
+
+const { minimizeWhiteIcon1, closeWhiteThinIcon } = getAllIcons(chrome);
+
+const w = Math.floor((window.screen.availWidth * 20) / 100);
+const h = Math.floor((w * 9) / 16);
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  text-align: center;
+`;
+
+const IFrame = styled.iframe`
+  width: ${w}px;
+  height: ${h}px;
+`;
+
+const ButtonCollection = styled.div`
+  width: 100%;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
+// use => http://i.ytimg.com/vi/${videoId}/maxresdefault.jpg
+class YoutubePlayer extends React.Component {
+  render() {
+    const { store, onClose } = this.props;
+    const { state, response } = store[STORE_VAR.YOUTUBE];
+    let videoId = DEFAULT_VIDEO_ID;
+
+    if (state === API_STATE.SUCCESS && response && response.length > 0)
+      videoId = response[0].videoId;
+
+    return (
+      <Wrapper>
+        <Separator height="12" />
+        <ButtonCollection>
+          <Img
+            w="15"
+            h="15"
+            src={minimizeWhiteIcon1}
+            onClick={() => onClose()}
+          ></Img>
+          <Separator width="16" />
+          <Img
+            w="15"
+            h="15"
+            src={closeWhiteThinIcon}
+            onClick={() => {
+              changeMedia(CONTROLS.PLAY);
+            }}
+          ></Img>
+          <Separator width="16" />
+        </ButtonCollection>
+        <Separator height="14" />
+        <CenterHV>
+          <IFrame
+            id={ID.YOUTUBE_IFRAME}
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=0&showinfo=0&controls=0`}
+            frameborder="0"
+            allow="accelerometer; 
+                    autoplay; 
+                    encrypted-media; 
+                    gyroscope; 
+                    picture-in-picture"
+            allowfullscreen
+          ></IFrame>
+        </CenterHV>
+      </Wrapper>
+    );
+  }
+}
+
+export default YoutubePlayer;

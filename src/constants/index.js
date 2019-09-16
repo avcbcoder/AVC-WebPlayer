@@ -19,7 +19,7 @@ const MINI_MODE = {
 const ID = {
   YOUTUBE_IFRAME: "yt_401",
   EXTENSION_BODY: "extension-body",
-  EXTENSION_PLAYER:"extension-player",
+  EXTENSION_PLAYER: "extension-player",
   CANVAS: {
     SPOTIFY: "id-spotify-canvas",
     LYRICS: "id-lyrics-canvas"
@@ -32,11 +32,11 @@ const ID = {
     SPOTIFY: "id-spotify-window",
     LYRICS: "id-lyrics-window"
   },
-  FRAME:{
+  FRAME: {
     SPOTIFY: "id-spotify-frame",
     LYRICS: "id-lyrics-frame"
   },
-  COMP:{
+  COMP: {
     SPOTIFY: "id-spotify-comp",
     LYRICS: "id-lyrics-comp"
   }
@@ -93,7 +93,7 @@ const STORE_VAR = {
   LYRICS: "store_lyrics",
   HAPPI: "store_happi",
   MODE: "mode",
-  ALPHA:"alpha"
+  ALPHA: "alpha"
 };
 
 const HAPPI_OBJ = {
@@ -112,7 +112,8 @@ const EXT_COMM = {
   GET_HAPPI_DATA: "get-happi-data",
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
-  RENDER: "render-store-modified"
+  RENDER: "render-store-modified",
+  YOUTUBE_MINI_MODE: "start-youtube-mini-moe"
 };
 
 const API_STATE = {

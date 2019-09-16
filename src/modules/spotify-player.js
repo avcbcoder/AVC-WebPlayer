@@ -30,7 +30,9 @@ const {
   closeIcon,
   pauseIcon,
   menuWhiteIcon,
-  closeWhiteIcon
+  closeWhiteIcon,
+  minimizeBlueIcon1,
+  minimizeBlueIcon2
 } = getAllIcons(chrome);
 
 const STYLE = {
@@ -187,6 +189,18 @@ const Close = styled.div`
   z-index: 100;
 `;
 
+const Mini = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 44px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.1);
+  }
+  z-index: 100;
+`;
+
 const Pie = styled.div`
   border-radius: 50%;
   background: #fff;
@@ -277,21 +291,15 @@ class SpotifyPlayer extends React.Component {
     return (
       <Wrapper>
         <HoverMenu ref={this.refMenuHover}></HoverMenu>
-        <Menu
-          onClick={() => {
-            this.toggleMenu();
-          }}
-        >
+        <Menu onClick={this.toggleMenu}>
           <Img ref={this.refMenuIcon} src={menuIcon} w={20} h={20}></Img>
         </Menu>
-        <Close
-          onClick={() => {
-            onClose();
-          }}
-        >
+        <Close onClick={onClose}>
           <Img ref={this.refCloseIcon} src={closeIcon} w={20} h={20}></Img>
         </Close>
-
+        <Mini onClick={this.startMiniWindow}>
+          <Img src={minimizeBlueIcon1} w={20} h={20}></Img>
+        </Mini>
         <Upper>
           <AlbumArtImage>
             <CircularProgress

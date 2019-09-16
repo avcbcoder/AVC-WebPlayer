@@ -7,9 +7,9 @@ import { Separator } from "../../../components";
 const WindowWrapper = styled.div`
   width: ${({ w }) => w}px;
   height: ${({ h }) => h}px;
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  left: 0;
+  left: 0; */
   z-index: 1000;
 `;
 

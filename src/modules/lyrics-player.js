@@ -14,7 +14,7 @@ import {
 } from "../constants";
 import domtoimage from "dom-to-image";
 
-const { minimizeIcon, closeWhiteThinIcon } = getAllIcons(chrome);
+const { minimizeWhiteIcon, closeWhiteThinIcon } = getAllIcons(chrome);
 
 const scroll = y => keyframes`
   0% {
@@ -182,7 +182,7 @@ class LyricsPlayer extends React.Component {
           <Img
             w="15"
             h="15"
-            src={minimizeIcon}
+            src={minimizeWhiteIcon}
             onClick={this.startMiniWindow}
           ></Img>
           <Separator width="16" />

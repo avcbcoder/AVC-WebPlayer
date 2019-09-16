@@ -30,7 +30,8 @@ const EXT_COMM = {
   GET_HAPPI_DATA: "get-happi-data",
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
-  RENDER: "render-store-modified"
+  RENDER: "render-store-modified",
+  YOUTUBE_MINI_MODE: "start-youtube-mini-moe"
 };
 
 const API_STATE = {

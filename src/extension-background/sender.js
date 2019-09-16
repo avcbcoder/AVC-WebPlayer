@@ -29,4 +29,11 @@ function getVideoId(songDetails) {
   });
 }
 
-export { changeMedia, getLyrics, getVideoId, getHappiData };
+function startYoutubeMiniMode(videoId) {
+  chrome.runtime.sendMessage({
+    type: EXT_COMM.YOUTUBE_MINI_MODE,
+    videoId
+  });
+}
+
+export { changeMedia, getLyrics, getVideoId, getHappiData, startYoutubeMiniMode };
