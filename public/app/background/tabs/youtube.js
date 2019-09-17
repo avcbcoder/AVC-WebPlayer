@@ -1,12 +1,11 @@
 /*global chrome */
 const startYoutubeMiniMode = videoId => {
-  const ratio = 20;
   chrome.windows.create(
     {
       type: "popup",
       focused: true,
-      width: ratio * 16,
-      height: ratio * 9,
+      width: 670,
+      height: 470,
       url: `https://www.youtube.com/watch?v=${videoId}`
     },
     function(window) {

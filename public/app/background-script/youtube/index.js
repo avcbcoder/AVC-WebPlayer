@@ -2,10 +2,53 @@ var storage = window.sessionStorage;
 var constants = {
   PLAYER_THEATER: "player-theater",
   PLAYER_DEFAULT: "player-default",
-  PLAYER_NOT_FOUND: "player-not-found"
+  PLAYER_NOT_FOUND: "player-not-found",
+  PIP_BTN_ID: "pip-btn-id"
 };
 
 var tgNodes = [];
+
+function addPipButton() {
+  let div = document.getElementById(constants.PIP_BTN_ID);
+  if (div) return;
+  div = document.createElement("div");
+  div.id = constants.PIP_BTN_ID;
+  document.body.appendChild(div);
+  const style = div.style;
+  style.width = "150px";
+  style.height = "25px";
+  style.position = "fixed";
+  style.top = "10px";
+  style.right = "10px";
+  style.zIndex = "99999";
+  style.backgroundColor = "#478ffc";
+  style.borderRadius = "5px";
+  style.color = "#fff";
+  style.textAlign = "center";
+  style.fontSize = "16px";
+  style.cursor = "pointer";
+  style.display = "flex";
+  style.justifyContent = "center";
+  style.justifyItems = "center";
+  style.flexDirection = "column";
+  style.style.borderRadius = "5px";
+  style.opacity = "0.6";
+  div.innerHTML = "Start mini mode";
+
+  div.addEventListener("mouseover", () => {
+    console.log("JOINED");
+    const btn = document.getElementById(constants.PIP_BTN_ID);
+    btn.style.boxShadow = "5px 5px 5px #c1c8d4";
+    btn.style.opacity = "1";
+  });
+
+  div.addEventListener("onmouseleave", () => {
+    console.log("LEFT");
+    const btn = document.getElementById(constants.PIP_BTN_ID);
+    btn.style.boxShadow = "";
+    btn.style.opacity = "0.6";
+  });
+}
 
 // set display to block if in fullscreen mode else hides it
 function toggleNodes() {
@@ -25,7 +68,6 @@ function toggleNodes() {
 
 // returns all the nodes which are not parent of this element
 function nonParentDomNodes(video) {
-  console.log("nonParentDomNodes()", video);
   var root = document.body;
   const nodes = [];
   console.log(video);
@@ -78,61 +120,57 @@ function identifyPlayer() {
 }
 
 function script() {
-  console.log("script()");
   const { type, player } = identifyPlayer();
-  console.log("script()", { type, player });
-  let video = null;
   if (type === constants.PLAYER_THEATER) {
-    var g = document.getElementsByTagName("ytd-player")[0].parentElement;
-    g = g ? g.parentElement : "";
-    g = g ? g.parentElement : "";
-    g = g ? g.parentElement : "";
-    video = g;
+    let video = document.getElementsByTagName("ytd-player")[0];
+    video = video ? video.parentElement : "";
+    video = video ? video.parentElement : "";
+    if (video) {
+      nonParentDomNodes(video);
+      toggleNodes();
+      document.body.style.overflow = "hidden";
+      addPipButton();
+    }
+    return true;
   } else if (type === constants.PLAYER_DEFAULT) {
-    video = player;
-  }
-
-  if (video) {
-    nonParentDomNodes(video);
+    nonParentDomNodes(player);
     toggleNodes();
-    video.style.position = "fixed";
-    video.style.top = "0";
-    video.style.left = "0";
-    const width = 427 + (window.outerWidth - window.innerWidth);
-    const height = 240 + (window.outerHeight - window.innerHeight);
-    console.log({ width, height });
-    window.resizeTo(width, height);
-    document.body.style.overflow = "none";
-    storage.setItem("playerDimension", {
-      width: video.offsetWidth,
-      height: video.offsetHeight
-    });
+    addPipButton();
     return true;
   }
   return false;
 }
 
 looper = () => {
-  const id = setInterval(() => {
+  const idOfScript = setInterval(() => {
+    console.log("---", new Date().getTime());
     try {
-      if (script()) clearInterval(id);
+      if (script()) clearInterval(idOfScript);
     } catch (err) {}
-  }, 5000);
+  }, 500);
 };
 
+function addListeners() {
+  document.addEventListener("fullscreenchange", toggleNodes, false);
+  window.addEventListener("resize", () => {
+    document.body.style.overflow = "none";
+  });
+
+  let buttonChecker = setInterval(() => {
+    if (document.readyState === "complete") {
+      const hideBtns = classId => {
+        const btns = document.getElementsByClassName(classId);
+        if (btns && btns.length > 0)
+          [].forEach.call(btns, btn => {
+            btn.style.display = "none";
+          });
+      };
+      hideBtns("ytp-size-button");
+      hideBtns("ytp-miniplayer-button");
+      clearInterval(buttonChecker);
+    }
+  }, 1000);
+}
+
 window.onload = looper;
-
-window.addEventListener("resize", () => {
-  const width = 427 + (window.outerWidth - window.innerWidth);
-  const height = 240 + (window.outerHeight - window.innerHeight);
-  window.resizeTo(width, height);
-  //   const playerDimension = storage.getItem("playerDimension");
-  //   if (!playerDimension) return;
-  //   window.resizeTo(
-  //     playerDimension.width + (window.outerWidth - window.innerWidth),
-  //     playerDimension.height + (window.outerHeight - window.innerHeight)
-  //   );
-  document.body.style.overflow = "none";
-});
-
-document.addEventListener("fullscreenchange", toggleNodes, false);
+addListeners();
