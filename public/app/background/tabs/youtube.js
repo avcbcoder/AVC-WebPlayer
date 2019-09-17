@@ -1,27 +1,24 @@
 /*global chrome */
 const startYoutubeMiniMode = videoId => {
+  const ratio = 20;
   chrome.windows.create(
     {
-      type: "panel",
+      type: "popup",
       focused: true,
-      width: 470,
-      height: 440,
+      width: ratio * 16,
+      height: ratio * 9,
       url: `https://www.youtube.com/watch?v=${videoId}`
     },
     function(window) {
       chrome.extension
         .getBackgroundPage()
         .console.log("created window", window);
+      const createdTab = window.tabs[0];
+      chrome.tabs.executeScript(createdTab.id, {
+        file: "app/background-script/youtube.js"
+      });
     }
   );
-  chrome.app.window.create("window.html", {
-    alwaysOnTop: true,
-    outerBounds: {
-      width: 560,
-      height: 315
-    }
-  });
-  chrome.windows.create({ url: "https://www.youtube.com/watch?v=V2hlQkVJZhE" });
 };
 
 export default startYoutubeMiniMode;
