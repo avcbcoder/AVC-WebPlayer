@@ -15,7 +15,7 @@ const startYoutubeMiniMode = videoId => {
         .console.log("created window", window);
       const createdTab = window.tabs[0];
       chrome.tabs.executeScript(createdTab.id, {
-        file: "app/background-script/youtube.js"
+        file: "app/background-script/youtube/index.js"
       });
     }
   );
