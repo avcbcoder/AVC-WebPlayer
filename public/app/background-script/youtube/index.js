@@ -168,7 +168,7 @@ function addListeners() {
   window.addEventListener("resize", () => {
     document.body.style.overflow = "hidden";
   });
-  
+
   setInterval(() => {
     if (document.readyState === "complete") {
       const hideBtns = classId => {
@@ -181,6 +181,12 @@ function addListeners() {
       hideBtns("ytp-size-button");
       hideBtns("ytp-miniplayer-button");
       addPipButton();
+      // remove ads
+      const ad = document.getElementsByClassName("ytp-ad-overlay-container")[0];
+      if (ad) ad.style.display = "none";
+      // skip video ads
+      const skipBtn = document.getElementsByClassName("ytp-ad-skip-button")[0];
+      if (skipBtn) skipBtn.click();
     }
   }, 1000);
 }
