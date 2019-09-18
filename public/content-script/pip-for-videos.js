@@ -23,12 +23,12 @@ function mainScript() {
           updatePos(video, pip);
           pipObj[pipUniqueIdHash] = { video, pip };
           video.dataset.pipId = pipUniqueIdHash;
-          //   window.addEventListener("scroll", () => {
-          //     updatePos(video, pip);
-          //   });
-          //   new ResizeObserver(() => {
-          //     updatePos(video, pip);
-          //   }).observe(video);
+          window.addEventListener("scroll", () => {
+            updatePos(video, pip);
+          });
+          new ResizeObserver(() => {
+            updatePos(video, pip);
+          }).observe(video);
           pipUniqueIdHash++;
         }
       });
