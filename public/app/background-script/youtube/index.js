@@ -1,4 +1,3 @@
-var storage = window.sessionStorage;
 var constants = {
   PLAYER_THEATER: "player-theater",
   PLAYER_DEFAULT: "player-default",
@@ -10,7 +9,14 @@ var tgNodes = [];
 
 function addPipButton() {
   let div = document.getElementById(constants.PIP_BTN_ID);
-  if (div) return;
+  if (div) {
+    const fullScreen =
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement;
+    div.style.display = fullScreen ? "none" : "flex";
+    return;
+  }
   div = document.createElement("div");
   div.id = constants.PIP_BTN_ID;
   document.body.appendChild(div);
@@ -31,46 +37,56 @@ function addPipButton() {
   style.justifyContent = "center";
   style.justifyItems = "center";
   style.flexDirection = "column";
-  style.style.borderRadius = "5px";
   style.opacity = "0.6";
-  div.innerHTML = "Start mini mode";
+  div.innerText = "Start mini mode";
 
   div.addEventListener("mouseover", () => {
-    console.log("JOINED");
     const btn = document.getElementById(constants.PIP_BTN_ID);
-    btn.style.boxShadow = "5px 5px 5px #c1c8d4";
+    btn.style.boxShadow = "3px 3px 8px #478ffc";
     btn.style.opacity = "1";
   });
 
-  div.addEventListener("onmouseleave", () => {
-    console.log("LEFT");
+  div.addEventListener("mouseout", () => {
     const btn = document.getElementById(constants.PIP_BTN_ID);
     btn.style.boxShadow = "";
     btn.style.opacity = "0.6";
   });
+
+  div.addEventListener("click", () => {
+    const btn = document.getElementById(constants.PIP_BTN_ID);
+    btn.innerText = "Stop Mini Mode";
+    if (document.pictureInPictureElement) document.exitPictureInPicture();
+    else document.getElementsByTagName("video")[0].requestPictureInPicture();
+  });
+
+  document
+    .getElementsByTagName("video")[0]
+    .addEventListener("leavepictureinpicture", () => {
+      const btn = document.getElementById(constants.PIP_BTN_ID);
+      btn.innerText = "Start Mini Mode";
+    });
 }
 
 // set display to block if in fullscreen mode else hides it
 function toggleNodes() {
-  //   const nodes = storage.getItem("domNodes");
   const nodes = tgNodes;
   const fullscreenElement =
     document.fullscreenElement ||
     document.mozFullScreenElement ||
     document.webkitFullscreenElement;
   if (nodes && nodes.length > 0) {
-    console.log("toggle()", { fullscreenElement }, nodes.length);
     nodes.forEach(node => {
       node.style.display = fullscreenElement ? "block" : "none";
     });
   }
+  const pip = document.getElementById(constants.PIP_BTN_ID);
+  pip.style.display = fullscreenElement ? "none" : "flex";
 }
 
 // returns all the nodes which are not parent of this element
 function nonParentDomNodes(video) {
   var root = document.body;
   const nodes = [];
-  console.log(video);
   if (video) {
     function remEleRecursively(ele) {
       const c = ele.childNodes;
@@ -86,9 +102,7 @@ function nonParentDomNodes(video) {
     }
     remEleRecursively(root);
   }
-  console.log("nonParentDomNodes()", "noes set", nodes.length);
   tgNodes = nodes;
-  storage.setItem("domNodes", nodes);
 }
 
 // returns whether the youtube player is in theater or default mode
@@ -129,23 +143,22 @@ function script() {
       nonParentDomNodes(video);
       toggleNodes();
       document.body.style.overflow = "hidden";
-      addPipButton();
     }
     return true;
   } else if (type === constants.PLAYER_DEFAULT) {
     nonParentDomNodes(player);
     toggleNodes();
-    addPipButton();
     return true;
   }
+  if (type !== constants.PLAYER_NOT_FOUND) return true;
   return false;
 }
 
 looper = () => {
   const idOfScript = setInterval(() => {
-    console.log("---", new Date().getTime());
     try {
       if (script()) clearInterval(idOfScript);
+      addPipButton();
     } catch (err) {}
   }, 500);
 };
@@ -153,10 +166,10 @@ looper = () => {
 function addListeners() {
   document.addEventListener("fullscreenchange", toggleNodes, false);
   window.addEventListener("resize", () => {
-    document.body.style.overflow = "none";
+    document.body.style.overflow = "hidden";
   });
-
-  let buttonChecker = setInterval(() => {
+  
+  setInterval(() => {
     if (document.readyState === "complete") {
       const hideBtns = classId => {
         const btns = document.getElementsByClassName(classId);
@@ -167,7 +180,7 @@ function addListeners() {
       };
       hideBtns("ytp-size-button");
       hideBtns("ytp-miniplayer-button");
-      clearInterval(buttonChecker);
+      addPipButton();
     }
   }, 1000);
 }
