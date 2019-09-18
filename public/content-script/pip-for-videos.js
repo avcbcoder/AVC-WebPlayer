@@ -1,4 +1,5 @@
 var pipUniqueIdHash = 78;
+var loopId = "";
 
 function mainScript() {
   const pipObj = {};
@@ -22,6 +23,12 @@ function mainScript() {
           updatePos(video, pip);
           pipObj[pipUniqueIdHash] = { video, pip };
           video.dataset.pipId = pipUniqueIdHash;
+          //   window.addEventListener("scroll", () => {
+          //     updatePos(video, pip);
+          //   });
+          //   new ResizeObserver(() => {
+          //     updatePos(video, pip);
+          //   }).observe(video);
           pipUniqueIdHash++;
         }
       });
@@ -103,38 +110,54 @@ function mainScript() {
 
   document.addEventListener("fullscreenchange", togglePipButtons, false);
 
-  const onLoad = setInterval(() => {
-    // filter on already added pips
-    console.log("interval=> ", pipObj);
-    for (let pipId in pipObj) {
-      const { pip, video } = pipObj[pipId];
-      if (!video && pip && pip.parentElement) {
-        pip.parentElement.removeChild(pip);
-        delete pipObj[pipId];
-      } else {
-        const posInfo = video.getBoundingClientRect();
-        if (posInfo.width > 200 && posInfo.height > 200 && video.src) {
-          updatePos(video, pip);
-        } else {
-          if (pip && pip.parentElement) pip.parentElement.removeChild(pip);
+  const looper = () => {
+    const intervalId = setInterval(() => {
+      // filter on already added pips
+      console.log("interval=> ", pipObj, new Date().getTime());
+      for (let pipId in pipObj) {
+        const { pip, video } = pipObj[pipId];
+        if (!video && pip && pip.parentElement) {
+          pip.parentElement.removeChild(pip);
           delete pipObj[pipId];
+        } else {
+          const posInfo = video.getBoundingClientRect();
+          if (posInfo.width > 200 && posInfo.height > 200 && video.src) {
+            updatePos(video, pip);
+          } else {
+            if (pip && pip.parentElement) pip.parentElement.removeChild(pip);
+            delete pipObj[pipId];
+          }
         }
       }
+
+      // find and filter videos
+      let videos = document.getElementsByTagName("video");
+      videos = [].filter.call(videos, video => {
+        const posInfo = video.getBoundingClientRect();
+        return posInfo.width > 200 && posInfo.height > 200 && video.src;
+      });
+
+      if (videos.length > 0 && !document.pictureInPictureElement) {
+        addPipFor(videos);
+      }
+    }, 1000);
+    return intervalId;
+  };
+
+  window.onload = () => {
+    console.log("window loadded");
+    loopId = looper();
+  };
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      clearInterval(loopId);
+    } else {
+      console.log("focus");
+      clearInterval(loopId);
+      loopId = looper();
     }
-
-    // find and filter videos
-    let videos = document.getElementsByTagName("video");
-    videos = [].filter.call(videos, video => {
-      const posInfo = video.getBoundingClientRect();
-      return posInfo.width > 200 && posInfo.height > 200 && video.src;
-    });
-
-    if (videos.length > 0 && !document.pictureInPictureElement) {
-      addPipFor(videos);
-    }
-  }, 1000);
-
-  window.onload = onLoad;
+  });
 }
 
 mainScript();
