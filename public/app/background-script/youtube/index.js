@@ -133,7 +133,7 @@ function identifyPlayer() {
   }
 }
 
-function script() {
+function windowScript() {
   const { type, player } = identifyPlayer();
   if (type === constants.PLAYER_THEATER) {
     let video = document.getElementsByTagName("ytd-player")[0];
@@ -157,7 +157,7 @@ function script() {
 looper = () => {
   const idOfScript = setInterval(() => {
     try {
-      if (script()) clearInterval(idOfScript);
+      if (windowScript()) clearInterval(idOfScript);
       addPipButton();
     } catch (err) {}
   }, 500);
