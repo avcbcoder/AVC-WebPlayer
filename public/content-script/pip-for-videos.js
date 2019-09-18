@@ -13,25 +13,23 @@ function mainScript() {
   };
 
   const addPipFor = videos => {
-    if (videos && videos.length > 0)
-      [].forEach.call(videos, video => {
-        let pipId = video.dataset.pipId;
-        if (pipId in pipObj) return;
-        const posInfo = video.getBoundingClientRect();
-        if (video.src && posInfo.width > 200 && posInfo.height > 200) {
-          const pip = addPipButtonForVideo(video);
-          updatePos(video, pip);
-          pipObj[pipUniqueIdHash] = { video, pip };
-          video.dataset.pipId = pipUniqueIdHash;
-          window.addEventListener("scroll", () => {
-            updatePos(video, pip);
-          });
-          new ResizeObserver(() => {
-            updatePos(video, pip);
-          }).observe(video);
-          pipUniqueIdHash++;
-        }
+    [].forEach.call(videos, video => {
+      let pipId = video.dataset.pipId;
+      if (pipId in pipObj) return;
+      const pip = addPipButtonForVideo(video);
+      updatePos(video, pip);
+      pipObj[pipUniqueIdHash] = { video, pip };
+      video.dataset.pipId = pipUniqueIdHash;
+      // Update position on scroll
+      window.addEventListener("scroll", () => {
+        updatePos(video, pip);
       });
+      // Update position when video size changes
+      new ResizeObserver(() => {
+        updatePos(video, pip);
+      }).observe(video);
+      pipUniqueIdHash++;
+    });
   };
 
   const updatePos = (video, pip) => {
@@ -108,56 +106,52 @@ function mainScript() {
     }
   };
 
-  document.addEventListener("fullscreenchange", togglePipButtons, false);
-
   const looper = () => {
     const intervalId = setInterval(() => {
       // filter on already added pips
-      console.log("interval=> ", pipObj, new Date().getTime());
       for (let pipId in pipObj) {
         const { pip, video } = pipObj[pipId];
-        if (!video && pip && pip.parentElement) {
+        const posInfo = video ? video.getBoundingClientRect() : null;
+        const videoExist = posInfo
+          ? posInfo.width > 200 && posInfo.height > 200 && video.src
+          : null;
+        if (!videoExist && pip && pip.parentElement) {
           pip.parentElement.removeChild(pip);
           delete pipObj[pipId];
-        } else {
-          const posInfo = video.getBoundingClientRect();
-          if (posInfo.width > 200 && posInfo.height > 200 && video.src) {
-            updatePos(video, pip);
-          } else {
-            if (pip && pip.parentElement) pip.parentElement.removeChild(pip);
-            delete pipObj[pipId];
-          }
         }
       }
-
       // find and filter videos
       let videos = document.getElementsByTagName("video");
       videos = [].filter.call(videos, video => {
         const posInfo = video.getBoundingClientRect();
-        return posInfo.width > 200 && posInfo.height > 200 && video.src;
+        const pipId = video.dataset.pipId;
+        return (
+          !(pipId in pipObj) &&
+          posInfo.width > 200 &&
+          posInfo.height > 200 &&
+          video.src
+        );
       });
 
-      if (videos.length > 0 && !document.pictureInPictureElement) {
+      if (videos.length > 0 && !document.pictureInPictureElement)
         addPipFor(videos);
-      }
     }, 1000);
     return intervalId;
   };
 
+  // start the looper when dom loads
   window.onload = () => {
-    console.log("window loadded");
     loopId = looper();
   };
 
+  // listener for tab change => restart looper if tab state becomes active
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      clearInterval(loopId);
-    } else {
-      console.log("focus");
-      clearInterval(loopId);
-      loopId = looper();
-    }
+    clearInterval(loopId);
+    if (!document.hidden) loopId = looper();
   });
+
+  // hide all pip buttons if dom is in full screen state
+  document.addEventListener("fullscreenchange", togglePipButtons, false);
 }
 
 mainScript();
