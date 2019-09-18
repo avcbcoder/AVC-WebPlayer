@@ -1,22 +1,37 @@
-function pipforvids() {
-  const pipAddedNodes = [];
+var pipUniqueIdHash = 78;
 
-  const script = videos => {
+function mainScript() {
+  const pipObj = {};
+
+  const isFullScreen = () => {
+    return (
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement
+    );
+  };
+
+  const addPipFor = videos => {
     if (videos && videos.length > 0)
       [].forEach.call(videos, video => {
-        if (video.dataset.pipAdded === "done") return;
+        let pipId = video.dataset.pipId;
+        if (pipId in pipObj) return;
         const posInfo = video.getBoundingClientRect();
-        if (posInfo.width > 200 && posInfo.height > 200) {
-          console.log("ading for", video, posInfo);
+        if (video.src && posInfo.width > 200 && posInfo.height > 200) {
           const pip = addPipButtonForVideo(video);
           updatePos(video, pip);
-          pipAddedNodes.push({ video, pip });
-          video.dataset.pipAdded = "done";
+          pipObj[pipUniqueIdHash] = { video, pip };
+          video.dataset.pipId = pipUniqueIdHash;
+          pipUniqueIdHash++;
         }
       });
   };
 
   const updatePos = (video, pip) => {
+    if (isFullScreen()) {
+      pip.style.display = "none";
+      return;
+    }
     const pos = video.getBoundingClientRect();
     if (
       (pos.y < 0 && pos.y + pos.height < 30) ||
@@ -79,63 +94,47 @@ function pipforvids() {
   }
 
   const togglePipButtons = () => {
-    const fullScreen =
-      document.fullscreenElement ||
-      document.mozFullScreenElement ||
-      document.webkitFullscreenElement;
-    if (pipAddedNodes)
-      [].forEach.call(pipAddedNodes, ({ video, pip }) => {
-        if (pip && pip.style) pip.style.display = fullScreen ? "none" : "flex";
-      });
-    return;
+    for (let pipId in pipObj) {
+      const { pip } = pipObj[pipId];
+      if (pip && pip.style)
+        pip.style.display = isFullScreen() ? "none" : "flex";
+    }
   };
 
   document.addEventListener("fullscreenchange", togglePipButtons, false);
 
-  const alreadyPip = () => {
-    const myPip = document.getElementById("pip-btn-id");
-    if (myPip) {
-      // if opened tab consist our own pip button
-      [].forEach.call(pipAddedNodes, ({ video, pip }) => {
-        if (pip && pip.parentElement && pip.parentElement.removeChild)
-          pip.parentElement.removeChild(pip);
-      });
-      return true;
-    }
-    return false;
-  };
-
   const onLoad = setInterval(() => {
-    if (alreadyPip()) clearInterval(onLoad);
+    // filter on already added pips
+    console.log("interval=> ", pipObj);
+    for (let pipId in pipObj) {
+      const { pip, video } = pipObj[pipId];
+      if (!video && pip && pip.parentElement) {
+        pip.parentElement.removeChild(pip);
+        delete pipObj[pipId];
+      } else {
+        const posInfo = video.getBoundingClientRect();
+        if (posInfo.width > 200 && posInfo.height > 200 && video.src) {
+          updatePos(video, pip);
+        } else {
+          if (pip && pip.parentElement) pip.parentElement.removeChild(pip);
+          delete pipObj[pipId];
+        }
+      }
+    }
+
     // find and filter videos
     let videos = document.getElementsByTagName("video");
     videos = [].filter.call(videos, video => {
       const posInfo = video.getBoundingClientRect();
       return posInfo.width > 200 && posInfo.height > 200 && video.src;
     });
-    if (pipAddedNodes)
-      for (let i = 0; i < pipAddedNodes.length; i++) {
-        const video = pipAddedNodes[i].video;
-        if (!video) {
-          const p = pipAddedNodes[i].pip;
-          p.parentElement.removeChild(p);
-        }
-        const posInfo = video.getBoundingClientRect();
-        if (!(posInfo.width > 200 && posInfo.height > 200 && video.src)) {
-          const p = pipAddedNodes[i].pip;
-          if (p && p.parentElement) p.parentElement.removeChild(p);
-        }
-      }
+
     if (videos.length > 0 && !document.pictureInPictureElement) {
-      script(videos);
-      // videos exist in page
-      [].forEach.call(pipAddedNodes, ({ video, pip }) => {
-        updatePos(video, pip);
-      });
+      addPipFor(videos);
     }
   }, 1000);
 
-  window.onload = setTimeout(onLoad, 5000);
+  window.onload = onLoad;
 }
 
-pipforvids();
+mainScript();
