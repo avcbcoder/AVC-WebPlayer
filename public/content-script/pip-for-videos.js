@@ -48,7 +48,6 @@ function mainScript() {
       return;
     }
     pip.style.display = "flex";
-    pip.style.opacity = 0.6;
     pip.style.left = `${Math.floor(pos.x < 0 ? 0 : pos.x + 8)}px`;
     pip.style.top = `${Math.floor(pos.y < 0 ? 0 : pos.y + 8)}px`;
   };
@@ -104,7 +103,6 @@ function mainScript() {
       const { pip } = pipObj[pipId];
       if (pip && pip.style)
         pip.style.display = isFullScreen() ? "none" : "flex";
-      pip.style.opacity = 0.6;
     }
   };
 

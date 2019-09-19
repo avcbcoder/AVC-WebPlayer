@@ -118,31 +118,12 @@ const isLocalUrl = url => {
   );
 };
 
-// listeners for tab
-/*
-chrome.tabs.onCreated.addListener(tab => {
-  // if (!isLocalUrl(tab.url))
-    setTimeout(() => {
-      chrome.extension.getBackgroundPage().console.log("inserting on created");
-      chrome.storage.local.get(["miniWindow"], result => {
-        if (tab && tab.id !== result.miniWindow) {
-          chrome.tabs.executeScript(tab.id, {
-            file: "content-script/pip-for-videos.js"
-            // file: "content-script/pip-video-hover.js"
-          });
-        }
-      });
-    }, 500);
-});
-*/
-
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (
     changeInfo.status == "complete" &&
     tab.status == "complete" &&
-    tab.url !== undefined
-    // &&
-    // !isLocalUrl(tab.url)
+    tab.url !== undefined &&
+    !isLocalUrl(tab.url)
   )
     setTimeout(() => {
       chrome.extension.getBackgroundPage().console.log("inserting on updated");

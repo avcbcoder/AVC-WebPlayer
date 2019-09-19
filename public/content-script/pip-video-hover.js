@@ -164,7 +164,7 @@ function mainScript() {
   });
 
   // hide all pip buttons if dom is in full screen state
-  //   document.addEventListener("fullscreenchange", togglePipButtons, false);
+  document.addEventListener("fullscreenchange", togglePipButtons, false);
 }
 
 mainScript();
