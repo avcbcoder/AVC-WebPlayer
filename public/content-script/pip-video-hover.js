@@ -1,4 +1,3 @@
-console.log("executing");
 var pipUniqueIdHash = 78;
 var loopId = "";
 
@@ -151,9 +150,12 @@ function mainScript() {
   };
 
   // start the looper when dom loads
-  window.onload = () => {
-    loopId = looper();
-  };
+  const loaded = setInterval(() => {
+    if (document.readyState === "complete") {
+      clearInterval(loaded);
+      loopId = looper();
+    }
+  }, 200);
 
   // listener for tab change => restart looper if tab state becomes active
   document.addEventListener("visibilitychange", () => {

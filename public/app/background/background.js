@@ -119,6 +119,7 @@ const isLocalUrl = url => {
 };
 
 // listeners for tab
+/*
 chrome.tabs.onCreated.addListener(tab => {
   // if (!isLocalUrl(tab.url))
     setTimeout(() => {
@@ -127,11 +128,13 @@ chrome.tabs.onCreated.addListener(tab => {
         if (tab && tab.id !== result.miniWindow) {
           chrome.tabs.executeScript(tab.id, {
             file: "content-script/pip-for-videos.js"
+            // file: "content-script/pip-video-hover.js"
           });
         }
       });
     }, 500);
 });
+*/
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (
@@ -147,6 +150,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (tabId !== result.miniWindow) {
           chrome.tabs.executeScript(tabId, {
             file: "content-script/pip-for-videos.js"
+            // file: "content-script/pip-video-hover.js"
           });
         }
       });

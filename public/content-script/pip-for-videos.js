@@ -1,7 +1,7 @@
-var pipUniqueIdHash = 78;
-var loopId = "";
-
 function mainScript() {
+  let pipUniqueIdHash = 78;
+  let loopId = "";
+
   const pipObj = {};
 
   const isFullScreen = () => {
@@ -15,6 +15,8 @@ function mainScript() {
   const addPipFor = videos => {
     [].forEach.call(videos, video => {
       const pip = addPipButtonForVideo(video);
+      const pipId = video.dataset.pipId;
+      if (pipId in pipObj) return;
       updatePos(video, pip);
       pipObj[pipUniqueIdHash] = { video, pip };
       video.dataset.pipId = pipUniqueIdHash;
@@ -46,6 +48,7 @@ function mainScript() {
       return;
     }
     pip.style.display = "flex";
+    pip.style.opacity = 0.6;
     pip.style.left = `${Math.floor(pos.x < 0 ? 0 : pos.x + 8)}px`;
     pip.style.top = `${Math.floor(pos.y < 0 ? 0 : pos.y + 8)}px`;
   };
@@ -101,6 +104,7 @@ function mainScript() {
       const { pip } = pipObj[pipId];
       if (pip && pip.style)
         pip.style.display = isFullScreen() ? "none" : "flex";
+      pip.style.opacity = 0.6;
     }
   };
 
@@ -116,6 +120,8 @@ function mainScript() {
         if (!videoExist && pip && pip.parentElement) {
           pip.parentElement.removeChild(pip);
           delete pipObj[pipId];
+        } else {
+          updatePos(video, pip);
         }
       }
       // find and filter videos
@@ -124,14 +130,12 @@ function mainScript() {
       videos = [].filter.call(videos, video => {
         const posInfo = video.getBoundingClientRect();
         const pipId = video.dataset.pipId;
-        return (
-          !(pipId in pipObj) && posInfo.width > 200 && posInfo.height > 200
-        );
+        if (pipId in pipObj) return false;
+        return posInfo.width > 200 && posInfo.height > 200;
       });
-
       if (videos.length > 0 && !document.pictureInPictureElement)
         addPipFor(videos);
-    }, 1000);
+    }, 3000);
     return intervalId;
   };
 
@@ -139,6 +143,7 @@ function mainScript() {
   const loaded = setInterval(() => {
     if (document.readyState === "complete") {
       clearInterval(loaded);
+
       loopId = looper();
     }
   }, 200);
@@ -153,4 +158,7 @@ function mainScript() {
   document.addEventListener("fullscreenchange", togglePipButtons, false);
 }
 
-mainScript();
+if (!window.alreadyInjected) {
+  window.alreadyInjected = true;
+  mainScript();
+}
