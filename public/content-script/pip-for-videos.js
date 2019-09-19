@@ -14,8 +14,6 @@ function mainScript() {
 
   const addPipFor = videos => {
     [].forEach.call(videos, video => {
-      let pipId = video.dataset.pipId;
-      if (pipId in pipObj) return;
       const pip = addPipButtonForVideo(video);
       updatePos(video, pip);
       pipObj[pipUniqueIdHash] = { video, pip };
@@ -113,7 +111,7 @@ function mainScript() {
         const { pip, video } = pipObj[pipId];
         const posInfo = video ? video.getBoundingClientRect() : null;
         const videoExist = posInfo
-          ? posInfo.width > 200 && posInfo.height > 200 && video.src
+          ? posInfo.width > 200 && posInfo.height > 200
           : null;
         if (!videoExist && pip && pip.parentElement) {
           pip.parentElement.removeChild(pip);
@@ -122,20 +120,18 @@ function mainScript() {
       }
       // find and filter videos
       let videos = document.getElementsByTagName("video");
+
       videos = [].filter.call(videos, video => {
         const posInfo = video.getBoundingClientRect();
         const pipId = video.dataset.pipId;
         return (
-          !(pipId in pipObj) &&
-          posInfo.width > 200 &&
-          posInfo.height > 200 &&
-          video.src
+          !(pipId in pipObj) && posInfo.width > 200 && posInfo.height > 200
         );
       });
 
       if (videos.length > 0 && !document.pictureInPictureElement)
         addPipFor(videos);
-    }, 1000);
+    }, 2000);
     return intervalId;
   };
 
