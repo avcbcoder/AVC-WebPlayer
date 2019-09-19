@@ -130,8 +130,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       chrome.storage.local.get(["miniWindow"], result => {
         if (tabId !== result.miniWindow) {
           chrome.tabs.executeScript(tabId, {
-            file: "content-script/pip-for-videos.js"
-            // file: "content-script/pip-video-hover.js"
+            // file: "content-script/pip-for-videos.js"
+            file: "content-script/pip-video-hover.js"
           });
         }
       });
