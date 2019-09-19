@@ -120,8 +120,9 @@ const isLocalUrl = url => {
 
 // listeners for tab
 chrome.tabs.onCreated.addListener(tab => {
-  if (!isLocalUrl(tab.url))
+  // if (!isLocalUrl(tab.url))
     setTimeout(() => {
+      chrome.extension.getBackgroundPage().console.log("inserting on created");
       chrome.storage.local.get(["miniWindow"], result => {
         if (tab && tab.id !== result.miniWindow) {
           chrome.tabs.executeScript(tab.id, {
@@ -129,17 +130,19 @@ chrome.tabs.onCreated.addListener(tab => {
           });
         }
       });
-    }, 1500);
+    }, 500);
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (
     changeInfo.status == "complete" &&
     tab.status == "complete" &&
-    tab.url !== undefined &&
-    !isLocalUrl(tab.url)
+    tab.url !== undefined
+    // &&
+    // !isLocalUrl(tab.url)
   )
     setTimeout(() => {
+      chrome.extension.getBackgroundPage().console.log("inserting on updated");
       chrome.storage.local.get(["miniWindow"], result => {
         if (tabId !== result.miniWindow) {
           chrome.tabs.executeScript(tabId, {

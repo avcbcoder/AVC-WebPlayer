@@ -1,3 +1,4 @@
+console.log("executing");
 var pipUniqueIdHash = 78;
 var loopId = "";
 
@@ -45,7 +46,7 @@ function mainScript() {
       pip.style.display = "none";
       return;
     }
-    pip.style.display = "flex";
+    // pip.style.display = "flex";
     pip.style.left = `${Math.floor(pos.x < 0 ? 0 : pos.x + 8)}px`;
     pip.style.top = `${Math.floor(pos.y < 0 ? 0 : pos.y + 8)}px`;
   };
@@ -65,33 +66,47 @@ function mainScript() {
     style.textAlign = "center";
     style.fontSize = "16px";
     style.cursor = "pointer";
-    style.display = "flex";
+    // style.display = "flex";
     style.justifyContent = "center";
     style.justifyItems = "center";
     style.flexDirection = "column";
     style.opacity = "0.6";
     div.innerText = "Start mini mode";
 
-    div.addEventListener("mouseover", () => {
+    div.addEventListener("mouseover", e => {
+      e.stopPropagation();
+      div.style.display = "flex";
       div.style.boxShadow = "3px 3px 8px #478ffc";
       div.style.opacity = "1";
     });
 
-    div.addEventListener("mouseout", () => {
+    div.addEventListener("mouseout", e => {
+      e.stopPropagation();
+      div.style.display = "flex";
       div.style.boxShadow = "";
       div.style.opacity = "0.6";
     });
 
     div.addEventListener("click", () => {
-      div.innerText = "Stop Mini Mode";
+      //   div.innerText = "Stop Mini Mode";
       if (document.pictureInPictureElement) document.exitPictureInPicture();
       else video.requestPictureInPicture();
     });
 
-    if (video)
+    if (video) {
+      video.addEventListener("enterpictureinpicture", () => {
+        div.innerText = "Stop Mini Mode";
+      });
       video.addEventListener("leavepictureinpicture", () => {
         div.innerText = "Start Mini Mode";
       });
+      video.addEventListener("mouseover", () => {
+        div.style.display = isFullScreen() ? "none" : "flex";
+      });
+      video.addEventListener("mouseout", () => {
+        div.style.display = "none";
+      });
+    }
 
     return div;
   }
@@ -131,17 +146,14 @@ function mainScript() {
 
       if (videos.length > 0 && !document.pictureInPictureElement)
         addPipFor(videos);
-    }, 1000);
+    }, 2000);
     return intervalId;
   };
 
   // start the looper when dom loads
-  const loaded = setInterval(() => {
-    if (document.readyState === "complete") {
-      clearInterval(loaded);
-      loopId = looper();
-    }
-  }, 200);
+  window.onload = () => {
+    loopId = looper();
+  };
 
   // listener for tab change => restart looper if tab state becomes active
   document.addEventListener("visibilitychange", () => {
@@ -150,7 +162,7 @@ function mainScript() {
   });
 
   // hide all pip buttons if dom is in full screen state
-  document.addEventListener("fullscreenchange", togglePipButtons, false);
+  //   document.addEventListener("fullscreenchange", togglePipButtons, false);
 }
 
 mainScript();
