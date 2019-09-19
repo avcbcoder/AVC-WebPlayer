@@ -32,20 +32,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
-chrome.tabs.onCreated.addListener(function(tab) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (tabs && tabs.length > 0)
-      chrome.storage.local.set({ url: tabs[0].url }, function() {});
-  });
-});
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (tabs && tabs.length > 0)
-      chrome.storage.local.set({ url: tabs[0].url }, function() {});
-  });
-});
-
 // CALLED WHENEVER BUTTON IS CLICKED FROM APP
 function injectChangeMedia(request) {
   chrome.tabs.query({}, tabs => {
@@ -120,4 +106,29 @@ chrome.runtime.onMessage.addListener(function(request) {
       if (request && request.videoId) startYoutubeMiniMode(request.videoId);
       break;
   }
+});
+
+// listeners for tab
+chrome.tabs.onCreated.addListener(tab => {
+  setTimeout(() => {
+    chrome.storage.local.get(["miniWindow"], result => {
+      if (tab && tab.id !== result.miniWindow) {
+        chrome.tabs.executeScript(createdTab.id, {
+          file: "content-script/pip-for-videos.js"
+        });
+      }
+    });
+  }, 1500);
+});
+
+chrome.tabs.onUpdated.addListener(tabId => {
+  setTimeout(() => {
+    chrome.storage.local.get(["miniWindow"], result => {
+      if (tabId !== result.miniWindow) {
+        chrome.tabs.executeScript(tabId, {
+          file: "content-script/pip-for-videos.js"
+        });
+      }
+    });
+  }, 1500);
 });
