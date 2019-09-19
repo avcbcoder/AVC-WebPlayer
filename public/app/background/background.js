@@ -108,27 +108,44 @@ chrome.runtime.onMessage.addListener(function(request) {
   }
 });
 
+const isLocalUrl = url => {
+  return (
+    url &&
+    (url.includes("chrome://") ||
+      url.includes("chrome-search://") ||
+      url.includes("chrome-extension://") ||
+      url.includes("chrome-error://chromewebdata/"))
+  );
+};
+
 // listeners for tab
 chrome.tabs.onCreated.addListener(tab => {
-  setTimeout(() => {
-    chrome.storage.local.get(["miniWindow"], result => {
-      if (tab && tab.id !== result.miniWindow) {
-        chrome.tabs.executeScript(createdTab.id, {
-          file: "content-script/pip-for-videos.js"
-        });
-      }
-    });
-  }, 1500);
+  if (!isLocalUrl(tab.url))
+    setTimeout(() => {
+      chrome.storage.local.get(["miniWindow"], result => {
+        if (tab && tab.id !== result.miniWindow) {
+          chrome.tabs.executeScript(tab.id, {
+            file: "content-script/pip-for-videos.js"
+          });
+        }
+      });
+    }, 1500);
 });
 
-chrome.tabs.onUpdated.addListener(tabId => {
-  setTimeout(() => {
-    chrome.storage.local.get(["miniWindow"], result => {
-      if (tabId !== result.miniWindow) {
-        chrome.tabs.executeScript(tabId, {
-          file: "content-script/pip-for-videos.js"
-        });
-      }
-    });
-  }, 1500);
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (
+    changeInfo.status == "complete" &&
+    tab.status == "complete" &&
+    tab.url !== undefined &&
+    !isLocalUrl(tab.url)
+  )
+    setTimeout(() => {
+      chrome.storage.local.get(["miniWindow"], result => {
+        if (tabId !== result.miniWindow) {
+          chrome.tabs.executeScript(tabId, {
+            file: "content-script/pip-for-videos.js"
+          });
+        }
+      });
+    }, 500);
 });

@@ -6,9 +6,8 @@ window.onload = () => {
     if (
       url.includes("chrome://") ||
       url.includes("chrome-search://") ||
-      url.includes(
-        "chrome-extension://" || url.includes("chrome-error://chromewebdata/")
-      )
+      url.includes("chrome-extension://") ||
+      url.includes("chrome-error://chromewebdata/")
     ) {
     } else {
       // disable popup

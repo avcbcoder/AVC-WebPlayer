@@ -9,13 +9,11 @@ const startYoutubeMiniMode = videoId => {
       url: `https://www.youtube.com/watch?v=${videoId}`
     },
     function(window) {
-      chrome.extension
-        .getBackgroundPage()
-        .console.log("created window", window);
       const createdTab = window.tabs[0];
       chrome.tabs.executeScript(createdTab.id, {
         file: "app/background-script/youtube/index.js"
       });
+      chrome.storage.local.set({ miniWindow: createdTab.id });
     }
   );
 };
