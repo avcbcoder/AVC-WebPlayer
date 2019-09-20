@@ -1,6 +1,7 @@
 /*global chrome */
 const startYoutubeMiniMode = videoId => {
   chrome.storage.local.get(["miniWindowId"], result => {
+    // remove previously created windows
     const winId = result.miniWindowId;
     if (winId) chrome.windows.remove(winId);
     // create new window
@@ -22,16 +23,14 @@ const startYoutubeMiniMode = videoId => {
       }
     );
   });
-  // chrome.storage.local.get(["miniWindowTabId"], result => {
-  //   // remove previous window
-  //   const tabId = result.miniWindowTabId;
-  //   if (tabId) {
-  //     chrome.tabs.executeScript(tabId, {
-  //       code: "window.close();"
-  //     });
-  //     chrome.tabs.remove([tabId]);
-  //   }
-  // });
 };
 
-export default startYoutubeMiniMode;
+const minimizeWindow = () => {
+  chrome.storage.local.get(["miniWindowId"], result => {
+    // minimize this window
+    const winId = result.miniWindowId;
+    if (winId) chrome.windows.update(winId, { state: "minimized" });
+  });
+};
+
+export { startYoutubeMiniMode, minimizeWindow };

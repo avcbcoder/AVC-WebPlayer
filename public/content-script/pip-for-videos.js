@@ -128,6 +128,8 @@ function mainScript() {
       videos = [].filter.call(videos, video => {
         const posInfo = video.getBoundingClientRect();
         const pipId = video.dataset.pipId;
+        const videoId = video.id;
+        if (videoId && videoId === "id-spotify-video") return false;
         if (pipId in pipObj) return false;
         return posInfo.width > 200 && posInfo.height > 200;
       });

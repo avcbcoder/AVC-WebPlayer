@@ -4,7 +4,7 @@ const STORE_VAR = {
   LYRICS: "store_lyrics",
   HAPPI: "store_happi",
   MODE: "mode",
-  ALPHA:"alpha"
+  ALPHA: "alpha"
 };
 
 const CACHE_VAR = {
@@ -31,7 +31,8 @@ const EXT_COMM = {
   SPOTIFY: "spotify",
   CHANGE_MEDIA: "change-media",
   RENDER: "render-store-modified",
-  YOUTUBE_MINI_MODE: "start-youtube-mini-mode"
+  YOUTUBE_MINI_MODE: "start-youtube-mini-mode",
+  MINIMIZE_WINDOW: "minimize-window"
 };
 
 const API_STATE = {
@@ -41,7 +42,8 @@ const API_STATE = {
   FAIL: "fail"
 };
 
-const VALID_REQ_TYPE = "change-media get-video-id spotify get-lyrics start-youtube-mini-mode";
+const VALID_REQ_TYPE =
+  "change-media get-video-id spotify get-lyrics start-youtube-mini-mode minimize-window";
 
 const YOUTUBE_V3_SEARCH = `https://www.googleapis.com/youtube/v3/search`;
 

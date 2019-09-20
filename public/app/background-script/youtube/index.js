@@ -54,6 +54,9 @@ function addPipButton() {
 
   div.addEventListener("click", () => {
     const btn = document.getElementById(constants.PIP_BTN_ID);
+    chrome.runtime.sendMessage({
+      type: "minimize-window"
+    });
     btn.innerText = "Stop Mini Mode";
     if (document.pictureInPictureElement) document.exitPictureInPicture();
     else document.getElementsByTagName("video")[0].requestPictureInPicture();

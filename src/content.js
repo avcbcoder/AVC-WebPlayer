@@ -53,6 +53,9 @@ function addPip() {
     extBody.style.width = "0px";
     extBody.style.height = "0px";
     extBody.style.overflow = "hidden";
+    extBody.style.position="fixed";
+    extBody.style.top='-2020px';
+    extBody.style.left='-2020px';
     document.body.appendChild(extBody);
   }
 }
