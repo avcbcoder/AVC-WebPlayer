@@ -127,8 +127,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   )
     setTimeout(() => {
       chrome.extension.getBackgroundPage().console.log("inserting on updated");
-      chrome.storage.local.get(["miniWindow"], result => {
-        if (tabId !== result.miniWindow) {
+      chrome.storage.local.get(["miniWindowTabId"], result => {
+        if (tabId !== result.miniWindowTabId) {
           chrome.tabs.executeScript(tabId, {
             // file: "content-script/pip-for-videos.js"
             file: "content-script/pip-video-hover.js"

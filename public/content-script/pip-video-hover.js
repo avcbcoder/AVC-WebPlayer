@@ -1,6 +1,7 @@
 function mainScript() {
   let pipUniqueIdHash = 78;
   let loopId = "";
+  let lastMove = new Date().getTime();
 
   const pipObj = {};
 
@@ -32,20 +33,26 @@ function mainScript() {
     });
   };
 
+  const togglePipButtons = () => {
+    for (let pipId in pipObj) {
+      const { pip } = pipObj[pipId];
+      if (pip && pip.style && isFullScreen()) pip.style.opacity = 0;
+    }
+  };
+
   const updatePos = (video, pip) => {
     const pos = video.getBoundingClientRect();
     if (
-      (pos.y < 0 && pos.y + pos.height < 30) ||
-      pos.y > window.innerHeight ||
-      (pos.x < 0 && pos.x + pos.width < 150) ||
-      pos.x > window.innerWidth
+      !(
+        (pos.y < 0 && pos.y + pos.height < 30) ||
+        pos.y > window.innerHeight ||
+        (pos.x < 0 && pos.x + pos.width < 150) ||
+        pos.x > window.innerWidth
+      )
     ) {
-      // pip.style.display = "none";
-      return;
+      pip.style.left = `${Math.floor(pos.x < 0 ? 0 : pos.x + 8)}px`;
+      pip.style.top = `${Math.floor(pos.y < 0 ? 0 : pos.y + 8)}px`;
     }
-    // pip.style.display = "flex";
-    pip.style.left = `${Math.floor(pos.x < 0 ? 0 : pos.x + 8)}px`;
-    pip.style.top = `${Math.floor(pos.y < 0 ? 0 : pos.y + 8)}px`;
   };
 
   function addPipButtonForVideo(video) {
@@ -87,11 +94,18 @@ function mainScript() {
       video.addEventListener("leavepictureinpicture", () => {
         div.innerText = "Start Mini Mode";
       });
-      video.addEventListener("mouseover", () => {
-        if (!isFullScreen()) div.style.opacity = 1;
-      });
+      // video.addEventListener("mouseover", () => {
+      //   if (!isFullScreen()) div.style.opacity = 1;
+      // });
       video.addEventListener("mouseout", () => {
         div.style.opacity = 0;
+      });
+      video.addEventListener("mousemove", () => {
+        lastMove = new Date().getTime();
+        if (!isFullScreen()) div.style.opacity = 1;
+        setTimeout(() => {
+          if (new Date().getTime() - lastMove > 2700) div.style.opacity = 0;
+        }, 3000);
       });
     }
 
@@ -143,6 +157,9 @@ function mainScript() {
     clearInterval(loopId);
     if (!document.hidden) loopId = looper();
   });
+
+  // hide all pip buttons if dom is in full screen state
+  document.addEventListener("fullscreenchange", togglePipButtons, false);
 }
 
 if (!window.alreadyInjected) {
