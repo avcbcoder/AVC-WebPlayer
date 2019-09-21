@@ -29,13 +29,7 @@ function fetch(searchString, callback) {
 function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
-    chrome.extension
-    .getBackgroundPage()
-    .console.log("current store in alpha ", store);
     store[STORE_VAR.ALPHA] = { state: "success", response: data };
-    chrome.extension
-      .getBackgroundPage()
-      .console.log("new store in alpha ", store);
     storage.set({ store: store }, () => {
       render({ method: "image-change" });
     });

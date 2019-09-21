@@ -25,9 +25,6 @@ function fetch(searchString, callback) {
   }`;
 
   $.get(searchUrl, response => {
-    chrome.extension
-      .getBackgroundPage()
-      .console.log("happi search response ", searchUrl, response);
     if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
       callback("");
       return;
@@ -46,16 +43,10 @@ function fetch(searchString, callback) {
 function saveInStore(data, callback) {
   storage.get(["store"], result => {
     const store = result.store;
-    chrome.extension
-      .getBackgroundPage()
-      .console.log("current store in happi", store);
     store[STORE_VAR.HAPPI] = {
       state: data ? "success" : "fail",
       response: data
     };
-    chrome.extension
-      .getBackgroundPage()
-      .console.log("new store in happi", store);
     storage.set({ store }, () => {
       render();
       callback();
@@ -88,14 +79,10 @@ const fetchHappiData = (songDetails, callback) => {
 
     if (happi) {
       // if exist in cache -> modify store
-      chrome.extension.getBackgroundPage().console.log("exist in cache", happi);
       saveInStore(happi,callback);
     } else {
       // call api to fetch cover
       fetch(searchString, happiData => {
-        chrome.extension
-          .getBackgroundPage()
-          .console.log("does not exist in cache & new data=", happiData);
         saveInStore(happiData,()=>{
           saveInCache(id, happiData,callback);
         });

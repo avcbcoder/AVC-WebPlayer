@@ -4,7 +4,6 @@ const getImageFromUrl = url => {
   $.ajax({
     url:"https://images7.alphacoders.com/905/905837.jpg",
     success: function(response) {
-      chrome.extension.getBackgroundPage().console.log("response=>", response);
     },
     statusCode: {
       404: function() {}

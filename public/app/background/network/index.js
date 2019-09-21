@@ -35,8 +35,6 @@ const render = () => {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type !== "spotify") return;
 
-  chrome.extension.getBackgroundPage().console.log("Spotify sent -> ", request);
-
   const isSongChanged = request.type === "spotify";
   const storage = chrome.storage.local;
 

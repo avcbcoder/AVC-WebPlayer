@@ -83,9 +83,6 @@ function handleSpotify(request) {
 
 // make request to fetch happi data and alpha images in case its 1st_time or response is fail/idle
 function handleSongChange(request) {
-  chrome.extension
-    .getBackgroundPage()
-    .console.log("song changed -------------------------");
   const song = request.data;
   storage.get(["store"], result => {
     const store = result.store;

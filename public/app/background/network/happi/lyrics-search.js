@@ -41,9 +41,6 @@ const fetchHappiLyrics = (songDetails) => {
       const lyricsSearchUrl =
         happi[HAPPI_OBJ.API_LYRICS] + `?apikey=${LYRICS_HAPPI_API_KEYS[0]}`;
       $.get(lyricsSearchUrl, response => {
-        chrome.extension
-          .getBackgroundPage()
-          .console.log("lyrics search response ", response);
         if (!response || (response && response[HAPPI_OBJ.LENGTH] === 0)) {
           callback("");
           return;
