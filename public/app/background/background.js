@@ -8,6 +8,8 @@ import { cacheCheck } from "./storage.js";
 import { render } from "./sender.js";
 import { startYoutubeMiniMode, minimizeWindow } from "./tabs/youtube.js";
 
+const storage = chrome.storage.local;
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.extension.getBackgroundPage().console.log("RECIEVED REQ", request);
   if (request.type === "toggle") {
@@ -53,13 +55,6 @@ function injectChangeMedia(request) {
 // CALLED WHENEVER SONG DETAILS CHANGE
 function handleSpotify(request) {
   const isSongChanged = request.method === "song-change";
-  const storage = chrome.storage.local;
-
-  if (isSongChanged)
-    cacheCheck(function() {
-      fetchHappiData(request.data);
-      fetchAlphaImages(request.data);
-    });
 
   storage.get(["store"], result => {
     const store = result.store;
@@ -78,7 +73,33 @@ function handleSpotify(request) {
       : store[STORE_VAR.ALPHA];
     storage.set({ store: store }, () => {
       render(request);
+      if (isSongChanged)
+        cacheCheck(function() {
+          handleSongChange(request);
+        });
     });
+  });
+}
+
+// make request to fetch happi data and alpha images in case its 1st_time or response is fail/idle
+function handleSongChange(request) {
+  chrome.extension
+    .getBackgroundPage()
+    .console.log("song changed -------------------------");
+  const song = request.data;
+  storage.get(["store"], result => {
+    const store = result.store;
+    const happi = store[STORE_VAR.HAPPI];
+    const alpha = store[STORE_VAR.ALPHA];
+    const filterState = state =>
+      state === API_STATE.FAIL || state === API_STATE.IDLE;
+    const shouldFetchHappi = !happi || (happi && filterState(happi.state));
+    const shouldFetchAlpha = !alpha || (alpha && filterState(alpha.state));
+    if (shouldFetchHappi)
+      fetchHappiData(song, () => {
+        fetchAlphaImages(song);
+      });
+    if (!shouldFetchHappi && shouldFetchAlpha) fetchAlphaImages(song);
   });
 }
 
@@ -103,7 +124,7 @@ chrome.runtime.onMessage.addListener(function(request) {
       injectChangeMedia(request);
       break;
     case EXT_COMM.YOUTUBE_MINI_MODE:
-      if (request) startYoutubeMiniMode(request.data,request.videoId);
+      if (request) startYoutubeMiniMode(request.data, request.videoId);
       break;
     case EXT_COMM.MINIMIZE_WINDOW:
       minimizeWindow();
@@ -128,7 +149,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     !isLocalUrl(tab.url)
   )
     setTimeout(() => {
-      chrome.extension.getBackgroundPage().console.log("inserting on updated");
       chrome.storage.local.get(["miniWindowTabId"], result => {
         if (tabId !== result.miniWindowTabId) {
           chrome.tabs.executeScript(tabId, {

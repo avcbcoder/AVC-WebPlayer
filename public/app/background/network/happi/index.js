@@ -43,27 +43,36 @@ function fetch(searchString, callback) {
   });
 }
 
-function saveInStore(data) {
+function saveInStore(data, callback) {
   storage.get(["store"], result => {
     const store = result.store;
+    chrome.extension
+      .getBackgroundPage()
+      .console.log("current store in happi", store);
     store[STORE_VAR.HAPPI] = {
       state: data ? "success" : "fail",
       response: data
     };
-    storage.set({ store }, render);
+    chrome.extension
+      .getBackgroundPage()
+      .console.log("new store in happi", store);
+    storage.set({ store }, () => {
+      render();
+      callback();
+    });
   });
 }
 
-function saveInCache(id, data) {
+function saveInCache(id, data, callback) {
   storage.get(["cache"], result => {
     const cache = result.cache;
     const cacheHappi = cache[CACHE_VAR.HAPPI];
     cacheHappi[id] = data;
-    storage.set({ cache }, function() {});
+    storage.set({ cache }, callback);
   });
 }
 
-const fetchHappiData = songDetails => {
+const fetchHappiData = (songDetails, callback) => {
   const { title, artist } = songDetails;
   const searchString =
     filter(title.toLowerCase(), " ") +
@@ -79,12 +88,17 @@ const fetchHappiData = songDetails => {
 
     if (happi) {
       // if exist in cache -> modify store
-      saveInStore(happi);
+      chrome.extension.getBackgroundPage().console.log("exist in cache", happi);
+      saveInStore(happi,callback);
     } else {
       // call api to fetch cover
       fetch(searchString, happiData => {
-        saveInStore(happiData);
-        saveInCache(id, happiData);
+        chrome.extension
+          .getBackgroundPage()
+          .console.log("does not exist in cache & new data=", happiData);
+        saveInStore(happiData,()=>{
+          saveInCache(id, happiData,callback);
+        });
       });
     }
   });

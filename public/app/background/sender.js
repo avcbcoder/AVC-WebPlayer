@@ -1,6 +1,7 @@
 import { EXT_COMM } from "./constants.js";
 
 const render = request => {
+  chrome.extension.getBackgroundPage().console.log('RENDER');
   chrome.tabs.query({}, function(tabs) {
     // DO NOT SEND TO ALL TABS
     for (let i = 0; i < tabs.length; i++) {

@@ -59,44 +59,49 @@ function extractDetails() {
   };
 }
 
-if (window.location.href.includes("open.spotify.com")) {
-  clearInterval(window.miniIntervalId);
-  window.miniIntervalId = setInterval(() => {
-    const newDetailsObj = extractDetails();
-    const lastProgress = songDetailsObj.progressTime;
-    const newProgress = newDetailsObj.progressTime;
-    let method = null;
+function script() {
+  if (window.location.href.includes("open.spotify.com")) {
+    if (window.miniIntervalId) return;
+    // clearInterval(window.miniIntervalId);
+    window.miniIntervalId = setInterval(() => {
+      const newDetailsObj = extractDetails();
+      const lastProgress = songDetailsObj.progressTime;
+      const newProgress = newDetailsObj.progressTime;
+      let method = null;
 
-    const isDiffArtist = (a, b) => {
-      if (a.length !== b.length) return true;
-      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return true;
-      return false;
-    };
+      const isDiffArtist = (a, b) => {
+        if (a.length !== b.length) return true;
+        for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return true;
+        return false;
+      };
 
-    if (
-      newDetailsObj.title !== songDetailsObj.title ||
-      isDiffArtist(newDetailsObj.artist, songDetailsObj.artist)
-    ) {
-      // fire event that song is changed
-      method = "song-change";
-    } else if (newDetailsObj.albumArt !== songDetailsObj.albumArt) {
-      // fire event for album art change
-      method = "album-art-change";
-    } else if (Math.abs(newProgress - lastProgress > 2)) {
-      // fire event that progress is changed
-      method = "progress-change";
-    } else if (songDetailsObj.playing !== newDetailsObj.playing) {
-      // fire event that play-state-changed
-      method = "play-state-change";
-    }
+      if (
+        newDetailsObj.title !== songDetailsObj.title ||
+        isDiffArtist(newDetailsObj.artist, songDetailsObj.artist)
+      ) {
+        // fire event that song is changed
+        method = "song-change";
+      } else if (newDetailsObj.albumArt !== songDetailsObj.albumArt) {
+        // fire event for album art change
+        method = "album-art-change";
+      } else if (Math.abs(newProgress - lastProgress > 2)) {
+        // fire event that progress is changed
+        method = "progress-change";
+      } else if (songDetailsObj.playing !== newDetailsObj.playing) {
+        // fire event that play-state-changed
+        method = "play-state-change";
+      }
 
-    if (method)
-      chrome.runtime.sendMessage({
-        type: "spotify",
-        method,
-        data: newDetailsObj
-      });
+      if (method)
+        chrome.runtime.sendMessage({
+          type: "spotify",
+          method,
+          data: newDetailsObj
+        });
 
-    songDetailsObj = newDetailsObj;
-  }, 500);
+      songDetailsObj = newDetailsObj;
+    }, 500);
+  }
 }
+
+script();

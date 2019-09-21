@@ -63,6 +63,7 @@ function addPip() {
 function renderPlayer() {
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   storage.get(["store"], result => {
+    console.log(result.store)
     if (extPlayer)
       ReactDOM.render(
         <RootApp
