@@ -18,7 +18,7 @@ function videoLoaded() {
   let count = 0;
   const ele = document.getElementById(ID.FRAME.SPOTIFY);
   const intervalId = setInterval(() => {
-    if (count === 10) {
+    if (count === 1) {
       const video = document.getElementById(ID.VIDEO.SPOTIFY);
       video.play();
       clearInterval(intervalId);
@@ -34,7 +34,7 @@ function videoLoaded() {
       });
     }
     count++;
-  }, 100);
+  }, 1000);
 }
 
 function attachListenersToVideo(video) {
