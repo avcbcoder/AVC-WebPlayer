@@ -103,7 +103,7 @@ chrome.runtime.onMessage.addListener(function(request) {
       injectChangeMedia(request);
       break;
     case EXT_COMM.YOUTUBE_MINI_MODE:
-      if (request && request.videoId) startYoutubeMiniMode(request.videoId);
+      if (request) startYoutubeMiniMode(request.data,request.videoId);
       break;
     case EXT_COMM.MINIMIZE_WINDOW:
       minimizeWindow();

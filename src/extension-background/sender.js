@@ -29,10 +29,11 @@ function getVideoId(songDetails) {
   });
 }
 
-function startYoutubeMiniMode(videoId) {
+function startYoutubeMiniMode(songDetails,videoId) {
   console.log("Sending request for yt mini mode")
   chrome.runtime.sendMessage({
     type: EXT_COMM.YOUTUBE_MINI_MODE,
+    data:songDetails,
     videoId
   });
 }

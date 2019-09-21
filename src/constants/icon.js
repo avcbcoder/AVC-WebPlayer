@@ -20,6 +20,14 @@ const getAllIcons = chrome => {
   const ytBkg1 = chrome.runtime.getURL("img/yt-bkg-1.svg");
   const ytBkg2 = chrome.runtime.getURL("img/yt-bkg-1.png");
 
+  // setting icons
+  const settingIcon1 = chrome.runtime.getURL("img/setting-1.png");
+  const settingIcon2 = chrome.runtime.getURL("img/setting-2.png");
+
+  // youtube icons
+  const youtubeIcon1 = chrome.runtime.getURL("img/youtube-1.png");
+  const youtubeIcon2 = chrome.runtime.getURL("img/youtube-2.png");
+
   return {
     playIcon,
     prevIcon,
@@ -40,7 +48,11 @@ const getAllIcons = chrome => {
     minimizeBlueIcon2,
     maximizeBlueIcon1,
     ytBkg1,
-    ytBkg2
+    ytBkg2,
+    settingIcon1,
+    settingIcon2,
+    youtubeIcon1,
+    youtubeIcon2
   };
 };
 

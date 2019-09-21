@@ -15,7 +15,10 @@ import { THEME } from "../constants/color";
 import { getAllIcons } from "../constants/icon";
 import { STORE_VAR, HAPPI_OBJ } from "../constants";
 import CircularProgress from "./circular-progress-bar";
-import { changeMedia } from "../extension-background/sender";
+import {
+  changeMedia,
+  startYoutubeMiniMode
+} from "../extension-background/sender";
 
 const {
   playIcon,
@@ -32,7 +35,11 @@ const {
   menuWhiteIcon,
   closeWhiteIcon,
   minimizeBlueIcon1,
-  minimizeBlueIcon2
+  minimizeBlueIcon2,
+  settingIcon1,
+  settingIcon2,
+  youtubeIcon1,
+  youtubeIcon2
 } = getAllIcons(chrome);
 
 const STYLE = {
@@ -201,6 +208,18 @@ const Mini = styled.div`
   z-index: 100;
 `;
 
+const Youtube = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 72px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.1);
+  }
+  z-index: 100;
+`;
+
 const Pie = styled.div`
   border-radius: 50%;
   background: #fff;
@@ -300,9 +319,14 @@ class SpotifyPlayer extends React.Component {
         <Mini onClick={this.startMiniWindow}>
           <Img src={minimizeBlueIcon1} w={20} h={20}></Img>
         </Mini>
-        {/* <Mini onClick={this.openSetting}>
-          <Img src={minimizeBlueIcon1} w={20} h={20}></Img>
-        </Mini> */}
+        <Youtube
+          onClick={() => {
+            if (playing) changeMedia(CONTROLS.PLAY);
+            startYoutubeMiniMode(store[STORE_VAR.SONG]);
+          }}
+        >
+          <Img src={youtubeIcon1} w={20} h={20}></Img>
+        </Youtube>
         <Upper>
           <AlbumArtImage>
             <CircularProgress

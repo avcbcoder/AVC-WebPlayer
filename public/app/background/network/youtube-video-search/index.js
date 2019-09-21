@@ -38,7 +38,7 @@ function fetch(searchString, callback) {
 function saveInStore(data) {
   storage.get(["store"], result => {
     const store = result.store;
-    store[STORE_VAR.YOUTUBE] = { state: "success", response:data };
+    store[STORE_VAR.YOUTUBE] = { state: "success", response: data };
     storage.set({ store: store }, render);
   });
 }
@@ -52,8 +52,10 @@ function saveInCache(id, data) {
   });
 }
 
-const fetchYoutubeVideos = songDetails => {
+const fetchYoutubeVideos = (songDetails, callback) => {
   const { title, artist } = songDetails;
+  if (!(title && artist && artist.length > 0)) return;
+
   const searchString = title + " " + artist.join(" ");
   const id = searchString; // will change it to hash later
 
@@ -65,10 +67,12 @@ const fetchYoutubeVideos = songDetails => {
 
     if (video) {
       saveInStore(video);
+      if (callback) callback(video);
     } else {
       fetch(searchString, data => {
         saveInStore(data);
         saveInCache(id, data);
+        if (callback) callback(data);
       });
     }
   });

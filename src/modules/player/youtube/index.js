@@ -63,7 +63,7 @@ class YoutubePlayer extends React.Component {
             src={minimizeWhiteIcon1}
             onClick={() => {
               if (playing) changeMedia(CONTROLS.PLAY);
-              startYoutubeMiniMode(videoId);
+              startYoutubeMiniMode(store[STORE_VAR.SONG],videoId);
             }}
           ></Img>
           <Separator width="16" />
