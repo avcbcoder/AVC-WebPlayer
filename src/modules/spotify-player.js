@@ -300,6 +300,9 @@ class SpotifyPlayer extends React.Component {
         <Mini onClick={this.startMiniWindow}>
           <Img src={minimizeBlueIcon1} w={20} h={20}></Img>
         </Mini>
+        {/* <Mini onClick={this.openSetting}>
+          <Img src={minimizeBlueIcon1} w={20} h={20}></Img>
+        </Mini> */}
         <Upper>
           <AlbumArtImage>
             <CircularProgress

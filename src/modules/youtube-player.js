@@ -44,7 +44,7 @@ class YoutubePlayer extends React.Component {
 
     if (state === API_STATE.SUCCESS && response && response.length > 0)
       videoId = response[0].videoId;
-
+      
     return (
       <Wrapper>
         <Separator height="12" />

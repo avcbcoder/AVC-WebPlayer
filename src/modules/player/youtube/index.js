@@ -46,6 +46,7 @@ const ButtonCollection = styled.div`
 class YoutubePlayer extends React.Component {
   render() {
     const { store, onClose } = this.props;
+    const { playing } = store[STORE_VAR.SONG];
     const { state, response } = store[STORE_VAR.YOUTUBE];
     let videoId = DEFAULT_VIDEO_ID;
 
@@ -61,8 +62,7 @@ class YoutubePlayer extends React.Component {
             h="15"
             src={minimizeWhiteIcon1}
             onClick={() => {
-              // pause if playing
-              // changeMedia(CONTROLS.PLAY);
+              if (playing) changeMedia(CONTROLS.PLAY);
               startYoutubeMiniMode(videoId);
             }}
           ></Img>
