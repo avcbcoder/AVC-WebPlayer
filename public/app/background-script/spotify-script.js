@@ -33,7 +33,8 @@ function extractDetails() {
   // extract play button
   const playerControls = document.getElementsByClassName("player-controls")[0];
   const mediaButtons = playerControls ? playerControls.childNodes[0] : null;
-  const play = mediaButtons ? mediaButtons.childNodes[2] : null;
+  const playWrapper = mediaButtons ? mediaButtons.childNodes[2] : null;
+  const play = playWrapper ? playWrapper.childNodes[0] : null;
 
   const artists = [];
   if (artistLinks && artistLinks.length > 0)

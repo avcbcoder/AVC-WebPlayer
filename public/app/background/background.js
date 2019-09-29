@@ -44,7 +44,7 @@ function injectChangeMedia(request) {
         { file: "app/background-script/spotify-buttons.js" },
         () => {
           chrome.tabs.executeScript(tab.id, {
-            code: `if(${request.button})${request.button}.click();`
+            code: `console.log(${request.button});if(${request.button})${request.button}.click();`
           });
         }
       );
