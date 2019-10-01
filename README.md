@@ -11,15 +11,49 @@ Mini can create a mini window which always stays on top, so that you can watch v
 
 #### Stable release version : ![](https://img.shields.io/badge/version-1.1.3-blue)
 
-## For Spotify streaming :
+----
+
+### User Guide
+
+#### For Spotify streaming :
 - [x] Control your music from any tab.
 - [x] Get `Lyrics` of the currently streaming song.
 - [x] Get `Youtube Video` of the current song.
 - [x] You can directly create a `mini window` of the song/video from the app itself. (view demo video for details)
 
-----
-
-## Mini Window button :
+#### Mini Window button :
 > * A script is injected in every tab (new/refreshed) to add mini window buttons.   
 > * The injected script attaches mini window button to every loaded video available on the page.  
 > * Using this button you can start/stop mini window view for videos.
+
+---
+
+### Installing
+
+1. Clone this repo (git required)
+```
+git clone https://github.com/avcbcoder/Mini---spotify-youtube
+```
+2. Install dependencies (npm/yarn required)
+```
+npm install 
+or
+yarn
+```
+3. Make build for chrome
+```
+npm build 
+or 
+yarn build
+```
+
+### Deployment
+* Toggle Developer mode
+```
+Got to chrome://extensions/ and enable developer mode
+```
+* Add extension
+```
+Add extension and select build folder of the project
+```
+
