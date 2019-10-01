@@ -13,7 +13,7 @@ Mini can create a mini window which always stays on top, so that you can watch v
 
 ----
 
-### User Guide
+## User Guide
 
 #### For Spotify streaming :
 - [x] Control your music from any tab.
@@ -22,9 +22,9 @@ Mini can create a mini window which always stays on top, so that you can watch v
 - [x] You can directly create a `mini window` of the song/video from the app itself. (view demo video for details)
 
 #### Mini Window button :
-> * A script is injected in every tab (new/refreshed) to add mini window buttons.   
-> * The injected script attaches mini window button to every loaded video available on the page.  
-> * Using this button you can start/stop mini window view for videos.
+* A script is injected in every tab (new/refreshed) to add mini window buttons.   
+* The injected script attaches mini window button to every loaded video available on the page.  
+* Using this button you can start/stop mini window view for videos.
 
 ---
 
