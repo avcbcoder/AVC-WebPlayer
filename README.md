@@ -5,7 +5,8 @@
 [![GitHub followers](https://img.shields.io/github/followers/avcbcoder.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/avcbcoder?tab=followers)
 
 Mini is a Chrome Extension which lets you control your spotify music from any browser tab.
-Mini can create a mini window which always stays on top, so that you can watch videos while working also.
+It can create a mini window which always stays on top, so that you can watch videos while working also.
+And it enables the functionality to videos of all tabs, so that they can be played in mini window mode.
 
 #### Build with  ![](https://img.shields.io/badge/-React-blue) ![](https://img.shields.io/badge/-StyledComponents-yellow) ![](https://img.shields.io/badge/-Javascript-red) ![](https://img.shields.io/badge/-HtmlCanvas-9cf) ![](https://img.shields.io/badge/-MeadiaStreaming-ff69b4) ![](https://img.shields.io/badge/-JQuery-green)
 
