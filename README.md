@@ -13,7 +13,7 @@ Mini can create a mini window which always stays on top, so that you can watch v
 
 ----
 
-## User Guide
+## User Guide 
 
 #### For Spotify streaming :
 - [x] Control your music from any tab.
@@ -28,9 +28,10 @@ Mini can create a mini window which always stays on top, so that you can watch v
 
 ---
 
+## Demo
 <br/>
 <p align="center">
-<img src="https://i.imgur.com/puPydK8.jpg" height="500" title="Tappy">
+<img src="https://i.imgur.com/QxyV62o.gif" height="500" title="Tappy">
 </p>
 
 ---
