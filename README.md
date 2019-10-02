@@ -4,7 +4,7 @@
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40avcbcoder)](https://twitter.com/avankyankit)
 [![GitHub followers](https://img.shields.io/github/followers/avcbcoder.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/avcbcoder?tab=followers)
 
-Mini is a Chrome Extension which lets you control your spotify music from any browser tab.
+AVC Web player is a Chrome Extension which lets you control your `music streams` (spotify/music.youtube/brainfm) from any browser tab.
 It can create a mini window which always stays on top, so that you can watch videos while working also.
 And it enables the functionality to videos of all tabs, so that they can be played in mini window mode.
 
@@ -16,7 +16,7 @@ And it enables the functionality to videos of all tabs, so that they can be play
 
 ## User Guide 
 
-#### For Spotify streaming :
+#### For Music (Spotify) streaming :
 - [x] Control your music from any tab.
 - [x] Get `Lyrics` of the currently streaming song.
 - [x] Get `Youtube Video` of the current song.
@@ -32,7 +32,7 @@ And it enables the functionality to videos of all tabs, so that they can be play
 ## Demo
 <br/>
 <p align="center">
-<img src="https://i.imgur.com/QxyV62o.gif" height="500" title="Tappy">
+<img src="https://i.imgur.com/QxyV62o.gif" height="500" title="AVC Web Player DEMO">
 </p>
 
 ---
