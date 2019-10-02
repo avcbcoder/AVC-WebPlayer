@@ -28,6 +28,13 @@ Mini can create a mini window which always stays on top, so that you can watch v
 
 ---
 
+<br/>
+<p align="center">
+<img src="https://i.imgur.com/puPydK8.jpg" height="500" title="Tappy">
+</p>
+
+---
+
 ### Installing
 
 1. Clone this repo (git required)
