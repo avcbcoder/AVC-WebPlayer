@@ -11,7 +11,10 @@ import {
   DEFAULT_STORE
 } from "./constants";
 import { createSpotifyWindow } from "./modules/mini-window";
-import {addMediaButtonSupport} from './modules/multimedia-player'
+import {
+  addMediaButtonSupport,
+  handleMultimediaAudio
+} from "./modules/multimedia-player";
 
 const storage = chrome.storage.local;
 storage.set({ store: DEFAULT_STORE });
@@ -124,6 +127,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     )
       renderPip();
   }
+  storage.get(["store"], result => {
+    const store = result.store;
+    const { playing } = store[STORE_VAR.SONG];
+    handleMultimediaAudio(playing);
+  });
 });
 
 document.addEventListener("visibilitychange", () => {

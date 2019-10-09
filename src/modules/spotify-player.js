@@ -19,7 +19,7 @@ import {
   changeMedia,
   startYoutubeMiniMode
 } from "../extension-background/sender";
-import {startPip, stopPip} from './multimedia-player'
+import { handleMultimediaAudio } from "./multimedia-player";
 
 const {
   playIcon,
@@ -288,7 +288,9 @@ class SpotifyPlayer extends React.Component {
   };
 
   startMiniWindow = () => {
-    startPip();
+    const { store } = this.props;
+    const { playing } = store[STORE_VAR.SONG];
+    handleMultimediaAudio(playing);
     const v = document.getElementById(ID.VIDEO.SPOTIFY);
     if (v) v.requestPictureInPicture();
   };

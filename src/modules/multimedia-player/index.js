@@ -3,11 +3,6 @@ import { ID, CONTROLS } from "../../constants";
 import { changeMedia } from "../../extension-background/sender";
 
 function initiallizeNavigator() {
-//   navigator.mediaSession = navigator.mediaSession || {};
-//   navigator.mediaSession.setActionHandler =
-//     navigator.mediaSession.setActionHandler || function() {};
-//   window.MediaMetadata = window.MediaMetadata || function() {};
-
   window.navigator.mediaSession.setActionHandler("previoustrack", function() {
     console.log('> User clicked "Previous Track" icon.');
     changeMedia(CONTROLS.PREV);
@@ -49,39 +44,22 @@ function playAudio() {
   const audio = document.getElementById(ID.AUDIO.SPOTIFY);
   if (audio) {
     audio.volume = 0.0;
-    audio
-      .play()
-      .then(_ => updateMetadata())
-      .catch(error => console.log(error));
+    audio.play();
   }
 }
+
 function pauseAudio() {
   const audio = document.getElementById(ID.AUDIO.SPOTIFY);
   if (audio) audio.pause();
 }
 
-function startPip() {
-  playAudio();
+function handleMultimediaAudio(songPlaying){
+    if(songPlaying){
+        playAudio();
+    }else{
+        playAudio();
+        pauseAudio();
+    }
 }
 
-function stopPip() {
-  pauseAudio();
-}
-
-function updateMetadata() {
-  const art = [];
-  const sizes = [96, 128, 192, 256, 384, 512];
-  const imgsrc =
-    "https://storage.googleapis.com/media-session/sintel/artwork-96.png";
-  sizes.forEach(size => {
-    art.push({ src: imgsrc, sizes: `${size}x${size}`, type: "image/png" });
-  });
-  window.navigator.mediaSession.metadata = new window.MediaMetadata({
-    title: "Ye mera title hai",
-    artist: "artist ka name",
-    album: "album ka name",
-    artwork: art
-  });
-}
-
-export { addMediaButtonSupport, startPip, stopPip };
+export { addMediaButtonSupport, handleMultimediaAudio };
