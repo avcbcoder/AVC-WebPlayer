@@ -5,6 +5,7 @@ import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import { ID, STORE_VAR } from "../../../constants";
 import $ from "jquery";
+import {startPip, stopPip} from './multimedia-player'
 
 import WindowView from "./view";
 
@@ -56,6 +57,7 @@ function attachListenersToVideo(video) {
     }
     if (canvas) canvas.parentNode.removeChild(canvas);
     registerFrame();
+    stopPip();
   });
   video.addEventListener("loadeddata", videoLoaded, false);
 }

@@ -1,4 +1,5 @@
-import { ID } from "../../constants";
+import { ID, CONTROLS } from "../../constants";
+import { changeMedia } from "../../extension-background/sender";
 
 function initiallizeNavigator() {
   navigator.mediaSession = navigator.mediaSession || {};
@@ -8,10 +9,12 @@ function initiallizeNavigator() {
 
   navigator.mediaSession.setActionHandler("previoustrack", function() {
     console.log('> User clicked "Previous Track" icon.');
+    changeMedia(CONTROLS.PREV);
   });
 
   navigator.mediaSession.setActionHandler("nexttrack", function() {
     console.log('> User clicked "Next Track" icon.');
+    changeMedia(CONTROLS.NEXT);
   });
 
   audio.addEventListener("ended", function() {
@@ -20,17 +23,20 @@ function initiallizeNavigator() {
 
   navigator.mediaSession.setActionHandler("play", function() {
     console.log('> User clicked "Play" icon.');
+    changeMedia(CONTROLS.PLAY);
     audio.play();
   });
 
   navigator.mediaSession.setActionHandler("pause", function() {
     console.log('> User clicked "Pause" icon.');
+    changeMedia(CONTROLS.PLAY);
     audio.pause();
   });
 }
 
 function addMediaButtonSupport() {
   if (document.getElementById(ID.AUDIO.SPOTIFY)) return;
+  initiallizeNavigator();
   const audio = document.createElement("audio");
   audio.id = ID.AUDIO.SPOTIFY;
   audio.src =
@@ -38,16 +44,25 @@ function addMediaButtonSupport() {
   audio.volume = 0.0;
 }
 
-function startPip() {
-  const audio = document.getElementById();
+function playAudio() {
+  const audio = document.getElementById(ID.AUDIO.SPOTIFY);
   audio
     .play()
     .then(_ => updateMetadata())
     .catch(error => console.log(error));
 }
 
-function stopPip(){
-    
+function startPip() {
+  const audio = document.getElementById(ID.AUDIO.SPOTIFY);
+  audio
+    .play()
+    .then(_ => updateMetadata())
+    .catch(error => console.log(error));
+}
+
+function stopPip() {
+  const audio = document.getElementById(ID.AUDIO.SPOTIFY);
+  audio.pause();
 }
 
 function updateMetadata() {
@@ -65,3 +80,5 @@ function updateMetadata() {
     artwork: art
   });
 }
+
+export { addMediaButtonSupport, startPip, stopPip };
