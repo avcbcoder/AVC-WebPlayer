@@ -53,9 +53,9 @@ function addPip() {
     extBody.style.width = "0px";
     extBody.style.height = "0px";
     extBody.style.overflow = "hidden";
-    extBody.style.position="fixed";
-    extBody.style.top='-2020px';
-    extBody.style.left='-2020px';
+    extBody.style.position = "fixed";
+    extBody.style.top = "-2020px";
+    extBody.style.left = "-2020px";
     document.body.appendChild(extBody);
   }
 }
@@ -63,7 +63,7 @@ function addPip() {
 function renderPlayer() {
   const extPlayer = document.getElementById(ID.EXTENSION_PLAYER);
   storage.get(["store"], result => {
-    console.log(result.store)
+    console.log(result.store);
     if (extPlayer)
       ReactDOM.render(
         <RootApp
@@ -80,10 +80,6 @@ function renderPip() {
   storage.get(["store"], result => {
     createSpotifyWindow(result.store);
   });
-}
-
-function addMediaButtonSupport(){
-  
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

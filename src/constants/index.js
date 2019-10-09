@@ -28,6 +28,9 @@ const ID = {
     SPOTIFY: "id-spotify-video",
     LYRICS: "id-lyrics-video"
   },
+  AUDIO:{
+    SPOTIFY: "id-spotify-audio"
+  },
   WINDOW: {
     SPOTIFY: "id-spotify-window",
     LYRICS: "id-lyrics-window"
