@@ -1,36 +1,33 @@
+/*global MediaMetadata*/
 import { ID, CONTROLS } from "../../constants";
 import { changeMedia } from "../../extension-background/sender";
 
 function initiallizeNavigator() {
-  navigator.mediaSession = navigator.mediaSession || {};
-  navigator.mediaSession.setActionHandler =
-    navigator.mediaSession.setActionHandler || function() {};
-  window.MediaMetadata = window.MediaMetadata || function() {};
+//   navigator.mediaSession = navigator.mediaSession || {};
+//   navigator.mediaSession.setActionHandler =
+//     navigator.mediaSession.setActionHandler || function() {};
+//   window.MediaMetadata = window.MediaMetadata || function() {};
 
-  navigator.mediaSession.setActionHandler("previoustrack", function() {
+  window.navigator.mediaSession.setActionHandler("previoustrack", function() {
     console.log('> User clicked "Previous Track" icon.');
     changeMedia(CONTROLS.PREV);
   });
 
-  navigator.mediaSession.setActionHandler("nexttrack", function() {
+  window.navigator.mediaSession.setActionHandler("nexttrack", function() {
     console.log('> User clicked "Next Track" icon.');
     changeMedia(CONTROLS.NEXT);
   });
 
-  audio.addEventListener("ended", function() {
+  window.navigator.mediaSession.setActionHandler("play", function() {
+    console.log('> User clicked "Play" icon.');
+    changeMedia(CONTROLS.PLAY);
     playAudio();
   });
 
-  navigator.mediaSession.setActionHandler("play", function() {
-    console.log('> User clicked "Play" icon.');
-    changeMedia(CONTROLS.PLAY);
-    audio.play();
-  });
-
-  navigator.mediaSession.setActionHandler("pause", function() {
+  window.navigator.mediaSession.setActionHandler("pause", function() {
     console.log('> User clicked "Pause" icon.');
     changeMedia(CONTROLS.PLAY);
-    audio.pause();
+    pauseAudio();
   });
 }
 
@@ -42,27 +39,33 @@ function addMediaButtonSupport() {
   audio.src =
     "https://storage.googleapis.com/media-session/sintel/snow-fight.mp3";
   audio.volume = 0.0;
+  audio.addEventListener("ended", function() {
+    playAudio();
+  });
+  document.body.appendChild(audio);
 }
 
 function playAudio() {
   const audio = document.getElementById(ID.AUDIO.SPOTIFY);
-  audio
-    .play()
-    .then(_ => updateMetadata())
-    .catch(error => console.log(error));
+  if (audio) {
+    audio.volume = 0.0;
+    audio
+      .play()
+      .then(_ => updateMetadata())
+      .catch(error => console.log(error));
+  }
+}
+function pauseAudio() {
+  const audio = document.getElementById(ID.AUDIO.SPOTIFY);
+  if (audio) audio.pause();
 }
 
 function startPip() {
-  const audio = document.getElementById(ID.AUDIO.SPOTIFY);
-  audio
-    .play()
-    .then(_ => updateMetadata())
-    .catch(error => console.log(error));
+  playAudio();
 }
 
 function stopPip() {
-  const audio = document.getElementById(ID.AUDIO.SPOTIFY);
-  audio.pause();
+  pauseAudio();
 }
 
 function updateMetadata() {
@@ -73,7 +76,7 @@ function updateMetadata() {
   sizes.forEach(size => {
     art.push({ src: imgsrc, sizes: `${size}x${size}`, type: "image/png" });
   });
-  navigator.mediaSession.metadata = new MediaMetadata({
+  window.navigator.mediaSession.metadata = new window.MediaMetadata({
     title: "Ye mera title hai",
     artist: "artist ka name",
     album: "album ka name",

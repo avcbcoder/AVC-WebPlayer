@@ -11,7 +11,7 @@ import {
   DEFAULT_STORE
 } from "./constants";
 import { createSpotifyWindow } from "./modules/mini-window";
-import {addMediaButtonSupport} from './multimedia-player'
+import {addMediaButtonSupport} from './modules/multimedia-player'
 
 const storage = chrome.storage.local;
 storage.set({ store: DEFAULT_STORE });
