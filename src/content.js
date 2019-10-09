@@ -82,6 +82,10 @@ function renderPip() {
   });
 }
 
+function addMediaButtonSupport(){
+  
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
     const tabInfo = window.tabInfo;
@@ -90,6 +94,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       tabInfo.isPlayerVisible = true;
       addPlayer();
       addPip();
+      addMediaButtonSupport();
       renderPlayer();
     } else {
       // make all things invisible
