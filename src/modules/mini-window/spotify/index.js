@@ -65,7 +65,7 @@ function attachListenersToVideo(video) {
   });
 }
 
-const createSpotifyWindow = store => {
+const createSpotifyWindow = (store) => {
   const extBody = document.getElementById(ID.EXTENSION_BODY);
   if (!extBody) return;
 
@@ -82,7 +82,7 @@ const createSpotifyWindow = store => {
 
     extBody.appendChild(spotifyMiniWindow);
   }
-  ReactDOM.render(<Window store={store} />, comp);
+  ReactDOM.render(<Window store={store}/>, comp);
 };
 
 function registerFrame() {

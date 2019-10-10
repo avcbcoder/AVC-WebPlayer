@@ -80,13 +80,14 @@ function renderPlayer() {
   });
 }
 
-function renderPip() {
+function renderPip(requestMethod) {
   storage.get(["store"], result => {
     createSpotifyWindow(result.store);
   });
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  console.log("request =>",request)
   if (request.message === "clicked_browser_action") {
     const tabInfo = window.tabInfo;
     if (tabInfo.isFirstTime) {
@@ -106,6 +107,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         tabInfo.isPlayerVisible = true;
         if (extPlayer) extPlayer.style.display = "block";
         renderPlayer();
+        if (
+          request &&
+          (request.method === "song-change" || request.method === "image-change")
+        )
         renderPip();
       }
     }
