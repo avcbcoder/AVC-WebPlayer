@@ -77,7 +77,9 @@ export default class WindowView extends React.Component {
       width = ratio * 16,
       height = ratio * 9,
       labelHeight = Math.floor((height * 24) / 100);
-
+let ctt=0;
+      if(imageUpdated){ctt=new Date().getTime();
+console.log("image is set to load ---------------------")}
     return (
       <WindowWrapper w={width} h={height + labelHeight}>
         <Body id={ID.FRAME.SPOTIFY}>
@@ -87,7 +89,7 @@ export default class WindowView extends React.Component {
             h={height}
             alt=""
             src={image}
-            onLoad={imageUpdated ? onLoad : () => {}}
+            onLoad={imageUpdated ? ()=>{console.log("VIEW image loaded" ," time diff=",new Date().getTime()-ctt);onLoad(); }: () => {}}
           ></Background>
           <Bottom h={labelHeight}>
             <Text fontSize={24}>

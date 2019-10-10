@@ -120,9 +120,10 @@ function onLoad() {
   let count = 0;
   const ele = document.getElementById(ID.FRAME.SPOTIFY);
   const intervalId = setInterval(() => {
-    if (count === 10) {
+    if (count === 1) {
       clearInterval(intervalId);
     } else {
+      const cttt=new Date().getTime();
       domtoimage.toPng(ele).then(function(dataUrl) {
         const img = new Image();
         img.src = dataUrl;
@@ -130,6 +131,7 @@ function onLoad() {
           const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
           const context = canvas.getContext("2d");
           context.drawImage(img, 0, 0);
+        console.log("DOM TO Imgae took ",new Date().getTime()-cttt)
         };
       });
     }

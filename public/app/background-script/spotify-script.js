@@ -1,7 +1,4 @@
 /*global chrome*/
-
-if (!window.spotify_script_alredy_injected) {
-  window.spotify_script_alredy_injected = true;
   var defaultDetails = {
     title: "",
     artist: [],
@@ -110,4 +107,3 @@ if (!window.spotify_script_alredy_injected) {
   }
 
   script();
-}
