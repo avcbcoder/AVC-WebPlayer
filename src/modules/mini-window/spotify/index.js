@@ -60,6 +60,9 @@ function attachListenersToVideo(video) {
     handleMultimediaAudio(false);
   });
   video.addEventListener("loadeddata", videoLoaded, false);
+  video.addEventListener("ended", () => {
+    video.play();
+  });
 }
 
 const createSpotifyWindow = store => {
