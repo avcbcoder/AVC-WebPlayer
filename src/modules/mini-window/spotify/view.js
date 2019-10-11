@@ -49,6 +49,7 @@ const Text = styled.div`
   font-size: ${({ fontSize }) => fontSize}px;
   padding-left: 4px;
   padding-right: 4px;
+  font-family:Comic Sans MS;
 `;
 
 export default class WindowView extends React.Component {
@@ -108,12 +109,12 @@ export default class WindowView extends React.Component {
             }
           ></Background>
           <Bottom h={labelHeight}>
-            <Text fontSize={graphics === GRAPHICS.HIGH ? 40:24}>
+            <Text fontSize={graphics === GRAPHICS.HIGH ? 42:24}>
               {title.length > 20 ? title.substr(0, 20) : title}
             </Text>
-            <Separator height="6" />
+            <Separator height="12" />
             {/* <br /> */}
-            <Text fontSize={graphics === GRAPHICS.HIGH ? 34:18}>
+            <Text fontSize={graphics === GRAPHICS.HIGH ? 32:18}>
               {artist[0].length > 20 ? artist[0].substr(0, 20) : artist[0]}
             </Text>
           </Bottom>
