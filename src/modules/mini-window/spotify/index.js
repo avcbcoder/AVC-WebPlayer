@@ -7,7 +7,8 @@ import { ID, STORE_VAR } from "../../../constants";
 import $ from "jquery";
 import { handleMultimediaAudio } from "../../multimedia-player";
 
-import WindowView from "./view";
+// import WindowView from "./view";
+import WindowView from "./optimizedView";
 
 const storage = chrome.storage.local;
 const STATUS = {
@@ -191,8 +192,6 @@ class Window extends React.Component {
         return { image: newImage };
       }
     }
-
-    return {};
   }
 
   viewImageLoaded = () => {
@@ -215,14 +214,15 @@ class Window extends React.Component {
   };
 
   render() {
-    const { currentImageUrl } = this.state;
+    const { currentImageUrl, image } = this.state;
     const { store } = this.props;
     const song = store[STORE_VAR.SONG];
 
     return (
       <WindowView
         song={song}
-        image={currentImageUrl}
+        imageUrl={currentImageUrl}
+        image={image}
         onLoad={this.viewImageLoaded}
       />
     );

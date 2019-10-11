@@ -7,10 +7,11 @@ import { Separator } from "../../../components";
 const WindowWrapper = styled.div`
   width: ${({ w }) => w}px;
   height: ${({ h }) => h}px;
-  position: fixed;
-  top: 0;
-  left: 0;
+  /* position: fixed;
+  top: 0px;
+  left: 0px;
   z-index: 1000;
+  border:5px solid red; */
 `;
 
 const Body = styled.div`
@@ -33,9 +34,6 @@ const AlbumCoverImage = styled.img`
 `;
 
 const Bottom = styled.div`
-  /* position: absolute;
-  bottom: 0;
-  left: 0; */
   width: 100%;
   height: ${({ h }) => h}px;
   background-color: ${COLOR.LIGHT_BLACK};
@@ -71,12 +69,15 @@ export default class WindowView extends React.Component {
   }
 
   static getNewDimension(ratio, image) {
+    console.log(567, "getting new dimension", image);
     const imagePortWidth = ratio * 16,
       imagePortHeight = ratio * 9,
       labelWidth = imagePortWidth,
-      labelHeight = Math.floor((height * 24) / 100),
+      labelHeight = Math.floor((imagePortHeight * 24) / 100),
       canvasWidth = imagePortWidth,
-      canvasHeight = imagePortHeight + labelHeight;
+      canvasHeight = imagePortHeight + labelHeight,
+      trackFontSize = graphicsSettings === GRAPHICS.HIGH ? 42 : 24,
+      artistFontSize = graphicsSettings === GRAPHICS.HIGH ? 36 : 18;
 
     let imageWidth = imagePortWidth,
       imageHeight = imagePortHeight,
@@ -88,16 +89,16 @@ export default class WindowView extends React.Component {
         h = image.height,
         r = (w * 1.0) / (h * 1.0);
 
-      if (Math.ceil(imagePortWidth / r) >= imagePortHeight) {
-        imageWidth = imagePortWidth;
-        imageHeight = imagePortWidth / r;
-      } else {
-        imageHeight = imagePortHeight;
-        imageWidth = r * imagePortHeight;
-      }
+      //   if (Math.ceil(imagePortWidth / r) >= imagePortHeight) {
+      imageWidth = imagePortWidth;
+      imageHeight = Math.ceil(imagePortWidth / r);
+      //   } else {
+      //     imageHeight = imagePortHeight;
+      //     imageWidth = Math.ceil(r * imagePortHeight);
+      //   }
 
-      top = -Math.abs(imagePortWidth - imageWidth) / 2;
-      left = -Math.abs(imagePortHeight - imageHeight) / 2;
+    //   top = -Math.abs(imagePortWidth - imageWidth) / 2;
+    //   left = -Math.abs(imagePortHeight - imageHeight) / 2;
     }
 
     return {
@@ -110,19 +111,22 @@ export default class WindowView extends React.Component {
       imageWidth,
       imageHeight,
       top,
-      left
+      left,
+      trackFontSize,
+      artistFontSize
     };
   }
 
   static getDerivedStateFromProps(props, state) {
     const { imageUrl, image } = props;
     const { ratio } = state;
-
+    const newDim = WindowView.getNewDimension(ratio, image);
+    console.log(567, "props in optimized view", props, newDim);
     return {
       image,
       imageUpdated: props.imageUrl !== state.imageUrl,
       imageUrl,
-      dimesnions: getNewDimension(ratio, image)
+      dimesnions: newDim
     };
   }
 
@@ -135,7 +139,7 @@ export default class WindowView extends React.Component {
   render() {
     const { song, onLoad } = this.props;
     const { title, artist } = song;
-    const { imageUrl, imageUpdated, dimension } = this.state;
+    const { imageUrl, imageUpdated, dimesnions } = this.state;
     const {
       imagePortWidth,
       imagePortHeight,
@@ -146,8 +150,10 @@ export default class WindowView extends React.Component {
       imageWidth,
       imageHeight,
       top,
-      left
-    } = dimension;
+      left,
+      trackFontSize,
+      artistFontSize
+    } = dimesnions;
 
     return (
       <WindowWrapper w={canvasWidth} h={canvasHeight}>
@@ -165,11 +171,11 @@ export default class WindowView extends React.Component {
             ></AlbumCoverImage>
           </AlbumCoverPort>
           <Bottom h={labelHeight}>
-            <Text fontSize={graphics === GRAPHICS.HIGH ? 42 : 24}>
+            <Text fontSize={trackFontSize}>
               {title.length > 20 ? title.substr(0, 20) : title}
             </Text>
-            <Separator height="12" />
-            <Text fontSize={graphics === GRAPHICS.HIGH ? 32 : 18}>
+            <Separator height="9" />
+            <Text fontSize={artistFontSize}>
               {artist[0].length > 20 ? artist[0].substr(0, 20) : artist[0]}
             </Text>
           </Bottom>
