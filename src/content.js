@@ -80,9 +80,9 @@ function renderPlayer() {
   });
 }
 
-function renderPip(requestMethod) {
+function renderPip(isSongChanged) {
   storage.get(["store"], result => {
-    createSpotifyWindow(result.store);
+    createSpotifyWindow(result.store,isSongChanged);
   });
 }
 
@@ -111,7 +111,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           request &&
           (request.method === "song-change" || request.method === "image-change")
         )
-        renderPip();
+        renderPip(request.method==="song-change");
       }
     }
   }

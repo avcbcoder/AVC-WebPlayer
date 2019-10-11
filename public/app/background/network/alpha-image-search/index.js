@@ -10,8 +10,8 @@ function getImageUrls(data) {
   const images = [];
   if (success) {
     wallpapers.forEach(wallpaper => {
-      const { url_image, width, height } = wallpaper;
-      images.push({ width, height, imageUrl: url_image });
+      const { url_image, width, height, url_thumb } = wallpaper;
+      images.push({ width, height, imageUrl: url_image, thumbUrl: url_thumb });
     });
   }
   return images;

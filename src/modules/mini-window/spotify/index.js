@@ -10,6 +10,13 @@ import { handleMultimediaAudio } from "../../multimedia-player";
 import WindowView from "./view";
 
 const storage = chrome.storage.local;
+const STATUS = {
+  DEFAULT: "default",
+  THUMB: "thumbnail",
+  HD: "highDefinition"
+};
+
+const DEFAULT_IMAGE_URL = "https://images.alphacoders.com/906/906319.jpg";
 
 /** Refrences => https://stackoverflow.com/questions/49930680/how-to-handle-uncaught-in-promise-domexception-play-failed-because-the-use*/
 /** https://developers.google.com/web/updates/2017/09/autoplay-policy-changes */
@@ -65,7 +72,7 @@ function attachListenersToVideo(video) {
   });
 }
 
-const createSpotifyWindow = (store) => {
+const createSpotifyWindow = (store, isSongChanged) => {
   const extBody = document.getElementById(ID.EXTENSION_BODY);
   if (!extBody) return;
 
@@ -82,7 +89,7 @@ const createSpotifyWindow = (store) => {
 
     extBody.appendChild(spotifyMiniWindow);
   }
-  ReactDOM.render(<Window store={store}/>, comp);
+  ReactDOM.render(<Window store={store} isSongChanged={isSongChanged} />, comp);
 };
 
 function registerFrame() {
@@ -123,7 +130,7 @@ function onLoad() {
     if (count === 1) {
       clearInterval(intervalId);
     } else {
-      const cttt=new Date().getTime();
+      const cttt = new Date().getTime();
       domtoimage.toPng(ele).then(function(dataUrl) {
         const img = new Image();
         img.src = dataUrl;
@@ -131,7 +138,7 @@ function onLoad() {
           const canvas = document.getElementById(ID.CANVAS.SPOTIFY);
           const context = canvas.getContext("2d");
           context.drawImage(img, 0, 0);
-        console.log("DOM TO Imgae took ",new Date().getTime()-cttt)
+          console.log("DOM TO Imgae took ", new Date().getTime() - cttt);
         };
       });
     }
@@ -139,25 +146,87 @@ function onLoad() {
   }, 100);
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+class Window extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageStatus: STATUS.DEFAULT,
+      currentImageUrl: DEFAULT_IMAGE_URL,
+      image: null,
+      songHash: null
+    };
+  }
 
-function Window({ store }) {
-  const song = store[STORE_VAR.SONG];
-  const images = store[STORE_VAR.ALPHA].response;
-  const image = images[getRandomInt(0, images.length) % images.length];
-  return (
-    <WindowView
-      song={song}
-      image={
-        image ? image.imageUrl : "https://images.alphacoders.com/906/906319.jpg"
+  static getDerivedStateFromProps(props, state) {
+    console.log("getDerivedStateFromProps called");
+    const { store } = props;
+    const { songHash } = state;
+
+    const song = store[STORE_VAR.SONG];
+    const { title, artist } = song;
+    const hashArr = [title];
+    for (let i = 0; i < artist.length; i++) hashArr.push(artist[i]);
+    const hash = hashArr.join("");
+
+    if (hash !== songHash) {
+      const images = store[STORE_VAR.ALPHA].response;
+      const image =
+        images[Math.floor(Math.random() * (images.length + 1)) % images.length];
+
+      return {
+        imageStatus: STATUS.DEFAULT,
+        currentImageUrl: DEFAULT_IMAGE_URL,
+        songHash: hash,
+        image
+      };
+    } else {
+      const { image } = state;
+
+      if (!image) {
+        const images = store[STORE_VAR.ALPHA].response;
+        const newImage =
+          images[
+            Math.floor(Math.random() * (images.length + 1)) % images.length
+          ];
+        return { image: newImage };
       }
-      onLoad={onLoad}
-    />
-  );
+    }
+
+    return {};
+  }
+
+  viewImageLoaded = () => {
+    console.log("viewImageLoaded called");
+    onLoad();
+    const { imageStatus, image } = this.state;
+    if (imageStatus === STATUS.DEFAULT) {
+      if (image)
+        this.setState({
+          imageStatus: STATUS.THUMB,
+          currentImageUrl: image.thumbUrl
+        });
+    } else if (imageStatus === STATUS.THUMB) {
+      if (image)
+        this.setState({
+          imageStatus: STATUS.HD,
+          currentImageUrl: image.imageUrl
+        });
+    }
+  };
+
+  render() {
+    const { currentImageUrl } = this.state;
+    const { store } = this.props;
+    const song = store[STORE_VAR.SONG];
+
+    return (
+      <WindowView
+        song={song}
+        image={currentImageUrl}
+        onLoad={this.viewImageLoaded}
+      />
+    );
+  }
 }
 
 export default createSpotifyWindow;
