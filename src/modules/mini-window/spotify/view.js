@@ -1,15 +1,15 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
-import { ID } from "../../../constants";
+import { ID, GRAPHICS } from "../../../constants";
 import { COLOR } from "../../../constants/color";
 import { Separator } from "../../../components";
 
 const WindowWrapper = styled.div`
   width: ${({ w }) => w}px;
   height: ${({ h }) => h}px;
-  /* position: fixed;
+  position: fixed;
   top: 0;
-  left: 0; */
+  left: 0;
   z-index: 1000;
 `;
 
@@ -70,16 +70,21 @@ export default class WindowView extends React.Component {
   }
 
   render() {
-    const ratio = 30,
+    // if graphics is high , ratio =60, on medium = ratio = 30, in low = only thumbnails are loaded
+    const graphics = GRAPHICS.HIGH;
+    const ratio = graphics === GRAPHICS.HIGH ? 60 : 30,
       { song, onLoad } = this.props,
       { image, imageUpdated } = this.state;
+
     const { title, artist } = song,
       width = ratio * 16,
       height = ratio * 9,
       labelHeight = Math.floor((height * 24) / 100);
-let ctt=0;
-      if(imageUpdated){ctt=new Date().getTime();
-console.log("image is set to load ---------------------")}
+    let ctt = 0;
+    if (imageUpdated) {
+      ctt = new Date().getTime();
+      console.log("image is set to load ---------------------");
+    }
     return (
       <WindowWrapper w={width} h={height + labelHeight}>
         <Body id={ID.FRAME.SPOTIFY}>
@@ -89,15 +94,26 @@ console.log("image is set to load ---------------------")}
             h={height}
             alt=""
             src={image}
-            onLoad={imageUpdated ? ()=>{console.log("VIEW image loaded" ," time diff=",new Date().getTime()-ctt);onLoad(); }: () => {}}
+            onLoad={
+              imageUpdated
+                ? () => {
+                    console.log(
+                      "VIEW image loaded",
+                      " time diff=",
+                      new Date().getTime() - ctt
+                    );
+                    onLoad();
+                  }
+                : () => {}
+            }
           ></Background>
           <Bottom h={labelHeight}>
-            <Text fontSize={24}>
+            <Text fontSize={graphics === GRAPHICS.HIGH ? 40:24}>
               {title.length > 20 ? title.substr(0, 20) : title}
             </Text>
             <Separator height="6" />
             {/* <br /> */}
-            <Text fontSize={18}>
+            <Text fontSize={graphics === GRAPHICS.HIGH ? 34:18}>
               {artist[0].length > 20 ? artist[0].substr(0, 20) : artist[0]}
             </Text>
           </Bottom>

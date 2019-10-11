@@ -69,6 +69,12 @@ const DEFAULT_STORE = {
   }
 };
 
+const GRAPHICS={
+  LOW:"low",
+  MEDIUM:"medium",
+  HIGH:"high"
+}
+
 const CONTROLS = {
   NEXT: "next",
   PREV: "previous",
@@ -138,5 +144,6 @@ export {
   EXT_COMM,
   API_STATE,
   MINI_MODE,
-  DEFAULT_STORE
+  DEFAULT_STORE,
+  GRAPHICS
 };
