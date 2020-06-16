@@ -1,5 +1,5 @@
 # AVC - Web Player 
-[![Build Status](https://travis-ci.com/cam-barts/ObeyTheTestingGoat.svg?branch=master)](https://travis-ci.com/cam-barts/ObeyTheTestingGoat)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40avcbcoder)](https://twitter.com/avankyankit)
 [![GitHub followers](https://img.shields.io/github/followers/avcbcoder.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/avcbcoder?tab=followers)
